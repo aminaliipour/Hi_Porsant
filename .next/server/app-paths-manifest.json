@@ -1,0 +1,12 @@
+{
+  "/page": "app/page.js",
+  "/api/projects/route": "app/api/projects/route.js",
+  "/api/project-incomes/route": "app/api/project-incomes/route.js",
+  "/api/section-weights/route": "app/api/section-weights/route.js",
+  "/api/project-tax/route": "app/api/project-tax/route.js",
+  "/api/system-percentages/route": "app/api/system-percentages/route.js",
+  "/api/system-expenses/route": "app/api/system-expenses/route.js",
+  "/api/team-members/route": "app/api/team-members/route.js",
+  "/api/user-commissions/[id]/route": "app/api/user-commissions/[id]/route.js",
+  "/api/employee-salaries/route": "app/api/employee-salaries/route.js"
+}

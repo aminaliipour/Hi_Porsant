@@ -1,0 +1,15 @@
+--2025-04-15 11:58:51--  https://github.com/mahdi-marjani-moghadam/wg/blob/master/DOCUMENT/theme/css/fonts/IRANSans/ttf/IRANSansWeb.ttf
+Resolving github.com (github.com)... 140.82.121.3
+Connecting to github.com (github.com)|140.82.121.3|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/html]
+Saving to: ‘IRANSansWeb.ttf’
+
+     0K .......... .......... .......... .......... .......... 2.80M
+    50K .......... .......... .......... .......... .......... 5.52M
+   100K .......... .......... .......... .......... .......... 6.25M
+   150K .......... .......... .......... .......... .......... 11.9M
+   200K .......... ....                                        62.2M=0.04s
+
+2025-04-15 11:58:52 (5.46 MB/s) - ‘IRANSansWeb.ttf’ saved [220040]
+

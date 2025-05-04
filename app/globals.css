@@ -1,0 +1,164 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 12%;
+
+    --primary: 45 100% 60%;
+    --primary-foreground: 0 0% 12%;
+
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 12%;
+
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+
+    --accent: 45 100% 96%;
+    --accent-foreground: 0 0% 12%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 45 100% 60%;
+
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 0 0% 12%;
+    --foreground: 0 0% 98%;
+
+    --card: 0 0% 16%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 16%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 45 100% 60%;
+    --primary-foreground: 0 0% 12%;
+
+    --secondary: 0 0% 20%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 0 0% 20%;
+    --muted-foreground: 0 0% 65%;
+
+    --accent: 45 70% 30%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 45 100% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    direction: rtl;
+  }
+
+  /* تنظیمات برای متن فارسی */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  span,
+  div,
+  button,
+  a,
+  label,
+  input,
+  textarea,
+  select {
+    text-align: right;
+  }
+
+  /* تنظیمات برای فرم‌ها */
+  input,
+  textarea,
+  select {
+    text-align: right;
+    direction: rtl;
+  }
+
+  /* تنظیمات برای فلکس باکس‌ها */
+  .flex {
+    flex-direction: row-reverse;
+  }
+
+  /* استثنا برای فلکس باکس‌هایی که نباید معکوس شوند */
+  .flex-no-reverse {
+    flex-direction: row;
+  }
+
+  /* تنظیمات برای گرید‌ها */
+  .grid {
+    direction: rtl;
+  }
+}
+
+/* اضافه کردن استایل‌های سفارشی برای طراحی مینیمال */
+.card-hover {
+  @apply transition-all duration-300 hover:shadow-md hover:-translate-y-1;
+}
+
+.btn-hover {
+  @apply transition-all duration-300 hover:shadow-md hover:-translate-y-0.5;
+}
+
+/* بهبود استایل اسکرول‌بار */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100 dark:bg-gray-800 rounded-full;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-yellow-400 dark:bg-yellow-600 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-yellow-500 dark:bg-yellow-500;
+}
+
+/* تنظیمات برای دیالوگ‌ها */
+.dialog-content {
+  direction: rtl;
+  text-align: right;
+}
+
+/* تنظیمات برای منوهای کشویی */
+.dropdown-menu {
+  text-align: right;
+  direction: rtl;
+}
+
+/* تنظیمات برای کارت‌ها */
+.card-content {
+  text-align: right;
+  direction: rtl;
+}
