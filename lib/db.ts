@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
 
 // MongoDB Local Connection String
-const MONGODB_URI = "mongodb://localhost:27017/taadol-db";
+const MONGODB_URI = "mongodb+srv://aminaliipour:7Fe12121@cluster0.ypjkwmj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 if (!MONGODB_URI) {
   throw new Error("لطفاً متغیر محیطی MONGODB_URI را تنظیم کنید");
