@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { MainLayout } from "@/components/layouts/main-layout"
 import { Tabs, TabsContent } from "@/components/ui/tabs"
 import ProjectsTab from "@/components/tabs/projects-tab"
@@ -11,11 +12,22 @@ import SalaryTab from "@/components/tabs/salary-tab"
 import TaadolTab from "@/components/tabs/taadol-tab"
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState("projects")
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const tabParam = searchParams.get("tab")
+  const [activeTab, setActiveTab] = useState(tabParam || "projects")
+
+  // تغییر تب و ثبت در query string
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab)
+    const params = new URLSearchParams(Array.from(searchParams.entries()))
+    params.set("tab", tab)
+    router.replace("?" + params.toString(), { scroll: false })
+  }
 
   return (
-    <MainLayout activeTab={activeTab} setActiveTab={setActiveTab}>
-      <Tabs value={activeTab} className="w-full">
+    <MainLayout activeTab={activeTab} setActiveTab={handleTabChange}>
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
         <TabsContent value="projects">
           <ProjectsTab />
         </TabsContent>

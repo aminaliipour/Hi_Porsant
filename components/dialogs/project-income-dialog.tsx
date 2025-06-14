@@ -271,6 +271,14 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
         }
       }
 
+      // دریافت archiveId فعال
+      const stored = localStorage.getItem("activeArchive")
+      let archiveId = ""
+      if (stored) {
+        try {
+          archiveId = JSON.parse(stored)._id
+        } catch {}
+      }
       // ذخیره اطلاعات درآمد
       const response = await fetch("/api/project-incomes", {
         method: "POST",
@@ -279,6 +287,7 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
         },
         body: JSON.stringify({
           projectId: project._id,
+          archiveId, // اضافه شد
           ...sectionTotals,
           details,
         }),

@@ -18,7 +18,7 @@ const TeamMemberSchema: Schema = new Schema(
     fullName: { type: String, required: true },
     position: { type: String, required: true },
     fatherName: { type: String, required: true },
-    nationalCode: { type: String, required: true, unique: true },
+    nationalCode: { type: String, required: true },
     phoneNumber: { type: String, required: true },
     email: { type: String },
     education: { type: String },

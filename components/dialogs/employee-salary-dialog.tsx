@@ -56,28 +56,35 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
       setLoading(true)
       setError(null)
 
-      // دریافت پورسانت‌ها
-      const commissionsResponse = await fetch(`/api/user-commissions/${employee._id}`)
+      // دریافت archiveId فعال
+      let archiveId = ""
+      const stored = localStorage.getItem("activeArchive")
+      if (stored) {
+        try { archiveId = JSON.parse(stored)._id } catch {}
+      }
+
+      // دریافت پورسانت‌ها فقط برای آرشیو فعال
+      let commissionsUrl = `/api/user-commissions/${employee._id}`
+      if (archiveId) commissionsUrl += `?archiveId=${archiveId}`
+      const commissionsResponse = await fetch(commissionsUrl)
       if (!commissionsResponse.ok) {
         throw new Error("خطا در دریافت پورسانت‌ها")
       }
       const commissionsData = await commissionsResponse.json()
-      
       if (Array.isArray(commissionsData)) {
         setAssignments(commissionsData)
       } else {
-        console.error("Invalid commissions data format:", commissionsData)
         setAssignments([])
       }
 
-      // دریافت اطلاعات حقوق
-      const salaryResponse = await fetch(`/api/employee-salaries?employeeId=${employee._id}`)
+      // دریافت اطلاعات حقوق فقط برای آرشیو فعال
+      let salaryUrl = `/api/employee-salaries?employeeId=${employee._id}`
+      if (archiveId) salaryUrl += `&archiveId=${archiveId}`
+      const salaryResponse = await fetch(salaryUrl)
       if (!salaryResponse.ok) {
         throw new Error("خطا در دریافت اطلاعات حقوق")
       }
-      
       const salaryData = await salaryResponse.json()
-
       if (Array.isArray(salaryData) && salaryData.length > 0) {
         const latestSalary = salaryData[0]
         setSalary({
@@ -93,7 +100,6 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
         })
       }
     } catch (error) {
-      console.error("Error fetching data:", error)
       setError(error instanceof Error ? error.message : "خطا در دریافت اطلاعات")
       toast({
         title: "خطا",
@@ -121,6 +127,20 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
   }
 
   const saveSalary = async () => {
+    // دریافت archiveId فعال
+    let archiveId = ""
+    const stored = localStorage.getItem("activeArchive")
+    if (stored) {
+      try { archiveId = JSON.parse(stored)._id } catch {}
+    }
+    if (!archiveId) {
+      toast({
+        title: "خطا",
+        description: "آرشیو فعال انتخاب نشده است!",
+        variant: "destructive",
+      })
+      return
+    }
     try {
       const response = await fetch("/api/employee-salaries", {
         method: "POST",
@@ -132,7 +152,7 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
           baseSalary: salary.baseSalary,
           additions: salary.additions,
           deductions: salary.deductions,
-          date: new Date().toISOString().split("T")[0],
+          archiveId,
         }),
       })
 
@@ -144,6 +164,8 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
         title: "موفق",
         description: "اطلاعات حقوق با موفقیت ذخیره شد",
       })
+      await fetchData() // اطلاعات جدید را واکشی کن
+      onOpenChange(false) // دیالوگ را ببند
     } catch (error) {
       console.error("Error saving salary:", error)
       toast({

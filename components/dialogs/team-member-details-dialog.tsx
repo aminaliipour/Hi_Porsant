@@ -65,21 +65,24 @@ export function TeamMemberDetailsDialog({ member, open, onOpenChange }: TeamMemb
     if (!member || !member._id) return
 
     try {
-      console.log("Fetching assignments for member:", member._id) // اضافه کردن log
       setLoading(true)
-      const response = await fetch(`/api/team-members/${member._id}/assignments`)
-      
-      console.log("Response status:", response.status) // اضافه کردن log
-      
+      // دریافت archiveId فعال از localStorage
+      let archiveId = ""
+      if (typeof window !== "undefined") {
+        const stored = localStorage.getItem("activeArchive")
+        if (stored) {
+          try { archiveId = JSON.parse(stored)._id } catch {}
+        }
+      }
+      // ارسال archiveId به API
+      const url = archiveId ? `/api/team-members/${member._id}/assignments?archiveId=${archiveId}` : `/api/team-members/${member._id}/assignments`
+      const response = await fetch(url)
       if (!response.ok) {
         throw new Error("خطا در دریافت وظایف اختصاص داده شده")
       }
-      
       const data = await response.json()
-      console.log("Received assignments data:", data) // اضافه کردن log
       setAssignments(data)
     } catch (error) {
-      console.error("Error fetching assignments:", error)
       toast({
         title: "خطا",
         description: "خطا در دریافت وظایف اختصاص داده شده",

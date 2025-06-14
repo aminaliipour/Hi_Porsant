@@ -1,18 +1,21 @@
 import { NextResponse } from "next/server"
 import dbConnect from "@/lib/db"
 import { EmployeeSalary } from "@/lib/models"
+import mongoose from "mongoose"
 
 export async function GET(request: Request) {
   try {
     await dbConnect()
     const { searchParams } = new URL(request.url)
     const employeeId = searchParams.get("employeeId")
+    const archiveId = searchParams.get("archiveId")
 
     if (!employeeId) {
       return NextResponse.json({ error: "شناسه کارمند الزامی است" }, { status: 400 })
     }
 
-    let query = { employeeId }
+    let query: any = { employeeId }
+    if (archiveId) query.archiveId = new mongoose.Types.ObjectId(archiveId)
 
     const salaries = await EmployeeSalary.find(query)
       .sort({ date: -1 })
@@ -45,31 +48,40 @@ export async function POST(request: Request) {
       )
     }
 
-    // بررسی وجود رکورد قبلی برای این کارمند و تاریخ
-    const existingSalary = await EmployeeSalary.findOne({
-      employeeId: body.employeeId,
-      date: body.date,
-    })
+    // تبدیل archiveId به ObjectId اگر وجود داشت
+    let findArchiveId = undefined
+    if (body.archiveId) {
+      try {
+        findArchiveId = new mongoose.Types.ObjectId(body.archiveId)
+      } catch (e) {
+        findArchiveId = undefined
+      }
+    }
 
-    if (existingSalary) {
-      // بروزرسانی رکورد موجود
-      existingSalary.baseSalary = body.baseSalary
-      existingSalary.additions = body.additions
-      existingSalary.deductions = body.deductions
-      await existingSalary.save()
-      return NextResponse.json(existingSalary)
+    // جستجو بر اساس employeeId + archiveId (اگر وجود داشت)
+    const query = {
+      employeeId: body.employeeId,
+      ...(findArchiveId && { archiveId: findArchiveId }),
+    }
+
+    let salary = await EmployeeSalary.findOne(query)
+    if (salary) {
+      salary.baseSalary = body.baseSalary
+      salary.additions = body.additions
+      salary.deductions = body.deductions
+      await salary.save()
     } else {
-      // ایجاد رکورد جدید
-      const salary = new EmployeeSalary({
+      salary = new EmployeeSalary({
         employeeId: body.employeeId,
         baseSalary: body.baseSalary || 0,
         additions: body.additions || 0,
         deductions: body.deductions || 0,
-        date: body.date,
+        date: body.date || new Date().toISOString().split("T")[0],
+        archiveId: findArchiveId,
       })
       await salary.save()
-      return NextResponse.json(salary, { status: 201 })
     }
+    return NextResponse.json(salary, { status: 201 })
   } catch (error) {
     console.error("Error saving salary data:", error)
     return NextResponse.json(

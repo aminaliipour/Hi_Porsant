@@ -1,4 +1,4 @@
-// File: C:\Users\Jackson\Desktop\Code\New folder (4)\app\api\project-sections\route.ts
+// File: C:\Users\Jackson\Desktop\Code\HiPorsant New\Hi_Porsant\app\api\project-sections\route.ts
 import * as entry from '../../../../../app/api/project-sections/route.js'
 import type { NextRequest } from 'next/server.js'
 

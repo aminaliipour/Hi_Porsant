@@ -16,6 +16,7 @@ interface TeamMember {
   _id: string
   fullName: string
   position: string
+  archiveId?: string // اضافه شد
 }
 
 export default function CommissionTab() {
@@ -29,20 +30,31 @@ export default function CommissionTab() {
   const { toast } = useToast()
 
   useEffect(() => {
-    fetchData()
+    // دریافت آرشیو فعال از localStorage
+    const stored = localStorage.getItem("activeArchive")
+    let archiveId = ""
+    if (stored) {
+      try {
+        archiveId = JSON.parse(stored)._id
+      } catch {}
+    }
+    fetchData(archiveId)
   }, [])
 
-  const fetchData = async () => {
+  const fetchData = async (archiveId?: string) => {
     try {
       setLoading(true)
-
-      // دریافت پروژه‌ها
-      const projectsResponse = await fetch("/api/projects")
+      // دریافت پروژه‌ها بر اساس آرشیو فعال
+      let projectsUrl = "/api/projects"
+      if (archiveId) projectsUrl += `?archiveId=${archiveId}`
+      const projectsResponse = await fetch(projectsUrl)
       const projectsData = await projectsResponse.json()
       setProjects(projectsData)
 
-      // دریافت اعضای تیم
-      const membersResponse = await fetch("/api/team-members")
+      // دریافت اعضای تیم فقط برای آرشیو فعال
+      let membersUrl = "/api/team-members"
+      if (archiveId) membersUrl += `?archiveId=${archiveId}`
+      const membersResponse = await fetch(membersUrl)
       const membersData = await membersResponse.json()
       setMembers(membersData)
     } catch (error) {
@@ -62,7 +74,15 @@ export default function CommissionTab() {
   }
 
   const handleMemberClick = (member: TeamMember) => {
-    setSelectedMember(member)
+    // دریافت archiveId فعال و ارسال به دیالوگ
+    const stored = localStorage.getItem("activeArchive")
+    let archiveId = ""
+    if (stored) {
+      try {
+        archiveId = JSON.parse(stored)._id
+      } catch {}
+    }
+    setSelectedMember({ ...member, archiveId })
     setIsUserDialogOpen(true)
   }
 

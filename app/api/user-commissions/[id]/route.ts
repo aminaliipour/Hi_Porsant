@@ -10,6 +10,9 @@ export async function GET(
     await dbConnect()
     const memberId = params.id
 
+    const { searchParams } = new URL(request.url)
+    const archiveId = searchParams.get("archiveId")
+
     // دریافت درصدهای سیستم
     const systemPercentages = await SystemPercentages.find().sort({ createdAt: -1 }).limit(1)
     const systemPercent = systemPercentages[0] || {
@@ -26,9 +29,9 @@ export async function GET(
     const commissions = []
 
     // دریافت تمام پروژه‌ها و بخش‌ها
-    const projects = await Project.find().lean()
-    const sections = await ProjectSection.find().lean()
-    const incomes = await ProjectIncome.find().lean()
+    const projects = archiveId ? await Project.find({ archiveId }).lean() : await Project.find().lean()
+    const sections = archiveId ? await ProjectSection.find({ archiveId }).lean() : await ProjectSection.find().lean()
+    const incomes = archiveId ? await ProjectIncome.find({ archiveId }).lean() : await ProjectIncome.find().lean()
 
     // بررسی بخش‌های دارای آیتم
     const withItemsCollections = [

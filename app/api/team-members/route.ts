@@ -2,9 +2,13 @@ import { NextResponse } from "next/server"
 import dbConnect from "@/lib/db"
 import { TeamMember } from "@/lib/models"
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     await dbConnect()
+    const { searchParams } = new URL(request.url)
+    const archiveId = searchParams.get("archiveId")
+    const filter: any = {}
+    if (archiveId) filter.archiveId = archiveId
     const members = await TeamMember.find({}).sort({ createdAt: -1 })
     return NextResponse.json(members)
   } catch (error) {

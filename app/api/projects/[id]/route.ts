@@ -19,25 +19,32 @@ export async function GET(request: Request, { params }: { params: { id: string }
 
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
   try {
-    const body = await request.json()
     await dbConnect()
+    const projectId = params.id
+    const body = await request.json()
+    const { archiveId, ...updateFields } = body
 
-    if (!body.name) {
-      return NextResponse.json({ error: "نام پروژه الزامی است" }, { status: 400 })
-    }
-
-    const project = await Project.findByIdAndUpdate(
-      params.id,
-      { name: body.name },
+    // به‌روزرسانی پروژه
+    const updatedProject = await Project.findByIdAndUpdate(
+      projectId,
+      { ...updateFields, ...(archiveId ? { archiveId } : {}) },
       { new: true }
     )
-
-    if (!project) {
-      return NextResponse.json({ error: "پروژه یافت نشد" }, { status: 404 })
+    if (!updatedProject) {
+      return NextResponse.json({ error: "پروژه پیدا نشد" }, { status: 404 })
     }
 
-    return NextResponse.json(project)
+    // اگر archiveId تغییر کرد، بخش‌های پروژه را هم آپدیت کن
+    if (archiveId) {
+      await ProjectSection.updateMany(
+        { projectId },
+        { $set: { archiveId } }
+      )
+    }
+
+    return NextResponse.json(updatedProject)
   } catch (error) {
+    console.error("Error in project PUT:", error)
     return NextResponse.json({ error: "خطا در بروزرسانی پروژه" }, { status: 500 })
   }
 }

@@ -41,20 +41,31 @@ export default function SalaryTab() {
   const { toast } = useToast()
 
   useEffect(() => {
-    fetchData()
+    // دریافت آرشیو فعال از localStorage
+    const stored = localStorage.getItem("activeArchive")
+    let archiveId = ""
+    if (stored) {
+      try {
+        archiveId = JSON.parse(stored)._id
+      } catch {}
+    }
+    fetchData(archiveId)
   }, [])
 
-  const fetchData = async () => {
+  const fetchData = async (archiveId?: string) => {
     try {
       setLoading(true)
-
-      // دریافت کارمندان
-      const employeesResponse = await fetch("/api/team-members")
+      // دریافت کارمندان و مهمانان بر اساس آرشیو فعال (در صورت نیاز)
+      let employeesUrl = "/api/team-members"
+      let guestsUrl = "/api/guest-referrals"
+      if (archiveId) {
+        employeesUrl += `?archiveId=${archiveId}`
+        guestsUrl += `?archiveId=${archiveId}`
+      }
+      const employeesResponse = await fetch(employeesUrl)
       const employeesData = await employeesResponse.json()
       setEmployees(employeesData)
-
-      // دریافت افراد مهمان
-      const guestsResponse = await fetch("/api/guest-referrals")
+      const guestsResponse = await fetch(guestsUrl)
       const guestsData = await guestsResponse.json()
       setGuests(guestsData)
     } catch (error) {
@@ -91,6 +102,13 @@ export default function SalaryTab() {
       return
     }
 
+    // دریافت archiveId فعال
+    let archiveId = ""
+    const stored = localStorage.getItem("activeArchive")
+    if (stored) {
+      try { archiveId = JSON.parse(stored)._id } catch {}
+    }
+
     try {
       const response = await fetch("/api/guest-referrals", {
         method: "POST",
@@ -100,6 +118,7 @@ export default function SalaryTab() {
         body: JSON.stringify({
           ...guestFormData,
           dateAdded: new Date().toISOString().split("T")[0],
+          archiveId, // اضافه شد
         }),
       })
 

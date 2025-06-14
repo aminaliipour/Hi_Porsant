@@ -42,7 +42,17 @@ export function ProjectSectionsDialog({ project, open, onOpenChange }: ProjectSe
   const fetchSections = async () => {
     try {
       setLoading(true)
-      const response = await fetch(`/api/project-sections?projectId=${project._id}`)
+      // دریافت archiveId فعال از localStorage
+      let archiveId = ""
+      if (typeof window !== "undefined") {
+        const stored = localStorage.getItem("activeArchive")
+        if (stored) {
+          try { archiveId = JSON.parse(stored)._id } catch {}
+        }
+      }
+      let url = `/api/project-sections?projectId=${project._id}`
+      if (archiveId) url += `&archiveId=${archiveId}`
+      const response = await fetch(url)
       const data = await response.json()
       setSections(data)
     } catch (error) {

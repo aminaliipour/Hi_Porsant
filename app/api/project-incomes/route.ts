@@ -6,12 +6,12 @@ export async function GET(request: Request) {
   try {
     await dbConnect()
     const { searchParams } = new URL(request.url)
+    const archiveId = searchParams.get("archiveId")
     const projectId = searchParams.get("projectId")
 
-    let query = {}
-    if (projectId) {
-      query = { projectId }
-    }
+    let query: any = {}
+    if (archiveId) query.archiveId = archiveId
+    if (projectId) query.projectId = projectId
 
     const incomes = await ProjectIncome.find(query).lean()
 
@@ -48,7 +48,7 @@ export async function POST(request: Request) {
       existingIncome.salesProfit = body.salesProfit
       existingIncome.consultationProfit = body.consultationProfit
       existingIncome.details = body.details
-
+      if (body.archiveId) existingIncome.archiveId = body.archiveId
       await existingIncome.save()
       return NextResponse.json(existingIncome)
     } else {
@@ -62,6 +62,7 @@ export async function POST(request: Request) {
         salesProfit: body.salesProfit,
         consultationProfit: body.consultationProfit,
         details: body.details,
+        archiveId: body.archiveId,
       })
 
       await income.save()

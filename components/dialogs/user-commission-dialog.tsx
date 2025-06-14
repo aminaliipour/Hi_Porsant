@@ -14,6 +14,7 @@ interface TeamMember {
   _id: string
   fullName: string
   position: string
+  archiveId?: string // اضافه شد
 }
 
 interface UserCommissionDialogProps {
@@ -71,7 +72,10 @@ export function UserCommissionDialog({ member, open, onOpenChange }: UserCommiss
     setLoading(true)
     setError(null)
     try {
-      const response = await fetch(`/api/user-commissions/${member._id}`)
+      // ارسال archiveId به API
+      let url = `/api/user-commissions/${member._id}`
+      if (member.archiveId) url += `?archiveId=${member.archiveId}`
+      const response = await fetch(url)
       if (!response.ok) {
         throw new Error('خطا در دریافت اطلاعات پورسانت')
       }

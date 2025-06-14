@@ -43,12 +43,22 @@ export default function TaadolTab() {
   const { toast } = useToast()
 
   useEffect(() => {
-    fetchData()
+    // دریافت آرشیو فعال از localStorage
+    const stored = localStorage.getItem("activeArchive")
+    let archiveId = ""
+    if (stored) {
+      try {
+        archiveId = JSON.parse(stored)._id
+      } catch {}
+    }
+    fetchData(archiveId)
   }, [])
 
-  const fetchData = async () => {
+  const fetchData = async (archiveId?: string) => {
     try {
       setLoading(true)
+      // اگر نیاز به فیلتر داده‌ها بر اساس آرشیو بود، اینجا اضافه شود
+      // فعلاً داده‌ها عمومی هستند
 
       // دریافت درصدهای سیستم
       const percentagesResponse = await fetch("/api/system-percentages")

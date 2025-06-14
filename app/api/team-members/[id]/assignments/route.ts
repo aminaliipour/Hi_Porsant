@@ -18,9 +18,14 @@ export async function GET(request: Request, { params }: { params: { id: string }
     const memberId = params.id
     const assignments = []
 
-    // دریافت تمام بخش‌های پروژه
-    const sections = await ProjectSection.find()
-    
+    const { searchParams } = new URL(request.url)
+    const archiveId = searchParams.get("archiveId")
+    // دریافت فقط بخش‌های مربوط به آرشیو فعال
+    let sectionFilter: any = {}
+    if (archiveId) sectionFilter.archiveId = archiveId
+    const sections = await ProjectSection.find(sectionFilter)
+    const sectionIds = sections.map(s => s._id.toString())
+    const sectionProjectIds = sections.map(s => s.projectId.toString())
     // جستجوی بخش‌های دارای آیتم
     const withItemsCollections = [
       { model: PurchaseDetails, name: "خرید" },
@@ -29,10 +34,12 @@ export async function GET(request: Request, { params }: { params: { id: string }
     ]
 
     for (const { model, name } of withItemsCollections) {
+      // دیتیل‌ها را بدون فیلتر archiveId بخوان
       const details = await model.find()
-      
       for (const detail of details) {
         if (!detail.assignedMembers) continue
+        // فقط دیتیل‌هایی که sectionId آن‌ها در بخش‌های همین آرشیو است
+        if (!detail.sectionId || !sectionIds.includes(detail.sectionId.toString())) continue
         
         // تبدیل Map به Object برای راحتی کار
         let assignedMembers = {}
@@ -72,8 +79,8 @@ export async function GET(request: Request, { params }: { params: { id: string }
 
     for (const { model, name } of withoutItemsCollections) {
       const details = await model.find()
-      
       for (const detail of details) {
+        if (!detail.sectionId || !sectionIds.includes(detail.sectionId.toString())) continue
         if (!detail.details) continue
         
         // تبدیل Map به Object برای راحتی کار

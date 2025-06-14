@@ -54,13 +54,23 @@ export default function TeamTab() {
   const { toast } = useToast()
 
   useEffect(() => {
-    fetchMembers()
+    // دریافت آرشیو فعال از localStorage
+    const stored = localStorage.getItem("activeArchive")
+    let archiveId = ""
+    if (stored) {
+      try {
+        archiveId = JSON.parse(stored)._id
+      } catch {}
+    }
+    fetchMembers(archiveId)
   }, [])
 
-  const fetchMembers = async () => {
+  const fetchMembers = async (archiveId?: string) => {
     try {
       setLoading(true)
-      const response = await fetch("/api/team-members")
+      let url = "/api/team-members"
+      if (archiveId) url += `?archiveId=${archiveId}`
+      const response = await fetch(url)
       if (!response.ok) {
         throw new Error("خطا در دریافت اطلاعات اعضای تیم")
       }
@@ -88,8 +98,17 @@ export default function TeamTab() {
       setSelectedMember(member)
       setLoadingAssignments(true)
       setIsAssignmentsDialogOpen(true)
-
-      const response = await fetch(`/api/team-members/${member._id}/assignments`)
+      // دریافت آرشیو فعال
+      const stored = localStorage.getItem("activeArchive")
+      let archiveId = ""
+      if (stored) {
+        try {
+          archiveId = JSON.parse(stored)._id
+        } catch {}
+      }
+      let url = `/api/team-members/${member._id}/assignments`
+      if (archiveId) url += `?archiveId=${archiveId}`
+      const response = await fetch(url)
       if (!response.ok) {
         throw new Error("خطا در دریافت وظایف اختصاص داده شده")
       }
@@ -150,7 +169,6 @@ export default function TeamTab() {
         })
         return
       }
-
       const response = await fetch("/api/team-members", {
         method: "POST",
         headers: {

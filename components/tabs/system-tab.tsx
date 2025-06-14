@@ -73,24 +73,31 @@ export default function SystemTab() {
   const [projectTaxes, setProjectTaxes] = useState<any[]>([])
 
   useEffect(() => {
-    fetchData()
-    fetchProjectTaxes()
+    // دریافت آرشیو فعال از localStorage
+    const stored = localStorage.getItem("activeArchive")
+    let archiveId = ""
+    if (stored) {
+      try {
+        archiveId = JSON.parse(stored)._id
+      } catch {}
+    }
+    fetchData(archiveId)
+    fetchProjectTaxes(archiveId)
   }, [])
 
-  const fetchData = async () => {
+  const fetchData = async (archiveId?: string) => {
     try {
       setLoading(true)
-
-      // دریافت پروژه‌ها
-      const projectsResponse = await fetch("/api/projects")
+      let projectsUrl = "/api/projects"
+      if (archiveId) projectsUrl += `?archiveId=${archiveId}`
+      const projectsResponse = await fetch(projectsUrl)
       const projectsData = await projectsResponse.json()
-      if (!Array.isArray(projectsData)) {
-        throw new Error("دریافت اطلاعات پروژه‌ها با خطا مواجه شد")
-      }
       setProjects(projectsData)
 
       // دریافت درآمدهای پروژه‌ها
-      const incomesResponse = await fetch("/api/project-incomes")
+      let incomesUrl = "/api/project-incomes"
+      if (archiveId) incomesUrl += `?archiveId=${archiveId}`
+      const incomesResponse = await fetch(incomesUrl)
       const incomesData = await incomesResponse.json()
       if (!Array.isArray(incomesData)) {
         throw new Error("دریافت اطلاعات درآمد پروژه‌ها با خطا مواجه شد")
@@ -158,9 +165,11 @@ export default function SystemTab() {
     }
   }
 
-  const fetchProjectTaxes = async () => {
+  const fetchProjectTaxes = async (archiveId?: string) => {
     try {
-      const response = await fetch("/api/project-tax")
+      let url = "/api/project-tax"
+      if (archiveId) url += `?archiveId=${archiveId}`
+      const response = await fetch(url)
       if (!response.ok) throw new Error()
       const data = await response.json()
       setProjectTaxes(data)
@@ -434,7 +443,18 @@ export default function SystemTab() {
           project={selectedProject}
           open={isIncomeDialogOpen}
           onOpenChange={setIsIncomeDialogOpen}
-          onSave={fetchData}
+          onSave={() => {
+            // دریافت آرشیو فعال و بازخوانی داده‌ها فقط برای همان آرشیو
+            const stored = localStorage.getItem("activeArchive")
+            let archiveId = ""
+            if (stored) {
+              try {
+                archiveId = JSON.parse(stored)._id
+              } catch {}
+            }
+            fetchData(archiveId)
+            fetchProjectTaxes(archiveId)
+          }}
         />
       )}
 

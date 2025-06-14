@@ -6,6 +6,7 @@ export interface IEmployeeSalary extends Document {
   additions: number
   deductions: number
   date: string
+  archiveId?: mongoose.Types.ObjectId // اضافه شد
   createdAt: Date
   updatedAt: Date
 }
@@ -17,6 +18,7 @@ const EmployeeSalarySchema: Schema = new Schema(
     additions: { type: Number, default: 0 },
     deductions: { type: Number, default: 0 },
     date: { type: String, required: true },
+    archiveId: { type: Schema.Types.ObjectId, ref: "Archive" }, // اضافه شد
   },
   { timestamps: true },
 )

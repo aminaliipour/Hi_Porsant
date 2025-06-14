@@ -7,12 +7,10 @@ export async function GET(request: Request) {
     await dbConnect()
     const { searchParams } = new URL(request.url)
     const projectId = searchParams.get("projectId")
-
-    let query = {}
-    if (projectId) {
-      query = { projectId }
-    }
-
+    const archiveId = searchParams.get("archiveId")
+    let query: any = {}
+    if (projectId) query.projectId = projectId
+    if (archiveId) query.archiveId = archiveId
     const sections = await ProjectSection.find(query).sort({ sectionName: 1 })
     return NextResponse.json(sections)
   } catch (error) {
@@ -29,6 +27,7 @@ export async function POST(request: Request) {
       projectId: body.projectId,
       sectionName: body.sectionName,
       isActive: body.isActive !== undefined ? body.isActive : true,
+      archiveId: body.archiveId,
     })
 
     await section.save()

@@ -17,6 +17,7 @@ const ProjectSectionSchema: Schema = new Schema(
     assignedMemberId: { type: Schema.Types.ObjectId, ref: "TeamMember" },
     assignedMembers: { type: Map, of: Schema.Types.ObjectId, default: {} },
     isActive: { type: Boolean, default: true }, // اضافه کردن فیلد فعال بودن بخش
+    archiveId: { type: Schema.Types.ObjectId, ref: "Archive" }, // اضافه شد
   },
   { timestamps: true },
 )

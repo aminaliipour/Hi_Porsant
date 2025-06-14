@@ -27,6 +27,7 @@ const ProjectIncomeSchema: Schema = new Schema(
     details: { type: Map, of: Schema.Types.Mixed, default: {} },
     totalIncome: { type: Number, default: 0 },
     taxShare: { type: Number, default: 0 },
+    archiveId: { type: Schema.Types.ObjectId, ref: "Archive", required: true },
   },
   { timestamps: true },
 )
