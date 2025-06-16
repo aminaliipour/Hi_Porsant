@@ -8,9 +8,10 @@ interface MainLayoutProps {
   children: React.ReactNode;
   activeTab: string;
   setActiveTab: (value: string) => void;
+  onLogout?: () => void;
 }
 
-export function MainLayout({ children, activeTab, setActiveTab }: MainLayoutProps) {
+export function MainLayout({ children, activeTab, setActiveTab, onLogout }: MainLayoutProps) {
   // اجرای کد مربوط به PWA
   useEffect(() => {
     if ("serviceWorker" in navigator) {
@@ -29,7 +30,7 @@ export function MainLayout({ children, activeTab, setActiveTab }: MainLayoutProp
 
   return (
     <div className="flex min-h-screen flex-col">
-      <Header activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Header activeTab={activeTab} setActiveTab={setActiveTab} onLogout={onLogout} />
       <main className="flex-1 container py-6">{children}</main>
     </div>
   )

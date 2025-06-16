@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { NumberInput } from "@/components/number-input"
+import { CommissionInvoicePdf } from "@/components/CommissionInvoicePdf"
 
 interface TeamMember {
   _id: string
@@ -111,10 +112,10 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
     }
   }
 
-  const handleSalaryChange = (field: string, value: string) => {
+  const handleSalaryChange = (field: string, value: number) => {
     setSalary(prev => ({
       ...prev,
-      [field]: Number.parseInt(value) || 0,
+      [field]: value,
     }))
   }
 
@@ -278,6 +279,21 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
 
         <DialogFooter>
           <Button onClick={saveSalary}>ذخیره</Button>
+          <CommissionInvoicePdf
+            fullName={employee.fullName}
+            position={employee.position}
+            assignments={assignments}
+            totalCommission={getTotalCommission()}
+            baseSalary={salary.baseSalary}
+            additions={salary.additions}
+            deductions={salary.deductions}
+            onComplete={() => {
+              toast({
+                title: "موفق",
+                description: "فیش حقوقی با موفقیت دانلود شد",
+              })
+            }}
+          />
         </DialogFooter>
       </DialogContent>
     </Dialog>

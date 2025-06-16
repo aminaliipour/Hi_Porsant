@@ -14,9 +14,10 @@ import { Calendar } from "@/components/ui/calendar"
 interface HeaderProps {
   activeTab: string;
   setActiveTab: (value: string) => void;
+  onLogout?: () => void;
 }
 
-export function Header({ activeTab, setActiveTab }: HeaderProps) {
+export function Header({ activeTab, setActiveTab, onLogout }: HeaderProps) {
   const { toast } = useToast()
   const [user, setUser] = useState<string | null>(null)
   const [archives, setArchives] = useState<any[]>([])
@@ -256,6 +257,19 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
         </div>
         {/* User Info and Actions */}
         <div className="flex items-center gap-4">
+          {/* دکمه خروج از سیستم */}
+          {onLogout && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onLogout}
+              className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
+            >
+              <LogOut size={16} className="ml-2" />
+              خروج از سیستم
+            </Button>
+          )}
+          
           {user ? (
             <>
               <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full">
