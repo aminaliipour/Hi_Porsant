@@ -2,8 +2,5 @@
   "/page": "app/page.js",
   "/api/archives/route": "app/api/archives/route.js",
   "/api/projects/route": "app/api/projects/route.js",
-  "/api/team-members/route": "app/api/team-members/route.js",
-  "/api/guest-referrals/route": "app/api/guest-referrals/route.js",
-  "/api/user-commissions/[id]/route": "app/api/user-commissions/[id]/route.js",
-  "/api/employee-salaries/route": "app/api/employee-salaries/route.js"
+  "/api/team-members/route": "app/api/team-members/route.js"
 }
