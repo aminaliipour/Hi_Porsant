@@ -1,32 +1,34 @@
 {
   "components\\CommissionInvoicePdf.tsx -> html2canvas": {
-    "id": "components\\CommissionInvoicePdf.tsx -> html2canvas",
+    "id": 24457,
     "files": [
-      "static/chunks/_app-pages-browser_node_modules_pnpm_html2canvas_1_4_1_node_modules_html2canvas_dist_html2canvas_js.js"
+      "static/chunks/ad2866b8.d16d5df33d15d005.js"
     ]
   },
   "components\\CommissionInvoicePdf.tsx -> jspdf": {
-    "id": "components\\CommissionInvoicePdf.tsx -> jspdf",
+    "id": 53375,
     "files": [
-      "static/chunks/_app-pages-browser_node_modules_pnpm_jspdf_3_0_1_node_modules_jspdf_dist_jspdf_es_min_js.js"
+      "static/chunks/164f4fb6.5045ba8de188a313.js",
+      "static/chunks/553.aad6cac1722fb725.js"
     ]
   },
-  "node_modules\\.pnpm\\jspdf@3.0.1\\node_modules\\jspdf\\dist\\jspdf.es.min.js -> canvg": {
-    "id": "node_modules\\.pnpm\\jspdf@3.0.1\\node_modules\\jspdf\\dist\\jspdf.es.min.js -> canvg",
+  "node_modules\\jspdf\\dist\\jspdf.es.min.js -> canvg": {
+    "id": 12396,
     "files": [
-      "static/chunks/_app-pages-browser_node_modules_pnpm_canvg_3_0_11_node_modules_canvg_lib_index_es_js.js"
+      "static/chunks/bc98253f.2a86d0955713b458.js",
+      "static/chunks/969.eabdf6860358e089.js"
     ]
   },
-  "node_modules\\.pnpm\\jspdf@3.0.1\\node_modules\\jspdf\\dist\\jspdf.es.min.js -> dompurify": {
-    "id": "node_modules\\.pnpm\\jspdf@3.0.1\\node_modules\\jspdf\\dist\\jspdf.es.min.js -> dompurify",
+  "node_modules\\jspdf\\dist\\jspdf.es.min.js -> dompurify": {
+    "id": 18848,
     "files": [
-      "static/chunks/_app-pages-browser_node_modules_pnpm_dompurify_3_2_5_node_modules_dompurify_dist_purify_es_mjs.js"
+      "static/chunks/848.0cc8e36bc1adb4f8.js"
     ]
   },
-  "node_modules\\.pnpm\\jspdf@3.0.1\\node_modules\\jspdf\\dist\\jspdf.es.min.js -> html2canvas": {
-    "id": "node_modules\\.pnpm\\jspdf@3.0.1\\node_modules\\jspdf\\dist\\jspdf.es.min.js -> html2canvas",
+  "node_modules\\jspdf\\dist\\jspdf.es.min.js -> html2canvas": {
+    "id": 24457,
     "files": [
-      "static/chunks/_app-pages-browser_node_modules_pnpm_html2canvas_1_4_1_node_modules_html2canvas_dist_html2canvas_js.js"
+      "static/chunks/ad2866b8.d16d5df33d15d005.js"
     ]
   }
 }
