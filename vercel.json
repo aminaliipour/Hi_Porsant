@@ -7,8 +7,5 @@
   "buildCommand": "pnpm run build",
   "outputDirectory": ".next",
   "framework": "nextjs",
-  "regions": ["fra1"],
-  "env": {
-    "MONGODB_URI": "@mongodb_uri"
-  }
+  "regions": ["fra1"]
 }
