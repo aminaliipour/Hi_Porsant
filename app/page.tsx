@@ -19,7 +19,6 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState(tabParam || "projects")
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
 
-  // تغییر تب و ثبت در query string
   const handleTabChange = (tab: string) => {
     setActiveTab(tab)
     const params = new URLSearchParams(Array.from(searchParams.entries()))
