@@ -1,4 +1,6 @@
-import React from "react"
+"use client"
+
+import React, { useState, useEffect } from "react"
 import { Button } from "./ui/button"
 
 interface CommissionAssignment {
@@ -33,16 +35,36 @@ export const CommissionInvoicePdf: React.FC<CommissionInvoicePdfProps> = ({
   deductions = 0,
   onComplete,
 }) => {
+  const [isClient, setIsClient] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
   const handleDownloadPdf = async () => {
+    if (!isClient) return
+    
+    setIsLoading(true)
     try {
-      // استفاده از html2canvas و jsPDF برای تولید PDF از HTML
-      const html2canvas = (await import("html2canvas")).default
-      const jsPDF = (await import("jspdf")).default
+      // Dynamic import with better error handling
+      const [html2canvasModule, jsPDFModule] = await Promise.all([
+        import("html2canvas"),
+        import("jspdf")
+      ])
+
+      const html2canvas = html2canvasModule.default
+      const jsPDF = jsPDFModule.default
+
+      // بررسی بارگیری کتابخانه‌ها
+      if (!html2canvas || !jsPDF) {
+        throw new Error('Failed to load PDF libraries')
+      }
 
       // ایجاد HTML برای تبدیل به PDF
       const htmlContent = createPdfHtml()
       
-      // ایجاد یک div موقت در DOM
+      // ایجاد div موقت در DOM
       const tempDiv = document.createElement('div')
       tempDiv.innerHTML = htmlContent
       tempDiv.style.position = 'absolute'
@@ -99,6 +121,8 @@ export const CommissionInvoicePdf: React.FC<CommissionInvoicePdfProps> = ({
     } catch (error) {
       console.error("خطا در تولید PDF:", error)
       alert("خطا در تولید PDF. لطفاً دوباره تلاش کنید.")
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -228,16 +252,31 @@ export const CommissionInvoicePdf: React.FC<CommissionInvoicePdfProps> = ({
     `
   }
 
+  // فقط در محیط browser نمایش داده شود
+  if (!isClient) {
+    return null
+  }
+
   return (
     <Button 
       onClick={handleDownloadPdf} 
       variant="outline"
       className="bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200"
+      disabled={isLoading}
     >
-      <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-      </svg>
-      دریافت فیش حقوقی
+      {isLoading ? (
+        <>
+          <div className="w-4 h-4 ml-2 animate-spin rounded-full border-2 border-blue-700 border-t-transparent"></div>
+          در حال تولید...
+        </>
+      ) : (
+        <>
+          <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          دریافت فیش حقوقی
+        </>
+      )}
     </Button>
   )
 }
