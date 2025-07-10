@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import dbConnect from "@/lib/db"
-import { Project, ProjectSection, ProjectIncome, PurchaseDetails, CollaborationDetails, SaleDetails, DesignDetails, ContractingDetails, ConsultationDetails, SectionWeights, SystemPercentages } from "@/lib/models"
+import { Project, ProjectSection, ProjectIncome, PurchaseDetails, CollaborationDetails, SaleDetails, DesignDetails, ContractingDetails, ConsultationDetails, SectionWeights, SystemPercentages, UserCommission } from "@/lib/models"
 
 export async function GET(
   request: Request,
@@ -102,7 +102,7 @@ export async function GET(
         // تعیین همه فیلدها و فیلدهای فعال
         const allFields = Object.keys(detailsObj)
         const activeFields = allFields.filter(field => 
-          !detailsObj[field] || detailsObj[field].isActive !== false
+          !(detailsObj as any)[field] || (detailsObj as any)[field].isActive !== false
         )
 
         // محاسبه وزن‌های بازتوزیع شده
@@ -118,14 +118,14 @@ export async function GET(
 
           if (assignedMemberId === memberId) {
             // بررسی وضعیت فعال/غیرفعال از details
-            const fieldDetails = detailsObj[field]
+            const fieldDetails = (detailsObj as any)[field]
             const isActive = !fieldDetails || fieldDetails.isActive !== false
 
             if (isActive) {
-              const section = sections.find(s => s._id.toString() === detail.sectionId?.toString())
+              const section = sections.find((s: any) => s._id.toString() === detail.sectionId?.toString())
               if (section) {
-                const project = projects.find(p => p._id.toString() === section.projectId.toString())
-                const income = incomes.find(i => i.projectId.toString() === section.projectId.toString())
+                const project = projects.find((p: any) => p._id.toString() === (section as any).projectId.toString())
+                const income = incomes.find((i: any) => i.projectId.toString() === (section as any).projectId.toString())
 
                 if (project && income) {
                   const key = `${name}_${detail.itemName}_${field}`
@@ -159,14 +159,14 @@ export async function GET(
         for (const [field, fieldDetails] of Object.entries(detailsObj)) {
           if (!fieldDetails || typeof fieldDetails !== 'object') continue
 
-          const assignedMemberId = fieldDetails.assignedMemberId?.toString()
-          const isActive = fieldDetails.isActive !== false
+          const assignedMemberId = (fieldDetails as any).assignedMemberId?.toString()
+          const isActive = (fieldDetails as any).isActive !== false
 
           if (assignedMemberId === memberId && isActive) {
-            const section = sections.find(s => s._id.toString() === detail.sectionId?.toString())
+            const section = sections.find((s: any) => s._id.toString() === detail.sectionId?.toString())
             if (section) {
-              const project = projects.find(p => p._id.toString() === section.projectId.toString())
-              const income = incomes.find(i => i.projectId.toString() === section.projectId.toString())
+              const project = projects.find((p: any) => p._id.toString() === (section as any).projectId.toString())
+              const income = incomes.find((i: any) => i.projectId.toString() === (section as any).projectId.toString())
 
               if (project && income) {
                 const key = `${name}_${detail.itemName}_${field}`
@@ -222,8 +222,8 @@ export async function GET(
         // تعیین همه فیلدها و فیلدهای فعال
         const allFields = Object.keys(detailsObj)
         const activeFields = allFields.filter(field => {
-          const fieldDetails = detailsObj[field]
-          return typeof fieldDetails === 'object' && fieldDetails?.isActive !== false
+          const fieldDetails = (detailsObj as any)[field]
+          return typeof fieldDetails === 'object' && (fieldDetails as any)?.isActive !== false
         })
 
         // محاسبه وزن‌های بازتوزیع شده
@@ -235,15 +235,15 @@ export async function GET(
 
           // بررسی ساختار details
           if (typeof fieldDetails === 'object') {
-            assignedMemberId = fieldDetails?.assignedMemberId?.toString()
-            isActive = fieldDetails?.isActive !== false
+            assignedMemberId = (fieldDetails as any)?.assignedMemberId?.toString()
+            isActive = (fieldDetails as any)?.isActive !== false
           }
           
           if (assignedMemberId === memberId && isActive) {
-            const section = sections.find(s => s._id.toString() === detail.sectionId?.toString())
+            const section = sections.find((s: any) => s._id.toString() === detail.sectionId?.toString())
             if (section) {
-              const project = projects.find(p => p._id.toString() === section.projectId.toString())
-              const income = incomes.find(i => i.projectId.toString() === section.projectId.toString())
+              const project = projects.find((p: any) => p._id.toString() === (section as any).projectId.toString())
+              const income = incomes.find((i: any) => i.projectId.toString() === (section as any).projectId.toString())
 
               if (project && income) {
                 const key = `${name}_${field}`
@@ -274,7 +274,28 @@ export async function GET(
       }
     }
 
-    return NextResponse.json(commissions)
+    // دریافت حالت‌های ذخیره شده از UserCommission
+    const savedCommissions = await UserCommission.find({
+      userId: memberId,
+      ...(archiveId && { archiveId })
+    }).lean()
+
+    // اضافه کردن حالت isActive به هر commission
+    const commissionsWithStatus = commissions.map(commission => {
+      const savedCommission = savedCommissions.find(saved => 
+        saved.projectId.toString() === (commission as any).projectId.toString() &&
+        saved.sectionName === (commission as any).sectionName &&
+        saved.fieldName === (commission as any).fieldName &&
+        ((commission as any).itemName ? saved.itemName === (commission as any).itemName : !saved.itemName)
+      )
+      
+      return {
+        ...commission,
+        isActive: savedCommission ? savedCommission.isActive : true // پیش‌فرض فعال
+      }
+    })
+
+    return NextResponse.json(commissionsWithStatus)
   } catch (error) {
     console.error("Error fetching user commissions:", error)
     return NextResponse.json(

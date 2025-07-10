@@ -33,6 +33,7 @@ interface Commission {
   weight: number
   systemPercent: number
   commission: number
+  isActive: boolean // وضعیت فعال/غیرفعال
 }
 
 interface GroupedSection {
@@ -44,6 +45,7 @@ interface GroupedSection {
     weight: number
     systemPercent: number
     commission: number
+    isActive: boolean // وضعیت فعال/غیرفعال
   }>
 }
 
@@ -123,7 +125,8 @@ export function UserCommissionDialog({ member, open, onOpenChange }: UserCommiss
         income: commission.income,
         weight: commission.weight,
         systemPercent: commission.systemPercent,
-        commission: commission.commission
+        commission: commission.commission,
+        isActive: commission.isActive !== false // پیش‌فرض فعال
       }
 
       // اضافه کردن تسک فقط اگر پورسانت یا وزن بیشتر از صفر باشد
@@ -136,7 +139,10 @@ export function UserCommissionDialog({ member, open, onOpenChange }: UserCommiss
   }
 
   const groupedCommissions = groupCommissionsByProject(commissions)
-  const totalCommission = commissions.reduce((sum, c) => sum + c.commission, 0)
+  const totalCommission = commissions.reduce((sum, c) => {
+    // فقط پورسانت‌های فعال را محاسبه کن
+    return c.isActive !== false ? sum + c.commission : sum
+  }, 0)
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

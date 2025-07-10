@@ -1,17 +1,8 @@
 import type React from "react"
 import "./globals.css"
-import { Vazirmatn } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
 import type { Metadata } from "next"
-
-// بهبود تنظیمات فونت وزیر
-const vazirmatn = Vazirmatn({
-  subsets: ["arabic"],
-  variable: "--font-vazirmatn",
-  weight: ["100", "300", "400", "500", "700", "900"],
-  display: "swap",
-})
 
 export const metadata: Metadata = {
   title: "HiPorsant - سیستم مدیریت پروژه",
@@ -29,8 +20,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="fa" dir="rtl" className={vazirmatn.variable}>
-      <body className="min-h-screen bg-background font-sans antialiased">
+    <html lang="fa" dir="rtl">
+      <body className="min-h-screen bg-background font-[Morabba] antialiased">
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           {children}
           <Toaster />
@@ -39,6 +30,3 @@ export default function RootLayout({
     </html>
   )
 }
-
-
-import './globals.css'

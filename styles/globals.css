@@ -2,8 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Morabba';
+  src: url('/fonts/Morabba.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Morabba', Arial, Helvetica, sans-serif;
 }
 
 @layer utilities {

@@ -29,12 +29,15 @@ interface ProjectIncome {
   _id: string
   projectId: string
   totalIncome: number
+  totalRawIncome?: number
+  totalSystemShare?: number
   purchaseProfit?: number
   collaborationProfit?: number
   salesProfit?: number
   designProfit?: number
   contractingProfit?: number
   consultationProfit?: number
+  details?: any
 }
 
 interface SystemExpenses {
@@ -103,6 +106,15 @@ export default function SystemTab() {
         throw new Error("دریافت اطلاعات درآمد پروژه‌ها با خطا مواجه شد")
       }
       setProjectIncomes(incomesData)
+      
+      // لاگ برای دیباگ
+      console.log("Project incomes received:", incomesData.map(income => ({
+        id: income._id,
+        totalIncome: income.totalIncome,
+        totalRawIncome: income.totalRawIncome,
+        totalSystemShare: income.totalSystemShare,
+        details: income.details?._rawTotals ? "Has rawTotals" : "No rawTotals"
+      })))
 
       // دریافت درصدهای سیستم
       const percentagesResponse = await fetch("/api/system-percentages")
@@ -148,7 +160,9 @@ export default function SystemTab() {
       }
 
       // دریافت هزینه‌های سیستم
-      const expensesResponse = await fetch("/api/system-expenses")
+      let expensesUrl = "/api/system-expenses"
+      if (archiveId) expensesUrl += `?archiveId=${archiveId}`
+      const expensesResponse = await fetch(expensesUrl)
       const expensesData = await expensesResponse.json()
       if (expensesData && expensesData.length > 0) {
         setExpenses(expensesData[0])
@@ -185,33 +199,60 @@ export default function SystemTab() {
   }
 
   const handleExpenseChange = (key: keyof SystemExpenses, value: string) => {
+    // حذف کاما و فقط نگه داشتن اعداد
+    const cleanValue = value.replace(/,/g, '').replace(/[^\d]/g, '')
+    const numericValue = cleanValue === '' ? 0 : parseInt(cleanValue, 10)
+    
     setExpenses({
       ...expenses,
-      [key]: Number.parseInt(value) || 0,
+      [key]: numericValue,
     })
   }
 
   const saveExpenses = async () => {
     try {
-      await fetch("/api/system-expenses", {
+      // دریافت آرشیو فعال از localStorage
+      const stored = localStorage.getItem("activeArchive")
+      let archiveId = ""
+      if (stored) {
+        try {
+          archiveId = JSON.parse(stored)._id
+        } catch {}
+      }
+
+      // حذف _id از داده‌ها برای ارسال
+      const { _id, ...expenseData } = expenses
+
+      const response = await fetch("/api/system-expenses", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          ...expenses,
+          ...expenseData,
+          archiveId: archiveId,
           date: new Date().toISOString().split("T")[0],
         }),
       })
+
+      if (!response.ok) {
+        const error = await response.text()
+        console.error("Save expenses error:", error)
+        throw new Error(`HTTP ${response.status}: ${error}`)
+      }
 
       toast({
         title: "موفق",
         description: "هزینه‌های سیستم با موفقیت ذخیره شد",
       })
+
+      // بازخوانی داده‌ها پس از ذخیره موفق
+      fetchData(archiveId)
     } catch (error) {
+      console.error("Error saving expenses:", error)
       toast({
         title: "خطا",
-        description: "خطا در ذخیره هزینه‌های سیستم",
+        description: `خطا در ذخیره هزینه‌های سیستم: ${error instanceof Error ? error.message : 'خطای ناشناخته'}`,
         variant: "destructive",
       })
     }
@@ -228,14 +269,52 @@ export default function SystemTab() {
   }
 
   const getTotalIncome = () => {
-    return projectIncomes.reduce((sum, income) => sum + income.totalIncome, 0)
+    // درآمد = مجموع مقادیر خام (قبل از کسر درصد سیستم)
+    return projectIncomes.reduce((sum, income) => {
+      // اگر totalRawIncome موجود است، از آن استفاده کن
+      if (income.totalRawIncome) {
+        return sum + income.totalRawIncome
+      }
+      
+      // وگرنه از details._rawTotals استفاده کن
+      if (income.details && income.details._rawTotals) {
+        const rawTotals = income.details._rawTotals
+        return sum + (
+          (rawTotals.rawPurchaseProfit || 0) +
+          (rawTotals.rawDesignProfit || 0) +
+          (rawTotals.rawCollaborationProfit || 0) +
+          (rawTotals.rawContractingProfit || 0) +
+          (rawTotals.rawSalesProfit || 0) +
+          (rawTotals.rawConsultationProfit || 0)
+        )
+      }
+      
+      // در آخر از totalIncome استفاده کن
+      return sum + (income.totalIncome || 0)
+    }, 0)
   }
 
   const getTotalSystemShare = () => {
-    return Object.values(systemShares).reduce((sum, share) => sum + share, 0)
+    // سهم سیستم = مجموع سهم‌های سیستم محاسبه شده
+    return projectIncomes.reduce((sum, income) => {
+      // اگر totalSystemShare موجود است، از آن استفاده کن
+      if (income.totalSystemShare) {
+        return sum + income.totalSystemShare
+      }
+      
+      // وگرنه محاسبه کن: درآمد خام - درآمد نهایی
+      const rawIncome = income.totalRawIncome || 
+        (income.details?._rawTotals ? 
+          Object.values(income.details._rawTotals).reduce((a: number, b: any) => a + (typeof b === 'number' ? b : 0), 0) : 
+          income.totalIncome || 0)
+      const finalIncome = income.totalIncome || 0
+      
+      return sum + (rawIncome - finalIncome)
+    }, 0)
   }
 
   const getFinalIncome = () => {
+    // سهم دفتر = درآمد - سهم سیستم
     return getTotalIncome() - getTotalSystemShare()
   }
 
@@ -259,16 +338,29 @@ export default function SystemTab() {
     return projectIncomes.find(income => income.projectId === projectId)
   }
 
-  const calculateProjectTotalIncome = (income: ProjectIncome) => {
+  const calculateProjectTotalIncome = (income: ProjectIncome | undefined) => {
     if (!income) return 0
-    return (
-      (income.purchaseProfit || 0) +
-      (income.collaborationProfit || 0) +
-      (income.salesProfit || 0) +
-      (income.designProfit || 0) +
-      (income.contractingProfit || 0) +
-      (income.consultationProfit || 0)
-    )
+    
+    // اگر totalRawIncome موجود است، از آن استفاده کن
+    if (income.totalRawIncome) {
+      return income.totalRawIncome
+    }
+    
+    // وگرنه از details._rawTotals استفاده کن
+    if (income.details && income.details._rawTotals) {
+      const rawTotals = income.details._rawTotals
+      return (
+        (rawTotals.rawPurchaseProfit || 0) +
+        (rawTotals.rawDesignProfit || 0) +
+        (rawTotals.rawCollaborationProfit || 0) +
+        (rawTotals.rawContractingProfit || 0) +
+        (rawTotals.rawSalesProfit || 0) +
+        (rawTotals.rawConsultationProfit || 0)
+      )
+    }
+    
+    // در آخر از totalIncome استفاده کن
+    return income.totalIncome || 0
   }
 
   if (loading) {
@@ -290,11 +382,15 @@ export default function SystemTab() {
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <span className="text-muted-foreground">مجموع درآمد:</span>
-                <span className="font-medium tabular-nums">{getTotalIncome().toLocaleString()} ریال</span>
+                <span className="font-medium tabular-nums">{formatNumber(Math.round(getTotalIncome()))} ریال</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-muted-foreground">سهم سیستم:</span>
-                <span className="font-medium tabular-nums">{getTotalSystemShare().toLocaleString()} ریال</span>
+                <span className="font-medium tabular-nums">{formatNumber(Math.round(getTotalSystemShare()))} ریال</span>
+              </div>
+              <div className="flex justify-between items-center border-t pt-2">
+                <span className="text-muted-foreground font-semibold">سهم دفتر:</span>
+                <span className="font-bold text-green-600 tabular-nums">{formatNumber(Math.round(getFinalIncome()))} ریال</span>
               </div>
             </div>
 
@@ -315,7 +411,7 @@ export default function SystemTab() {
                             <div className="text-xs text-muted-foreground">
                               {income && (
                                 <span className="mr-2">
-                                  درآمد: {income.totalIncome.toLocaleString()} ریال
+                                  درآمد: {formatNumber(calculateProjectTotalIncome(income))} ریال
                                 </span>
                               )}
                             </div>
@@ -364,7 +460,7 @@ export default function SystemTab() {
                       return validLabels.includes(key)
                     })
                     .map(([key, value]) => {
-                      const label = {
+                      const labels: Record<string, string> = {
                         staffSalary: "حقوق پرسنل",
                         officeCosts: "هزینه‌های جاری دفتر",
                         maintenanceCosts: "تعمیرات و بازسازی",
@@ -374,15 +470,16 @@ export default function SystemTab() {
                         digitalDevelopment: "توسعه دیجیتال",
                         paperworkCosts: "اسناد کاغذی",
                         eventCosts: "نمایشگاه‌ها"
-                      }[key as keyof SystemExpenses]
+                      }
+                      const label = labels[key]
 
                       return (
                         <div key={key} className="grid grid-cols-3 gap-3 items-center bg-muted/30 p-2 rounded-lg">
                           <label className="col-span-2 text-sm">{label}</label>
                           <Input
-                            type="number"
+                            type="text"
                             className="text-left dir-ltr h-8 text-sm"
-                            value={value as number}
+                            value={formatNumber(value as number)}
                             onChange={(e) => handleExpenseChange(key as keyof SystemExpenses, e.target.value)}
                           />
                         </div>
@@ -392,7 +489,7 @@ export default function SystemTab() {
                   <div className="mt-4 pt-3 border-t">
                     <div className="flex justify-between items-center text-lg font-medium text-primary/80">
                       <span>جمع کل هزینه‌ها:</span>
-                      <span className="tabular-nums">{getTotalExpenses().toLocaleString()} ریال</span>
+                      <span className="tabular-nums">{formatNumber(getTotalExpenses())} ریال</span>
                     </div>
                   </div>
                 </div>

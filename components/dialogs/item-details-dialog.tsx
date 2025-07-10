@@ -145,6 +145,22 @@ export function ItemDetailsDialog({ section, item, open, onOpenChange }: ItemDet
     setSelectedMembers(newSelectedMembers)
   }
 
+  const handleToggleAllFields = (activate: boolean) => {
+    const newActiveFields: Record<string, boolean> = {}
+    const fields = getFieldsForSection(section.sectionName)
+    
+    fields.forEach(field => {
+      newActiveFields[field] = activate
+    })
+    
+    setActiveFields(newActiveFields)
+
+    // اگر همه فیلدها غیرفعال شدند، همه اعضای انتخاب شده را هم حذف کن
+    if (!activate) {
+      setSelectedMembers({})
+    }
+  }
+
   const handleRemoveMember = (field: string) => {
     setSelectedMembers(prev => {
       const newMembers = { ...prev }
@@ -266,20 +282,38 @@ export function ItemDetailsDialog({ section, item, open, onOpenChange }: ItemDet
               <Separator />
 
               <div className="space-y-4">
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center border-b pb-2">
                   <h3 className="font-medium">اعضای تیم</h3>
-                  <Select onValueChange={handleAllFieldsMemberChange}>
-                    <SelectTrigger className="w-[200px]">
-                      <SelectValue placeholder="انتخاب عضو برای همه" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {members.map((member) => (
-                        <SelectItem key={member._id} value={member._id}>
-                          {member.fullName} ({member.position})
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <div className="flex items-center gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleToggleAllFields(true)}
+                      className="text-green-600 border-green-300 hover:bg-green-50"
+                    >
+                      فعال کردن همه
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleToggleAllFields(false)}
+                      className="text-red-600 border-red-300 hover:bg-red-50"
+                    >
+                      غیرفعال کردن همه
+                    </Button>
+                    <Select onValueChange={handleAllFieldsMemberChange}>
+                      <SelectTrigger className="w-[200px]">
+                        <SelectValue placeholder="انتخاب عضو برای همه" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {members.map((member) => (
+                          <SelectItem key={member._id} value={member._id}>
+                            {member.fullName} ({member.position})
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
 
                 {getFieldsForSection(section.sectionName).map((field) => (

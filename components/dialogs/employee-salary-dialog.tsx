@@ -11,6 +11,7 @@ import { Separator } from "@/components/ui/separator"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { NumberInput } from "@/components/number-input"
 import { CommissionInvoicePdf } from "@/components/CommissionInvoicePdf"
+import { Switch } from "@/components/ui/switch"
 
 interface TeamMember {
   _id: string
@@ -27,6 +28,7 @@ interface UserAssignment {
   income: number
   weight: number
   systemPercent: number
+  isActive: boolean // وضعیت فعال/غیرفعال
 }
 
 interface EmployeeSalaryDialogProps {
@@ -44,6 +46,7 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
   })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [commissionStates, setCommissionStates] = useState<Record<string, boolean>>({}) // state برای toggle ها
   const { toast } = useToast()
 
   useEffect(() => {
@@ -74,8 +77,17 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
       const commissionsData = await commissionsResponse.json()
       if (Array.isArray(commissionsData)) {
         setAssignments(commissionsData)
+        
+        // تنظیم state های toggle ها
+        const states: Record<string, boolean> = {}
+        commissionsData.forEach((assignment: UserAssignment, index: number) => {
+          const key = `${assignment.projectName}_${assignment.sectionName}_${assignment.itemName || ""}_${assignment.fieldName}_${index}`
+          states[key] = assignment.isActive ?? true // اگر isActive تعریف نشده، پیش‌فرض true
+        })
+        setCommissionStates(states)
       } else {
         setAssignments([])
+        setCommissionStates({})
       }
 
       // دریافت اطلاعات حقوق فقط برای آرشیو فعال
@@ -119,8 +131,24 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
     }))
   }
 
+  const handleCommissionToggle = (key: string, index: number) => {
+    const newState = !commissionStates[key]
+    setCommissionStates(prev => ({
+      ...prev,
+      [key]: newState
+    }))
+
+    // به‌روزرسانی assignment
+    setAssignments(prev => prev.map((assignment, i) => 
+      i === index ? { ...assignment, isActive: newState } : assignment
+    ))
+  }
+
   const getTotalCommission = () => {
-    return assignments.reduce((sum, assignment) => sum + assignment.commission, 0)
+    return assignments.reduce((sum, assignment) => {
+      // فقط پورسانت‌های فعال را محاسبه کن
+      return assignment.isActive !== false ? sum + assignment.commission : sum
+    }, 0)
   }
 
   const getTotalPayment = () => {
@@ -143,6 +171,7 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
       return
     }
     try {
+      // ذخیره حقوق پایه
       const response = await fetch("/api/employee-salaries", {
         method: "POST",
         headers: {
@@ -159,6 +188,29 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
 
       if (!response.ok) {
         throw new Error("خطا در ذخیره اطلاعات حقوق")
+      }
+
+      // ذخیره حالت toggle های پورسانت‌ها
+      const commissionStatesResponse = await fetch("/api/user-commissions/update-status", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          employeeId: employee._id,
+          archiveId,
+          commissionStates: assignments.map((assignment, index) => ({
+            projectName: assignment.projectName,
+            sectionName: assignment.sectionName,
+            itemName: assignment.itemName || "",
+            fieldName: assignment.fieldName,
+            isActive: assignment.isActive !== false
+          }))
+        }),
+      })
+
+      if (!commissionStatesResponse.ok) {
+        console.warn("خطا در ذخیره حالت پورسانت‌ها")
       }
 
       toast({
@@ -248,27 +300,47 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
-                      {assignments.map((assignment, index) => (
-                        <div key={index} className="flex justify-between items-center border-b pb-2">
-                          <div>
-                            <p className="font-medium">{assignment.projectName}</p>
-                            <p className="text-sm text-gray-500">
-                              {assignment.sectionName} {assignment.itemName && `- ${assignment.itemName}`}
-                            </p>
-                            <p className="text-sm text-gray-500">
-                              درآمد: {new Intl.NumberFormat('fa-IR').format(assignment.income)} ریال
-                            </p>
-                            <p className="text-sm text-gray-500">
-                              پورسانت: {assignment.weight}% | سهم سیستم: {assignment.systemPercent}% | سهم نهایی: {(assignment.weight * (100 - assignment.systemPercent) / 100).toFixed(2)}%
-                            </p>
+                      {assignments.map((assignment, index) => {
+                        const key = `${assignment.projectName}_${assignment.sectionName}_${assignment.itemName || ""}_${assignment.fieldName}_${index}`
+                        const isActive = assignment.isActive !== false
+                        
+                        return (
+                          <div key={index} className="border rounded-lg p-4 space-y-3">
+                            <div className="flex justify-between items-start">
+                              <div className="flex-1">
+                                <p className="font-medium">{assignment.projectName}</p>
+                                <p className="text-sm text-gray-500">
+                                  {assignment.sectionName} {assignment.itemName && `- ${assignment.itemName}`}
+                                </p>
+                                <p className="text-sm text-gray-500">
+                                  درآمد: {new Intl.NumberFormat('fa-IR').format(assignment.income)} ریال
+                                </p>
+                                <p className="text-sm text-gray-500">
+                                  پورسانت: {assignment.weight}% | سهم سیستم: {assignment.systemPercent}% | سهم نهایی: {(assignment.weight * (100 - assignment.systemPercent) / 100).toFixed(2)}%
+                                </p>
+                              </div>
+                              <div className="text-left">
+                                <p className={`font-medium ${isActive ? 'text-green-600' : 'text-gray-400'}`}>
+                                  {isActive 
+                                    ? new Intl.NumberFormat('fa-IR').format(assignment.commission) 
+                                    : '0'
+                                  } ریال
+                                </p>
+                              </div>
+                            </div>
+                            
+                            <div className="flex justify-between items-center pt-2 border-t">
+                              <span className="text-sm font-medium">وضعیت محاسبه:</span>
+                              <Switch
+                                checked={isActive}
+                                onCheckedChange={() => handleCommissionToggle(key, index)}
+                                label={isActive ? "فعال" : "غیرفعال"}
+                                size="small"
+                              />
+                            </div>
                           </div>
-                          <div className="text-left">
-                            <p className="font-medium text-green-600">
-                              {new Intl.NumberFormat('fa-IR').format(assignment.commission)} ریال
-                            </p>
-                          </div>
-                        </div>
-                      ))}
+                        )
+                      })}
                     </div>
                   </CardContent>
                 </Card>
@@ -282,7 +354,7 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
           <CommissionInvoicePdf
             fullName={employee.fullName}
             position={employee.position}
-            assignments={assignments}
+            assignments={assignments.filter(assignment => assignment.isActive !== false)} // فقط پورسانت‌های فعال
             totalCommission={getTotalCommission()}
             baseSalary={salary.baseSalary}
             additions={salary.additions}

@@ -152,6 +152,7 @@ export function SectionDetailsDialog({ section, open, onOpenChange }: SectionDet
     setDetails(newDetails)
 
     try {
+      const endpoint = getEndpointForSection(section.sectionName)
       const response = await fetch(`/api/${endpoint}/update-field-status`, {
         method: 'POST',
         headers: {
@@ -167,9 +168,6 @@ export function SectionDetailsDialog({ section, open, onOpenChange }: SectionDet
       if (!response.ok) {
         throw new Error('خطا در به‌روزرسانی وضعیت فیلد')
       }
-
-      // در صورت موفقیت، onSave را فراخوانی کن تا صفحه والد به‌روز شود
-      if (onSave) onSave()
 
       toast({
         title: "موفق",
@@ -218,6 +216,52 @@ export function SectionDetailsDialog({ section, open, onOpenChange }: SectionDet
       }
     })
     setSelectedMembers(newSelectedMembers)
+  }
+
+  const handleToggleAllFields = async (activate: boolean) => {
+    const newActiveFields: Record<string, boolean> = {}
+    const fields = getFieldsForSection(section.sectionName)
+    
+    fields.forEach(field => {
+      newActiveFields[field] = activate
+    })
+    
+    setActiveFields(newActiveFields)
+
+    // اگر همه فیلدها غیرفعال شدند، همه اعضای انتخاب شده را هم حذف کن
+    if (!activate) {
+      setSelectedMembers({})
+    }
+
+    // به‌روزرسانی وضعیت همه فیلدها در سرور
+    try {
+      const endpoint = getEndpointForSection(section.sectionName)
+      await Promise.all(fields.map(field => 
+        fetch(`/api/${endpoint}/update-field-status`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            sectionId: section._id,
+            field,
+            isActive: activate
+          }),
+        })
+      ))
+
+      toast({
+        title: "موفق",
+        description: `همه فیلدها ${activate ? 'فعال' : 'غیرفعال'} شدند`,
+      })
+    } catch (error) {
+      console.error('Error updating all fields status:', error)
+      toast({
+        title: "خطا",
+        description: "خطا در به‌روزرسانی وضعیت فیلدها",
+        variant: "destructive",
+      })
+    }
   }
 
   const saveChanges = async () => {
@@ -286,7 +330,7 @@ export function SectionDetailsDialog({ section, open, onOpenChange }: SectionDet
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="max-w-4xl max-h-[90vh] flex flex-col">
         <DialogHeader>
           <DialogTitle>جزئیات بخش {section.sectionName}</DialogTitle>
         </DialogHeader>
@@ -296,66 +340,86 @@ export function SectionDetailsDialog({ section, open, onOpenChange }: SectionDet
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
           </div>
         ) : (
-          <ScrollArea className="h-[400px] pr-4">
-            <div className="space-y-4">
-              <div className="flex justify-between items-center pb-2">
-                <h3 className="font-medium">جزئیات</h3>
-                <Select onValueChange={handleAllFieldsMemberChange}>
-                  <SelectTrigger className="w-[200px]">
-                    <SelectValue placeholder="انتخاب عضو برای همه" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {members.map((member) => (
-                      <SelectItem key={member._id} value={member._id}>
-                        {member.fullName}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+          <div className="flex flex-col min-h-0">
+            <ScrollArea className="h-[300px] pr-4">
+              <div className="space-y-4">
+                <div className="flex justify-between items-center pb-2 border-b">
+                  <h3 className="font-medium">جزئیات</h3>
+                  <div className="flex items-center gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleToggleAllFields(true)}
+                      className="text-green-600 border-green-300 hover:bg-green-50"
+                    >
+                      فعال کردن همه
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleToggleAllFields(false)}
+                      className="text-red-600 border-red-300 hover:bg-red-50"
+                    >
+                      غیرفعال کردن همه
+                    </Button>
+                    <Select onValueChange={handleAllFieldsMemberChange}>
+                      <SelectTrigger className="w-[200px]">
+                        <SelectValue placeholder="انتخاب عضو برای همه" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {members.map((member) => (
+                          <SelectItem key={member._id} value={member._id}>
+                            {member.fullName}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
 
-              {getFieldsForSection(section.sectionName).map((field) => (
-                <Card key={field}>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-base">{field}</CardTitle>
-                    <Switch
-                      checked={activeFields[field] ?? true}
-                      onCheckedChange={() => toggleFieldActive(field)}
-                    />
-                  </CardHeader>
-                  <CardContent>
-                    {activeFields[field] && (
-                      <>
-                        {selectedMembers[field] ? (
-                          <div className="flex items-center justify-between">
-                            <div>
-                              عضو انتخاب شده: {members.find((m) => m._id === selectedMembers[field])?.fullName || "نامشخص"}
+                {getFieldsForSection(section.sectionName).map((field) => (
+                  <Card key={field}>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-base">{field}</CardTitle>
+                      <Switch
+                        checked={activeFields[field] ?? true}
+                        onCheckedChange={() => toggleFieldActive(field)}
+                      />
+                    </CardHeader>
+                    <CardContent>
+                      {activeFields[field] && (
+                        <>
+                          {selectedMembers[field] ? (
+                            <div className="flex items-center justify-between">
+                              <div>
+                                عضو انتخاب شده: {members.find((m) => m._id === selectedMembers[field])?.fullName || "نامشخص"}
+                              </div>
+                              <Button variant="ghost" size="icon" onClick={() => handleRemoveMember(field)}>
+                                <X className="h-4 w-4" />
+                              </Button>
                             </div>
-                            <Button variant="ghost" size="icon" onClick={() => handleRemoveMember(field)}>
-                              <X className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        ) : (
-                          <Select onValueChange={(value) => handleMemberChange(field, value)}>
-                            <SelectTrigger>
-                              <SelectValue placeholder="انتخاب عضو" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {members.map((member) => (
-                                <SelectItem key={member._id} value={member._id}>
-                                  {member.fullName}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        )}
-                      </>
-                    )}
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </ScrollArea>
+                          ) : (
+                            <Select onValueChange={(value) => handleMemberChange(field, value)}>
+                              <SelectTrigger>
+                                <SelectValue placeholder="انتخاب عضو" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {members.map((member) => (
+                                  <SelectItem key={member._id} value={member._id}>
+                                    {member.fullName}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          )}
+                        </>
+                      )}
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </ScrollArea>
+          </div>
         )}
 
         <DialogFooter>

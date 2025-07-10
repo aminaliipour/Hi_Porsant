@@ -10,16 +10,6 @@ exports.id = "vendor-chunks/next";
 exports.ids = ["vendor-chunks/next"];
 exports.modules = {
 
-/***/ "(rsc)/./node_modules/next/font/google/target.css?{\"path\":\"app\\\\layout.tsx\",\"import\":\"Vazirmatn\",\"arguments\":[{\"subsets\":[\"arabic\"],\"variable\":\"--font-vazirmatn\",\"weight\":[\"100\",\"300\",\"400\",\"500\",\"700\",\"900\"],\"display\":\"swap\"}],\"variableName\":\"vazirmatn\"}":
-/*!****************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/next/font/google/target.css?{"path":"app\\layout.tsx","import":"Vazirmatn","arguments":[{"subsets":["arabic"],"variable":"--font-vazirmatn","weight":["100","300","400","500","700","900"],"display":"swap"}],"variableName":"vazirmatn"} ***!
-  \****************************************************************************************************************************************************************************************************************************************************************/
-/***/ ((module) => {
-
-eval("// Exports\nmodule.exports = {\n\t\"style\": {\"fontFamily\":\"'__Vazirmatn_0fe153', '__Vazirmatn_Fallback_0fe153'\",\"fontStyle\":\"normal\"},\n\t\"className\": \"__className_0fe153\",\n\t\"variable\": \"__variable_0fe153\"\n};\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKHJzYykvLi9ub2RlX21vZHVsZXMvbmV4dC9mb250L2dvb2dsZS90YXJnZXQuY3NzP3tcInBhdGhcIjpcImFwcFxcXFxsYXlvdXQudHN4XCIsXCJpbXBvcnRcIjpcIlZhemlybWF0blwiLFwiYXJndW1lbnRzXCI6W3tcInN1YnNldHNcIjpbXCJhcmFiaWNcIl0sXCJ2YXJpYWJsZVwiOlwiLS1mb250LXZhemlybWF0blwiLFwid2VpZ2h0XCI6W1wiMTAwXCIsXCIzMDBcIixcIjQwMFwiLFwiNTAwXCIsXCI3MDBcIixcIjkwMFwiXSxcImRpc3BsYXlcIjpcInN3YXBcIn1dLFwidmFyaWFibGVOYW1lXCI6XCJ2YXppcm1hdG5cIn0iLCJtYXBwaW5ncyI6IkFBQUE7QUFDQTtBQUNBLFdBQVcsd0ZBQXdGO0FBQ25HO0FBQ0E7QUFDQSIsInNvdXJjZXMiOlsid2VicGFjazovL215LXYwLXByb2plY3QvLi9ub2RlX21vZHVsZXMvbmV4dC9mb250L2dvb2dsZS90YXJnZXQuY3NzPzlhZTYiXSwic291cmNlc0NvbnRlbnQiOlsiLy8gRXhwb3J0c1xubW9kdWxlLmV4cG9ydHMgPSB7XG5cdFwic3R5bGVcIjoge1wiZm9udEZhbWlseVwiOlwiJ19fVmF6aXJtYXRuXzBmZTE1MycsICdfX1ZhemlybWF0bl9GYWxsYmFja18wZmUxNTMnXCIsXCJmb250U3R5bGVcIjpcIm5vcm1hbFwifSxcblx0XCJjbGFzc05hbWVcIjogXCJfX2NsYXNzTmFtZV8wZmUxNTNcIixcblx0XCJ2YXJpYWJsZVwiOiBcIl9fdmFyaWFibGVfMGZlMTUzXCJcbn07XG4iXSwibmFtZXMiOltdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///(rsc)/./node_modules/next/font/google/target.css?{\"path\":\"app\\\\layout.tsx\",\"import\":\"Vazirmatn\",\"arguments\":[{\"subsets\":[\"arabic\"],\"variable\":\"--font-vazirmatn\",\"weight\":[\"100\",\"300\",\"400\",\"500\",\"700\",\"900\"],\"display\":\"swap\"}],\"variableName\":\"vazirmatn\"}\n");
-
-/***/ }),
-
 /***/ "(ssr)/./node_modules/next/dist/api/image.js":
 /*!*********************************************!*\
   !*** ./node_modules/next/dist/api/image.js ***!

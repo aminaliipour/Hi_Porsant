@@ -12,6 +12,7 @@ interface CommissionAssignment {
   weight: number
   systemPercent: number
   fieldName?: string
+  isActive?: boolean // وضعیت فعال/غیرفعال
 }
 
 interface CommissionInvoicePdfProps {
@@ -70,9 +71,9 @@ export const CommissionInvoicePdf: React.FC<CommissionInvoicePdfProps> = ({
       tempDiv.style.position = 'absolute'
       tempDiv.style.left = '-9999px'
       tempDiv.style.top = '0'
-      tempDiv.style.width = '800px'
+      tempDiv.style.width = '750px'
       tempDiv.style.backgroundColor = 'white'
-      tempDiv.style.fontFamily = 'Vazirmatn, IRANSans, Arial, sans-serif'
+      tempDiv.style.fontFamily = 'Morabba, Arial, sans-serif'
       tempDiv.style.direction = 'rtl'
       document.body.appendChild(tempDiv)
 
@@ -82,7 +83,7 @@ export const CommissionInvoicePdf: React.FC<CommissionInvoicePdfProps> = ({
         useCORS: true,
         allowTaint: true,
         backgroundColor: '#ffffff',
-        width: 800,
+        width: 750,
         height: tempDiv.scrollHeight
       })
 
@@ -133,109 +134,127 @@ export const CommissionInvoicePdf: React.FC<CommissionInvoicePdfProps> = ({
       day: 'numeric'
     })
     
+    // دریافت نام آرشیو فعال
+    let archiveName = ''
+    try {
+      const stored = localStorage.getItem("activeArchive")
+      if (stored) {
+        const activeArchive = JSON.parse(stored)
+        archiveName = activeArchive.name || ''
+      }
+    } catch {}
+    
     const totalPayment = baseSalary + additions + totalCommission - deductions
 
     return `
-      <div style="width: 800px; min-height: 900px; background: white; font-family: Vazirmatn, IRANSans, Arial, sans-serif; font-size: 13px; direction: rtl; padding: 15px; box-sizing: border-box;">
+      <style>
+        @font-face {
+          font-family: 'Morabba';
+          src: url('/fonts/Morabba.ttf') format('truetype');
+          font-weight: normal;
+        }
+        @font-face {
+          font-family: 'Morabba';
+          src: url('/fonts/Morabba Bold.ttf') format('truetype');
+          font-weight: bold;
+        }
+      </style>
+      <div style="width: 750px; min-height: 800px; background: white; font-family: 'Morabba', Arial, sans-serif; font-size: 12px; direction: rtl; padding: 12px; box-sizing: border-box;">
         
         <!-- هدر -->
-        <div style="background: linear-gradient(135deg, #FBCC0A, #FDD835); padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 20px;">
-          <div style="display: flex; align-items: center; justify-content: space-between;">
-            <div style="width: 70px;">
-              <img src="/logo.png" alt="لوگو" style="width: 50px; height: 50px; border-radius: 6px;" />
-            </div>
-            <div style="flex: 1; text-align: center;">
-              <h1 style="color: #58595B; font-size: 22px; margin: 0; font-weight: bold;">فیش حقوق و دستمزد</h1>
-              <h2 style="color: #58595B; font-size: 15px; margin: 3px 0; font-weight: normal;">شرکت Hi Architect</h2>
-              <p style="color: #58595B; font-size: 11px; margin: 0;">سیستم مدیریت پروژه و محاسبه پورسانت</p>
-            </div>
-            <div style="width: 70px;"></div>
+        <div style="background: linear-gradient(135deg, #FBCC0A, #FDD835); padding: 15px; border-radius: 6px; margin-bottom: 15px; position: relative;">
+          <div style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%);">
+            <img src="/factor_logo.png" alt="لوگو" style="width: 255px; height: auto; max-height: 250px; object-fit: contain; border-radius: 4px;" />
+          </div>
+          <div style="text-align: right; padding-right: 12px;">
+            <h1 style="color:rgb(42, 41, 41); font-size: 25px; margin: 0 0 5px 0; font-weight: bold; font-family: 'Morabba', Arial, sans-serif;">فیش حقوق و دستمزد${archiveName ? ` - ${archiveName}` : ''}</h1>
+            <h2 style="color:rgb(42, 42, 42); font-size: 15px; margin: 0; font-weight: normal; font-family: 'Morabba', Arial, sans-serif;">شرکت Hi Architect</h2>
           </div>
         </div>
 
         <!-- اطلاعات کارمند -->
-        <div style="background: #f8f9fa; padding: 15px; border-radius: 6px; margin-bottom: 20px; border-right: 3px solid #FBCC0A;">
+        <div style="background: #f8f9fa; padding: 12px; border-radius: 5px; margin-bottom: 15px; border-right: 3px solid #FBCC0A;">
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <div>
-              <p style="margin: 0; font-size: 15px; font-weight: bold; color: #58595B; display: flex; align-items: center;">
-                نام و نام خانوادگی: <span style="color: #FBCC0A; background: #58595B; padding: 4px 10px; border-radius: 4px; margin-right: 8px; display: inline-block;">${fullName}</span>
+              <p style="margin: 0; font-size: 14px; font-weight: bold; color: #58595B; font-family: 'Morabba', Arial, sans-serif;">
+                نام و نام خانوادگی: <span style="color: #58595B; margin-right: 8px; font-family: 'Morabba', Arial, sans-serif;">${fullName}</span>
               </p>
-              ${position ? `<p style="margin: 8px 0 0 0; font-size: 13px; color: #58595B;">سمت: ${position}</p>` : ''}
+              ${position ? `<p style="margin: 6px 0 0 0; font-size: 12px; color: #58595B; font-family: 'Morabba', Arial, sans-serif;">سمت: ${position}</p>` : ''}
             </div>
-            <div style="text-align: left; color: #58595B; font-size: 11px;">
+            <div style="text-align: left; color: #58595B; font-size: 10px; font-family: 'Morabba', Arial, sans-serif;">
               تاریخ صدور: ${currentDate}
             </div>
           </div>
         </div>
 
         <!-- خلاصه مالی -->
-        <div style="margin-bottom: 20px;">
-          <h3 style="color: #58595B; font-size: 16px; margin-bottom: 12px; border-bottom: 2px solid #FBCC0A; padding-bottom: 3px;">خلاصه مالی</h3>
+        <div style="margin-bottom: 15px;">
+          <h3 style="color: #58595B; font-size: 15px; margin-bottom: 10px; border-bottom: 2px solid #FBCC0A; padding-bottom: 2px; font-family: 'Morabba', Arial, sans-serif;">خلاصه مالی</h3>
           
-          <table style="width: 100%; border-collapse: collapse; margin-bottom: 12px;">
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px; font-family: 'Morabba', Arial, sans-serif;">
             <tr style="background: #FBCC0A;">
-              <td style="padding: 10px; border: 1px solid #58595B; font-weight: bold; text-align: right; color: #58595B;">💰 حقوق پایه (مبلغ ثابت ماهانه)</td>
-              <td style="padding: 10px; border: 1px solid #58595B; text-align: left; color: #58595B; font-weight: bold;">${baseSalary.toLocaleString('fa-IR')} ریال</td>
+              <td style="padding: 8px; border: 1px solid #58595B; font-weight: bold; text-align: center; vertical-align: middle; color: #58595B; font-family: 'Morabba', Arial, sans-serif;">💰 حقوق پایه (مبلغ ثابت ماهانه)</td>
+              <td style="padding: 8px; border: 1px solid #58595B; text-align: center; vertical-align: middle; color: #58595B; font-weight: bold; font-family: 'Morabba', Arial, sans-serif;">${baseSalary.toLocaleString('fa-IR')} ریال</td>
             </tr>
             <tr style="background: white;">
-              <td style="padding: 10px; border: 1px solid #58595B; font-weight: bold; text-align: right; color: #58595B;">➕ اضافات (پاداش و مزایا)</td>
-              <td style="padding: 10px; border: 1px solid #58595B; text-align: left; color: #58595B; font-weight: bold;">${additions.toLocaleString('fa-IR')} ریال</td>
+              <td style="padding: 8px; border: 1px solid #58595B; font-weight: bold; text-align: center; vertical-align: middle; color: #58595B; font-family: 'Morabba', Arial, sans-serif;">➕ اضافات (پاداش و مزایا)</td>
+              <td style="padding: 8px; border: 1px solid #58595B; text-align: center; vertical-align: middle; color: #58595B; font-weight: bold; font-family: 'Morabba', Arial, sans-serif;">${additions.toLocaleString('fa-IR')} ریال</td>
             </tr>
             <tr style="background: #FBCC0A;">
-              <td style="padding: 10px; border: 1px solid #58595B; font-weight: bold; text-align: right; color: #58595B;">🎯 مجموع پورسانت (سهم از پروژه‌ها)</td>
-              <td style="padding: 10px; border: 1px solid #58595B; text-align: left; color: #58595B; font-weight: bold;">${totalCommission.toLocaleString('fa-IR')} ریال</td>
+              <td style="padding: 8px; border: 1px solid #58595B; font-weight: bold; text-align: center; vertical-align: middle; color: #58595B; font-family: 'Morabba', Arial, sans-serif;">🎯 مجموع پورسانت (سهم از پروژه‌ها)</td>
+              <td style="padding: 8px; border: 1px solid #58595B; text-align: center; vertical-align: middle; color: #58595B; font-weight: bold; font-family: 'Morabba', Arial, sans-serif;">${totalCommission.toLocaleString('fa-IR')} ریال</td>
             </tr>
             <tr style="background: white;">
-              <td style="padding: 10px; border: 1px solid #58595B; font-weight: bold; text-align: right; color: #58595B;">➖ کسورات (بیمه، مالیات و سایر)</td>
-              <td style="padding: 10px; border: 1px solid #58595B; text-align: left; color: #58595B; font-weight: bold;">${deductions.toLocaleString('fa-IR')} ریال</td>
+              <td style="padding: 8px; border: 1px solid #58595B; font-weight: bold; text-align: center; vertical-align: middle; color: #58595B; font-family: 'Morabba', Arial, sans-serif;">➖ کسورات (بیمه، مالیات و سایر)</td>
+              <td style="padding: 8px; border: 1px solid #58595B; text-align: center; vertical-align: middle; color: #58595B; font-weight: bold; font-family: 'Morabba', Arial, sans-serif;">${deductions.toLocaleString('fa-IR')} ریال</td>
             </tr>
           </table>
           
-          <div style="background: white; color: #58595B; padding: 12px; border-radius: 6px; text-align: center; border: 2px solid #FBCC0A;">
-            <span style="font-size: 16px; font-weight: bold;">💵 جمع کل دریافتی: ${totalPayment.toLocaleString('fa-IR')} ریال</span>
+          <div style="background: white; color: #58595B; padding: 10px; border-radius: 5px; text-align: center; border: 2px solid #FBCC0A;">
+            <span style="font-size: 15px; font-weight: bold; font-family: 'Morabba', Arial, sans-serif;">💵 جمع کل دریافتی: ${totalPayment.toLocaleString('fa-IR')} ریال</span>
           </div>
         </div>
 
         <!-- جزئیات پورسانت -->
         <div>
-          <h3 style="color: #58595B; font-size: 16px; margin-bottom: 12px; border-bottom: 2px solid #FBCC0A; padding-bottom: 3px;">🏗️ جزئیات محاسبه پورسانت</h3>
+          <h3 style="color: #58595B; font-size: 15px; margin-bottom: 10px; border-bottom: 2px solid #FBCC0A; padding-bottom: 2px; font-family: 'Morabba', Arial, sans-serif;">🏗️ جزئیات محاسبه پورسانت</h3>
           
           ${assignments.length > 0 ? `
-          <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 10px; font-family: 'Morabba', Arial, sans-serif;">
             <thead>
               <tr style="background: #58595B; color: #FBCC0A;">
-                <th style="padding: 8px; border: 1px solid #58595B; text-align: center; font-weight: bold; width: 6%;">ردیف</th>
-                <th style="padding: 8px; border: 1px solid #58595B; text-align: center; font-weight: bold; width: 28%;">نام پروژه</th>
-                <th style="padding: 8px; border: 1px solid #58595B; text-align: center; font-weight: bold; width: 16%;">بخش</th>
-                <th style="padding: 8px; border: 1px solid #58595B; text-align: center; font-weight: bold; width: 20%;">آیتم/فیلد</th>
-                <th style="padding: 8px; border: 1px solid #58595B; text-align: center; font-weight: bold; width: 15%;">درآمد (ریال)</th>
-                <th style="padding: 8px; border: 1px solid #58595B; text-align: center; font-weight: bold; width: 15%;">پورسانت (ریال)</th>
+                <th style="padding: 6px; border: 1px solid #58595B; text-align: center; vertical-align: middle; font-weight: bold; width: 6%; font-family: 'Morabba', Arial, sans-serif;">ردیف</th>
+                <th style="padding: 6px; border: 1px solid #58595B; text-align: center; vertical-align: middle; font-weight: bold; width: 28%; font-family: 'Morabba', Arial, sans-serif;">نام پروژه</th>
+                <th style="padding: 6px; border: 1px solid #58595B; text-align: center; vertical-align: middle; font-weight: bold; width: 16%; font-family: 'Morabba', Arial, sans-serif;">بخش</th>
+                <th style="padding: 6px; border: 1px solid #58595B; text-align: center; vertical-align: middle; font-weight: bold; width: 20%; font-family: 'Morabba', Arial, sans-serif;">آیتم/فیلد</th>
+                <th style="padding: 6px; border: 1px solid #58595B; text-align: center; vertical-align: middle; font-weight: bold; width: 15%; font-family: 'Morabba', Arial, sans-serif;">درآمد (ریال)</th>
+                <th style="padding: 6px; border: 1px solid #58595B; text-align: center; vertical-align: middle; font-weight: bold; width: 15%; font-family: 'Morabba', Arial, sans-serif;">پورسانت (ریال)</th>
               </tr>
             </thead>
             <tbody>
               ${assignments.map((assignment, index) => `
-                <tr style="background: ${index % 2 === 0 ? '#FBCC0A' : 'white'}; color: #58595B;">
-                  <td style="padding: 6px; border: 1px solid #58595B; text-align: center; font-weight: bold;">${(index + 1).toLocaleString('fa-IR')}</td>
-                  <td style="padding: 6px; border: 1px solid #58595B; text-align: right; font-weight: 600;">${assignment.projectName || 'نام پروژه مشخص نیست'}</td>
-                  <td style="padding: 6px; border: 1px solid #58595B; text-align: center; font-weight: 500;">${assignment.sectionName || 'بخش مشخص نیست'}</td>
-                  <td style="padding: 6px; border: 1px solid #58595B; text-align: center;">${assignment.itemName || assignment.fieldName || 'فیلد مشخص نیست'}</td>
-                  <td style="padding: 6px; border: 1px solid #58595B; text-align: left; font-weight: 600;">${assignment.income.toLocaleString('fa-IR')}</td>
-                  <td style="padding: 6px; border: 1px solid #58595B; text-align: left; font-weight: bold;">${assignment.commission.toLocaleString('fa-IR')}</td>
+                <tr style="background: white; color: #58595B;">
+                  <td style="padding: 5px; border: 1px solid #58595B; text-align: center; vertical-align: middle; font-weight: bold; font-family: 'Morabba', Arial, sans-serif;">${(index + 1).toLocaleString('fa-IR')}</td>
+                  <td style="padding: 5px; border: 1px solid #58595B; text-align: center; vertical-align: middle; font-weight: 600; font-family: 'Morabba', Arial, sans-serif;">${assignment.projectName || 'نام پروژه مشخص نیست'}</td>
+                  <td style="padding: 5px; border: 1px solid #58595B; text-align: center; vertical-align: middle; font-weight: 500; font-family: 'Morabba', Arial, sans-serif;">${assignment.sectionName || 'بخش مشخص نیست'}</td>
+                  <td style="padding: 5px; border: 1px solid #58595B; text-align: center; vertical-align: middle; font-family: 'Morabba', Arial, sans-serif;">${assignment.itemName || assignment.fieldName || 'فیلد مشخص نیست'}</td>
+                  <td style="padding: 5px; border: 1px solid #58595B; text-align: center; vertical-align: middle; font-weight: 600; font-family: 'Morabba', Arial, sans-serif;">${assignment.income.toLocaleString('fa-IR')}</td>
+                  <td style="padding: 5px; border: 1px solid #58595B; text-align: center; vertical-align: middle; font-weight: bold; font-family: 'Morabba', Arial, sans-serif;">${assignment.commission.toLocaleString('fa-IR')}</td>
                 </tr>
               `).join('')}
             </tbody>
             <tfoot>
               <tr style="background: white; color: #58595B; border: 2px solid #FBCC0A;">
-                <td colspan="5" style="padding: 10px; border: 1px solid #58595B; text-align: center; font-weight: bold; font-size: 13px;">🎯 مجموع کل پورسانت دریافتی</td>
-                <td style="padding: 10px; border: 1px solid #58595B; text-align: left; font-weight: bold; font-size: 13px;">${totalCommission.toLocaleString('fa-IR')} ریال</td>
+                <td colspan="5" style="padding: 8px; border: 1px solid #58595B; text-align: center; vertical-align: middle; font-weight: bold; font-size: 12px; font-family: 'Morabba', Arial, sans-serif;">🎯 مجموع کل پورسانت دریافتی</td>
+                <td style="padding: 8px; border: 1px solid #58595B; text-align: center; vertical-align: middle; font-weight: bold; font-size: 12px; font-family: 'Morabba', Arial, sans-serif;">${totalCommission.toLocaleString('fa-IR')} ریال</td>
               </tr>
             </tfoot>
           </table>
           ` : `
-          <div style="background: #FBCC0A; padding: 20px; border-radius: 6px; text-align: center; color: #58595B; border: 2px solid #58595B;">
-            <div style="font-size: 40px; margin-bottom: 10px;">📋</div>
-            <h4 style="margin: 0 0 8px 0; font-size: 16px; font-weight: bold;">هیچ پورسانتی ثبت نشده</h4>
-            <p style="margin: 0; font-size: 12px; line-height: 1.4;">
+          <div style="background: #FBCC0A; padding: 15px; border-radius: 5px; text-align: center; color: #58595B; border: 2px solid #58595B;">
+            <div style="font-size: 35px; margin-bottom: 8px;">📋</div>
+            <h4 style="margin: 0 0 6px 0; font-size: 15px; font-weight: bold; font-family: 'Morabba', Arial, sans-serif;">هیچ پورسانتی ثبت نشده</h4>
+            <p style="margin: 0; font-size: 11px; line-height: 1.4; font-family: 'Morabba', Arial, sans-serif;">
               برای این کارمند در دوره جاری هیچ پورسانتی محاسبه و ثبت نشده است.
             </p>
           </div>
@@ -243,10 +262,9 @@ export const CommissionInvoicePdf: React.FC<CommissionInvoicePdfProps> = ({
         </div>
 
         <!-- فوتر -->
-        <div style="margin-top: 25px; padding-top: 15px; border-top: 2px solid #FBCC0A; text-align: center; color: #58595B; font-size: 10px;">
-          <p style="margin: 3px 0;">📄 این فیش به صورت خودکار تولید شده است</p>
-          <p style="margin: 3px 0;">📅 تاریخ تولید: ${new Date().toLocaleString('fa-IR')} | 📋 شماره صفحه: ۱</p>
-          <p style="margin: 3px 0; font-weight: bold; color: #FBCC0A; background: #58595B; padding: 3px 10px; border-radius: 4px; display: inline-block;">🏢 شرکت Hi Architect - سیستم مدیریت پروژه</p>
+        <div style="margin-top: 20px; padding-top: 12px; border-top: 2px solid #FBCC0A; text-align: center; color: #58595B; font-size: 9px; font-family: 'Morabba', Arial, sans-serif;">
+          <p style="margin: 2px 0; font-family: 'Morabba', Arial, sans-serif;">📅 تاریخ تولید: ${new Date().toLocaleString('fa-IR')} | 📋 شماره صفحه: ۱</p>
+          <p style="margin: 2px 0; font-weight: bold; color:rgb(29, 28, 28); background: padding: 2px 8px; border-radius: 3px; display: inline-block; font-family: 'Morabba', Arial, sans-serif;">🏢 شرکت Hi Architect - سیستم مدیریت پروژه</p>
         </div>
       </div>
     `
