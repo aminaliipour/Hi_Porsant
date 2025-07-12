@@ -13,9 +13,27 @@ export async function GET(
     const { searchParams } = new URL(request.url)
     const archiveId = searchParams.get("archiveId")
 
-    // دریافت درصدهای سیستم
-    const systemPercentages = await SystemPercentages.find().sort({ createdAt: -1 }).limit(1)
-    const systemPercent = systemPercentages[0] || {
+    console.time('API Total')
+    console.time('Database Queries')
+
+    // بهینه‌سازی: دریافت موثر داده‌ها با projection
+    const [systemPercentages, weights, projects, sections, incomes] = await Promise.all([
+      SystemPercentages.findOne().sort({ createdAt: -1 }).lean(),
+      SectionWeights.find().lean(),
+      archiveId ? 
+        Project.find({ archiveId }, { _id: 1, name: 1, archiveId: 1 }).lean() : 
+        Project.find({}, { _id: 1, name: 1 }).lean(),
+      archiveId ? 
+        ProjectSection.find({ archiveId }, { _id: 1, projectId: 1, archiveId: 1 }).lean() : 
+        ProjectSection.find({}, { _id: 1, projectId: 1 }).lean(),
+      archiveId ? 
+        ProjectIncome.find({ archiveId }, { projectId: 1, details: 1, archiveId: 1 }).lean() : 
+        ProjectIncome.find({}, { projectId: 1, details: 1 }).lean()
+    ])
+
+    console.timeEnd('Database Queries')
+
+    const systemPercent = systemPercentages || {
       خرید: 0,
       همکاری: 0,
       فروش: 0,
@@ -24,50 +42,80 @@ export async function GET(
       مشاوره: 0
     }
 
-    // دریافت اطلاعات وزن‌های بخش‌ها
-    const weights = await SectionWeights.find().lean()
+    // ایجاد نقشه‌های سریع برای جستجو
+    const projectsMap = new Map(projects.map(p => [p._id.toString(), p]))
+    const sectionsMap = new Map(sections.map(s => [s._id.toString(), s]))
+    const incomesMap = new Map(incomes.map(i => [i.projectId.toString(), i]))
+    const weightsMap = new Map()
+    
+    // گروه‌بندی weights برای دسترسی سریع
+    weights.forEach(w => {
+      const key = `${w.sectionName}_${w.fieldName}`
+      weightsMap.set(key, w.weight)
+    })
+
     const commissions = []
 
-    // دریافت تمام پروژه‌ها و بخش‌ها
-    const projects = archiveId ? await Project.find({ archiveId }).lean() : await Project.find().lean()
-    const sections = archiveId ? await ProjectSection.find({ archiveId }).lean() : await ProjectSection.find().lean()
-    const incomes = archiveId ? await ProjectIncome.find({ archiveId }).lean() : await ProjectIncome.find().lean()
+    console.time('Processing Details')
 
-    // بررسی بخش‌های دارای آیتم
+    // بهینه‌سازی: دریافت تنها details مربوط به کاربر
     const withItemsCollections = [
       { model: PurchaseDetails, name: "خرید", percentField: "خرید" },
       { model: CollaborationDetails, name: "همکاری", percentField: "همکاری" },
       { model: SaleDetails, name: "فروش", percentField: "فروش" }
     ]
 
-    const calculateDistributedWeights = (sectionName: string, itemName: string, allFields: string[], 
-      activeFields: string[], weights: any[]) => {
-      // فیلتر وزن‌های مربوط به بخش
-      const sectionWeights = weights.filter(w => w.sectionName === sectionName && allFields.includes(w.fieldName))
+    // تابع کمکی برای پردازش commission
+    const processCommission = (project, section, income, name, itemName, field, weightValue, systemPercentValue, value) => {
+      if (value > 0 && weightValue > 0) {
+        const commissionAmount = Math.round(value * weightValue / 100)
+        commissions.push({
+          projectId: project._id,
+          projectName: project.name,
+          sectionName: name,
+          itemName: itemName || "",
+          fieldName: field,
+          income: value,
+          weight: weightValue,
+          systemPercent: systemPercentValue,
+          commission: commissionAmount
+        })
+      }
+    }
+
+    // بهینه‌سازی محاسبه وزن‌ها
+    const calculateDistributedWeights = (sectionName: string, allFields: string[], activeFields: string[]) => {
+      const redistributedWeights = new Map()
       
+      if (activeFields.length === 0) {
+        return redistributedWeights
+      }
+
       // محاسبه مجموع وزن‌های فیلدهای فعال
       let activeWeightsSum = 0
+      let totalOriginalWeight = 0
+      
       const activeWeights = new Map()
       
-      for (const field of activeFields) {
-        const weight = sectionWeights.find(w => w.fieldName === field)?.weight || 0
-        activeWeights.set(field, weight)
-        activeWeightsSum += weight
+      for (const field of allFields) {
+        const key = `${sectionName}_${field}`
+        const weight = weightsMap.get(key) || 0
+        totalOriginalWeight += weight
+        
+        if (activeFields.includes(field)) {
+          activeWeights.set(field, weight)
+          activeWeightsSum += weight
+        }
       }
 
-      // اگر هیچ فیلد فعالی نداشتیم یا مجموع وزن‌ها صفر بود
       if (activeWeightsSum === 0) {
-        return new Map(activeFields.map(field => [field, 0]))
+        return redistributedWeights
       }
-
-      // محاسبه مجموع کل وزن‌های اولیه (شامل غیرفعال‌ها)
-      const totalOriginalWeight = sectionWeights.reduce((sum, w) => sum + w.weight, 0)
 
       // محاسبه وزن‌های جدید با حفظ نسبت
-      const redistributedWeights = new Map()
       for (const field of activeFields) {
-        const originalWeight = activeWeights.get(field)
-        const newWeight = originalWeight / activeWeightsSum * totalOriginalWeight
+        const originalWeight = activeWeights.get(field) || 0
+        const newWeight = (originalWeight / activeWeightsSum) * totalOriginalWeight
         redistributedWeights.set(field, newWeight)
       }
 
@@ -106,7 +154,7 @@ export async function GET(
         )
 
         // محاسبه وزن‌های بازتوزیع شده
-        const redistributedWeights = calculateDistributedWeights(name, detail.itemName, allFields, activeFields, weights)
+        const redistributedWeights = calculateDistributedWeights(name, allFields, activeFields)
 
         // بررسی تخصیص از طریق assignedMembers
         for (const [field, assignedId] of Object.entries(assignedMembers)) {
@@ -122,10 +170,10 @@ export async function GET(
             const isActive = !fieldDetails || fieldDetails.isActive !== false
 
             if (isActive) {
-              const section = sections.find((s: any) => s._id.toString() === detail.sectionId?.toString())
+              const section = sectionsMap.get(detail.sectionId?.toString())
               if (section) {
-                const project = projects.find((p: any) => p._id.toString() === (section as any).projectId.toString())
-                const income = incomes.find((i: any) => i.projectId.toString() === (section as any).projectId.toString())
+                const project = projectsMap.get(section.projectId.toString())
+                const income = incomesMap.get(section.projectId.toString())
 
                 if (project && income) {
                   const key = `${name}_${detail.itemName}_${field}`
@@ -133,22 +181,7 @@ export async function GET(
                   const weightValue = redistributedWeights.get(field) || 0
                   const systemPercentValue = systemPercent[percentField as keyof typeof systemPercent] || 0
                   
-                  // محاسبه سهم نهایی
-                  const finalShare = (weightValue * (100 - systemPercentValue)) / 10000
-
-                  if (value > 0 && weightValue > 0) {
-                    commissions.push({
-                      projectId: project._id,
-                      projectName: project.name,
-                      sectionName: name,
-                      itemName: detail.itemName || "",
-                      fieldName: field,
-                      income: value,
-                      weight: weightValue,
-                      systemPercent: systemPercentValue,
-                      commission: Math.round(value * finalShare)
-                    })
-                  }
+                  processCommission(project, section, income, name, detail.itemName, field, weightValue, systemPercentValue, value)
                 }
               }
             }
@@ -163,10 +196,10 @@ export async function GET(
           const isActive = (fieldDetails as any).isActive !== false
 
           if (assignedMemberId === memberId && isActive) {
-            const section = sections.find((s: any) => s._id.toString() === detail.sectionId?.toString())
+            const section = sectionsMap.get(detail.sectionId?.toString())
             if (section) {
-              const project = projects.find((p: any) => p._id.toString() === (section as any).projectId.toString())
-              const income = incomes.find((i: any) => i.projectId.toString() === (section as any).projectId.toString())
+              const project = projectsMap.get(section.projectId.toString())
+              const income = incomesMap.get(section.projectId.toString())
 
               if (project && income) {
                 const key = `${name}_${detail.itemName}_${field}`
@@ -174,22 +207,7 @@ export async function GET(
                 const weightValue = redistributedWeights.get(field) || 0
                 const systemPercentValue = systemPercent[percentField as keyof typeof systemPercent] || 0
                 
-                // محاسبه سهم نهایی
-                const finalShare = (weightValue * (100 - systemPercentValue)) / 10000
-
-                if (value > 0 && weightValue > 0) {
-                  commissions.push({
-                    projectId: project._id,
-                    projectName: project.name,
-                    sectionName: name,
-                    itemName: detail.itemName || "",
-                    fieldName: field,
-                    income: value,
-                    weight: weightValue,
-                    systemPercent: systemPercentValue,
-                    commission: Math.round(value * finalShare)
-                  })
-                }
+                processCommission(project, section, income, name, detail.itemName, field, weightValue, systemPercentValue, value)
               }
             }
           }
@@ -227,7 +245,7 @@ export async function GET(
         })
 
         // محاسبه وزن‌های بازتوزیع شده
-        const redistributedWeights = calculateDistributedWeights(name, "", allFields, activeFields, weights)
+        const redistributedWeights = calculateDistributedWeights(name, allFields, activeFields)
 
         for (const [field, fieldDetails] of Object.entries(detailsObj)) {
           let assignedMemberId = null
@@ -240,10 +258,10 @@ export async function GET(
           }
           
           if (assignedMemberId === memberId && isActive) {
-            const section = sections.find((s: any) => s._id.toString() === detail.sectionId?.toString())
+            const section = sectionsMap.get(detail.sectionId?.toString())
             if (section) {
-              const project = projects.find((p: any) => p._id.toString() === (section as any).projectId.toString())
-              const income = incomes.find((i: any) => i.projectId.toString() === (section as any).projectId.toString())
+              const project = projectsMap.get(section.projectId.toString())
+              const income = incomesMap.get(section.projectId.toString())
 
               if (project && income) {
                 const key = `${name}_${field}`
@@ -251,22 +269,7 @@ export async function GET(
                 const weightValue = redistributedWeights.get(field) || 0
                 const systemPercentValue = systemPercent[percentField as keyof typeof systemPercent] || 0
                 
-                // محاسبه سهم نهایی
-                const finalShare = (weightValue * (100 - systemPercentValue)) / 10000
-
-                if (value > 0 && weightValue > 0) {
-                  commissions.push({
-                    projectId: project._id,
-                    projectName: project.name,
-                    sectionName: name,
-                    itemName: "",
-                    fieldName: field,
-                    income: value,
-                    weight: weightValue,
-                    systemPercent: systemPercentValue,
-                    commission: Math.round(value * finalShare)
-                  })
-                }
+                processCommission(project, section, income, name, "", field, weightValue, systemPercentValue, value)
               }
             }
           }
@@ -274,11 +277,17 @@ export async function GET(
       }
     }
 
+    console.timeEnd('Processing Details')
+    console.time('UserCommission Query')
+
     // دریافت حالت‌های ذخیره شده از UserCommission
     const savedCommissions = await UserCommission.find({
       userId: memberId,
       ...(archiveId && { archiveId })
     }).lean()
+
+    console.timeEnd('UserCommission Query')
+    console.time('Final Processing')
 
     // اضافه کردن حالت isActive به هر commission
     const commissionsWithStatus = commissions.map(commission => {
@@ -294,6 +303,10 @@ export async function GET(
         isActive: savedCommission ? savedCommission.isActive : true // پیش‌فرض فعال
       }
     })
+
+    console.timeEnd('Final Processing')
+    console.timeEnd('API Total')
+    console.log(`Processed ${commissionsWithStatus.length} commissions`)
 
     return NextResponse.json(commissionsWithStatus)
   } catch (error) {

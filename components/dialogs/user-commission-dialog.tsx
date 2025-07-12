@@ -185,7 +185,7 @@ export function UserCommissionDialog({ member, open, onOpenChange }: UserCommiss
                                     درآمد: {new Intl.NumberFormat('fa-IR').format(task.income)} ریال
                                   </p>
                                   <p className="text-sm text-gray-500">
-                                    پورسانت: {task.weight}% | سهم سیستم: {task.systemPercent}% | سهم نهایی: {(task.weight * (100 - task.systemPercent) / 100).toFixed(2)}%
+                                    پورسانت: {task.weight}% | سهم سیستم: {task.systemPercent}%
                                   </p>
                                 </div>
                                 <div className="text-left">

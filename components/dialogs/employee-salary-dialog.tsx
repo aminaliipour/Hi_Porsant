@@ -316,7 +316,7 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
                                   درآمد: {new Intl.NumberFormat('fa-IR').format(assignment.income)} ریال
                                 </p>
                                 <p className="text-sm text-gray-500">
-                                  پورسانت: {assignment.weight}% | سهم سیستم: {assignment.systemPercent}% | سهم نهایی: {(assignment.weight * (100 - assignment.systemPercent) / 100).toFixed(2)}%
+                                  پورسانت: {assignment.weight}% | سهم سیستم: {assignment.systemPercent}%
                                 </p>
                               </div>
                               <div className="text-left">
