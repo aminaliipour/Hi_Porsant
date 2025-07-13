@@ -68,14 +68,19 @@ export async function GET(
     // تابع کمکی برای پردازش commission
     const processCommission = (project, section, income, name, itemName, field, weightValue, systemPercentValue, value) => {
       if (value > 0 && weightValue > 0) {
-        const commissionAmount = Math.round(value * weightValue / 100)
+        // محاسبه مقدار پس از کسر درصد سیستم
+        const valueAfterSystemPercent = Math.round(value * (1 - systemPercentValue / 100))
+        // محاسبه پورسانت از مقدار پس از کسر درصد سیستم
+        const commissionAmount = Math.round(valueAfterSystemPercent * weightValue / 100)
+        
         commissions.push({
           projectId: project._id,
           projectName: project.name,
           sectionName: name,
           itemName: itemName || "",
           fieldName: field,
-          income: value,
+          income: valueAfterSystemPercent, // مقدار پس از کسر درصد سیستم
+          originalIncome: value, // مقدار اصلی قبل از کسر درصد سیستم
           weight: weightValue,
           systemPercent: systemPercentValue,
           commission: commissionAmount

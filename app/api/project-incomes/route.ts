@@ -29,7 +29,15 @@ export async function GET(request: Request) {
       fixedValues: income.fixedValues instanceof Map ? 
         Object.fromEntries(income.fixedValues) : 
         (typeof income.fixedValues === 'function' ? 
-          income.fixedValues.toObject() : income.fixedValues)
+          income.fixedValues.toObject() : income.fixedValues),
+      itemCalculationType: income.itemCalculationType instanceof Map ? 
+        Object.fromEntries(income.itemCalculationType) : 
+        (typeof income.itemCalculationType === 'function' ? 
+          income.itemCalculationType.toObject() : income.itemCalculationType),
+      itemFixedValues: income.itemFixedValues instanceof Map ? 
+        Object.fromEntries(income.itemFixedValues) : 
+        (typeof income.itemFixedValues === 'function' ? 
+          income.itemFixedValues.toObject() : income.itemFixedValues)
     }))
 
     console.log("API returning incomes:", transformedIncomes.map(inc => ({
@@ -55,6 +63,8 @@ export async function POST(request: Request) {
     console.log("API received rawCollaborationProfit:", body.rawCollaborationProfit)
     console.log("API received calculationType:", body.calculationType)
     console.log("API received fixedValues:", body.fixedValues)
+    console.log("API received itemCalculationType:", body.itemCalculationType)
+    console.log("API received itemFixedValues:", body.itemFixedValues)
     
     await dbConnect()
 
@@ -89,12 +99,21 @@ export async function POST(request: Request) {
       console.log("Updating fixedValues:", body.fixedValues)
       console.log("fixedValues type:", typeof body.fixedValues)
       
+      console.log("Updating itemCalculationType:", body.itemCalculationType)
+      console.log("Updating itemFixedValues:", body.itemFixedValues)
+      
       // برای Map ها باید از روش خاصی استفاده کنیم
       if (body.calculationType !== undefined) {
         existingIncome.calculationType = new Map(Object.entries(body.calculationType || {}))
       }
       if (body.fixedValues !== undefined) {
         existingIncome.fixedValues = new Map(Object.entries(body.fixedValues || {}))
+      }
+      if (body.itemCalculationType !== undefined) {
+        existingIncome.itemCalculationType = new Map(Object.entries(body.itemCalculationType || {}))
+      }
+      if (body.itemFixedValues !== undefined) {
+        existingIncome.itemFixedValues = new Map(Object.entries(body.itemFixedValues || {}))
       }
       const savedIncome = await existingIncome.save()
       console.log("Saved income:", savedIncome.toObject())
@@ -103,6 +122,8 @@ export async function POST(request: Request) {
       // ایجاد رکورد جدید
       console.log("Creating new income with calculationType:", body.calculationType)
       console.log("Creating new income with fixedValues:", body.fixedValues)
+      console.log("Creating new income with itemCalculationType:", body.itemCalculationType)
+      console.log("Creating new income with itemFixedValues:", body.itemFixedValues)
       
       const income = new ProjectIncome({
         projectId: body.projectId,
@@ -125,6 +146,8 @@ export async function POST(request: Request) {
         archiveId: body.archiveId || null,
         calculationType: new Map(Object.entries(body.calculationType || {})),
         fixedValues: new Map(Object.entries(body.fixedValues || {})),
+        itemCalculationType: new Map(Object.entries(body.itemCalculationType || {})),
+        itemFixedValues: new Map(Object.entries(body.itemFixedValues || {})),
       })
 
       const savedIncome = await income.save()

@@ -148,18 +148,29 @@ export const CommissionInvoicePdf: React.FC<CommissionInvoicePdfProps> = ({
 
     return `
       <style>
+        /* فونت‌های اصلی */
         @font-face {
           font-family: 'Morabba';
           src: url('/fonts/Morabba.ttf') format('truetype');
           font-weight: normal;
+          font-display: swap;
         }
         @font-face {
           font-family: 'Morabba';
           src: url('/fonts/Morabba Bold.ttf') format('truetype');
           font-weight: bold;
+          font-display: swap;
+        }
+        
+        /* فونت fallback برای production */
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap');
+        
+        /* اطمینان از استفاده از فونت مناسب */
+        body, * {
+          font-family: 'Morabba', 'Vazirmatn', 'Tahoma', 'Arial', sans-serif !important;
         }
       </style>
-      <div style="width: 750px; min-height: 800px; background: white; font-family: 'Morabba', Arial, sans-serif; font-size: 12px; direction: rtl; padding: 12px; box-sizing: border-box;">
+      <div style="width: 750px; min-height: 800px; background: white; font-family: 'Morabba', 'Vazirmatn', 'Tahoma', 'Arial', sans-serif; font-size: 12px; direction: rtl; padding: 12px; box-sizing: border-box;">
         
         <!-- هدر -->
         <div style="background: linear-gradient(135deg, #FBCC0A, #FDD835); padding: 15px; border-radius: 6px; margin-bottom: 15px; position: relative;">

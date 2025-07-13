@@ -49,6 +49,10 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
   const [fixedValues, setFixedValues] = useState<Record<string, number>>({})
   const [inputValues, setInputValues] = useState<Record<string, string>>({}) // برای نگهداری value خام هنگام تایپ
   const [fixedInputValues, setFixedInputValues] = useState<Record<string, string>>({}) // برای مقادیر ثابت
+  // استیت‌های جدید برای مدیریت آیتم‌ها به صورت مستقل
+  const [itemCalculationType, setItemCalculationType] = useState<Record<string, 'variable' | 'fixed'>>({})
+  const [itemFixedValues, setItemFixedValues] = useState<Record<string, number>>({})
+  const [itemFixedInputValues, setItemFixedInputValues] = useState<Record<string, string>>({})
   const { toast } = useToast()
 
   // تابع فرمت‌دهی اعداد با کاما (دستی)
@@ -87,6 +91,7 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
       // مقادیر اصلی (fixedValues) را پاک نکن تا هنگام باز شدن مجدد، نمایش داده شوند
       setInputValues({})
       setFixedInputValues({})
+      setItemFixedInputValues({})
     }
   }, [open, project._id])
 
@@ -219,13 +224,19 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
         }
         setIncomeValues(values)
 
-        // بازیابی نوع محاسبه (ثابت/متغیر)
+        // بازیابی نوع محاسبه (ثابت/متغیر) برای بخش‌ها
         if (incomeData.calculationType) {
           console.log("Retrieved calculationType:", incomeData.calculationType)
           setCalculationType(incomeData.calculationType)
         }
 
-        // بازیابی مقادیر ثابت
+        // بازیابی نوع محاسبه (ثابت/متغیر) برای آیتم‌ها
+        if (incomeData.itemCalculationType) {
+          console.log("Retrieved itemCalculationType:", incomeData.itemCalculationType)
+          setItemCalculationType(incomeData.itemCalculationType)
+        }
+
+        // بازیابی مقادیر ثابت برای بخش‌ها
         if (incomeData.fixedValues) {
           console.log("Retrieved fixedValues:", incomeData.fixedValues)
           setFixedValues(incomeData.fixedValues)
@@ -240,6 +251,22 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
           console.log("Formatted fixedInputValues:", formattedFixedInputs)
           setFixedInputValues(formattedFixedInputs)
         }
+
+        // بازیابی مقادیر ثابت برای آیتم‌ها
+        if (incomeData.itemFixedValues) {
+          console.log("Retrieved itemFixedValues:", incomeData.itemFixedValues)
+          setItemFixedValues(incomeData.itemFixedValues)
+          
+          // آماده‌سازی itemFixedInputValues برای نمایش مقادیر ثابت در فیلدهای input
+          const formattedItemFixedInputs: Record<string, string> = {}
+          Object.entries(incomeData.itemFixedValues).forEach(([key, value]) => {
+            if (typeof value === 'number' && value > 0) {
+              formattedItemFixedInputs[key] = formatNumber(value)
+            }
+          })
+          console.log("Formatted itemFixedInputValues:", formattedItemFixedInputs)
+          setItemFixedInputValues(formattedItemFixedInputs)
+        }
         
         // تمیزسازی state های موقت برای نمایش درست (فقط inputValues)
         setInputValues({})
@@ -250,6 +277,9 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
         setFixedValues({})
         setInputValues({})
         setFixedInputValues({})
+        setItemCalculationType({})
+        setItemFixedValues({})
+        setItemFixedInputValues({})
       }
     } catch (error) {
       console.error('Error fetching data:', error)
@@ -352,6 +382,119 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
     }
   }
 
+  // توابع مدیریت نوع محاسبه آیتم‌ها
+  const handleItemCalculationTypeChange = (sectionName: string, itemName: string, type: 'variable' | 'fixed') => {
+    const itemKey = `${sectionName}_${itemName}`
+    console.log(`Changing item calculation type for ${itemKey} to ${type}`)
+    
+    setItemCalculationType(prev => {
+      const newType = {
+        ...prev,
+        [itemKey]: type
+      }
+      console.log("New itemCalculationType state:", newType)
+      return newType
+    })
+    
+    // اگر به متغیر تغییر کرد، مقدار ثابت آیتم را پاک کن
+    if (type === 'variable') {
+      setItemFixedValues(prev => {
+        const newValues = { ...prev }
+        delete newValues[itemKey]
+        console.log("Cleared itemFixedValues for variable type:", newValues)
+        return newValues
+      })
+      
+      // همچنین itemFixedInputValues را نیز پاک کن
+      setItemFixedInputValues(prev => {
+        const newValues = { ...prev }
+        delete newValues[itemKey]
+        return newValues
+      })
+    }
+  }
+
+  // مدیریت مقدار ثابت آیتم‌ها
+  const handleItemFixedValueChange = (sectionName: string, itemName: string, value: string) => {
+    const itemKey = `${sectionName}_${itemName}`
+    console.log(`Changing item fixed value for ${itemKey} to ${value}`)
+    
+    // پاک کردن کاما و حروف غیر عددی
+    const numericOnly = value.replace(/[^\d]/g, '')
+    
+    // تبدیل به عدد
+    const numericValue = numericOnly === '' ? 0 : parseFloat(numericOnly)
+    
+    console.log(`Parsed numeric value: ${numericValue}`)
+    
+    // فرمت کردن با کاما برای نمایش
+    const formattedValue = numericValue === 0 ? '' : formatNumber(numericValue)
+    
+    // ذخیره مقدار فرمت شده برای نمایش
+    setItemFixedInputValues({
+      ...itemFixedInputValues,
+      [itemKey]: formattedValue,
+    })
+    
+    // ذخیره مقدار عددی خالص
+    setItemFixedValues(prev => {
+      const newValues = {
+        ...prev,
+        [itemKey]: numericValue
+      }
+      console.log("Updated itemFixedValues:", newValues)
+      return newValues
+    })
+
+    // پر کردن خودکار همه فیلدهای فعال آیتم
+    if (numericValue > 0) {
+      const systemPercentage = systemPercentages[sectionName as keyof typeof systemPercentages] || 0
+      const finalFixedValue = Math.round(numericValue * (1 - systemPercentage / 100))
+      
+      console.log(`Auto-filling item fields for ${itemKey} with finalValue: ${finalFixedValue}`)
+      
+      const newIncomeValues = { ...incomeValues }
+      const fields = getFieldsForSection(sectionName)
+      
+      for (const field of fields) {
+        const fieldKey = `${sectionName}_${itemName}_${field}`
+        const isFieldActiveValue = isFieldActive(sectionName, itemName, field)
+        
+        if (isFieldActiveValue) {
+          newIncomeValues[fieldKey] = finalFixedValue
+          console.log(`Auto-set field ${fieldKey} to:`, finalFixedValue)
+        }
+      }
+      
+      // به‌روزرسانی state
+      setIncomeValues(newIncomeValues)
+    } else {
+      // اگر مقدار صفر شد، فیلدهای آیتم را صفر کن
+      const newIncomeValues = { ...incomeValues }
+      const fields = getFieldsForSection(sectionName)
+      
+      for (const field of fields) {
+        const fieldKey = `${sectionName}_${itemName}_${field}`
+        newIncomeValues[fieldKey] = 0
+      }
+      
+      setIncomeValues(newIncomeValues)
+    }
+  }
+
+  const handleItemFixedValueBlur = (sectionName: string, itemName: string) => {
+    const itemKey = `${sectionName}_${itemName}`
+    // هنگام از دست دادن focus، مقدار را format کن
+    const currentValue = itemFixedValues[itemKey] || 0
+    if (currentValue > 0) {
+      // تنظیم مقدار format شده در input برای نمایش بهتر
+      setItemFixedInputValues(prev => ({
+        ...prev,
+        [itemKey]: formatNumber(currentValue)
+      }))
+    }
+  }
+
   const handleFixedValueChange = (sectionName: string, value: string) => {
     console.log(`Changing fixed value for ${sectionName} to ${value}`)
     
@@ -405,6 +548,9 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
         )
         
         if (activeItems.length > 0) {
+          // تقسیم مقدار نهایی بین آیتم‌های فعال
+          const perItemValue = Math.round(finalFixedValue / activeItems.length)
+          
           for (const item of activeItems) {
             const fields = getFieldsForSection(sectionName)
             for (const field of fields) {
@@ -412,8 +558,8 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
               const isFieldActiveValue = item.details?.[field]?.isActive !== false
               
               if (isFieldActiveValue) {
-                newIncomeValues[key] = finalFixedValue
-                console.log(`Auto-set field ${key} to:`, finalFixedValue)
+                newIncomeValues[key] = perItemValue
+                console.log(`Auto-set field ${key} to:`, perItemValue)
               }
             }
           }
@@ -426,10 +572,15 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
           isFieldActive(sectionName, undefined, field)
         )
         
-        for (const field of activeFields) {
-          const key = `${sectionName}_${field}`
-          newIncomeValues[key] = finalFixedValue
-          console.log(`Auto-set field ${key} to:`, finalFixedValue)
+        if (activeFields.length > 0) {
+          // تقسیم مقدار نهایی بین فیلدهای فعال
+          const perFieldValue = Math.round(finalFixedValue / activeFields.length)
+          
+          for (const field of activeFields) {
+            const key = `${sectionName}_${field}`
+            newIncomeValues[key] = perFieldValue
+            console.log(`Auto-set field ${key} to:`, perFieldValue)
+          }
         }
       }
       
@@ -504,11 +655,25 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
 
       const details: Record<string, { value: number; isActive: boolean }> = {}
 
-      // محاسبه مقادیر ثابت
+      // محاسبه مقادیر ثابت (بخش‌ها)
       const fixedSections: Record<string, number> = {}
       sections.forEach(section => {
         if (calculationType[section.sectionName] === 'fixed') {
           fixedSections[section.sectionName] = fixedValues[section.sectionName] || 0
+        }
+      })
+
+      // محاسبه مقادیر ثابت (آیتم‌ها)
+      const fixedItems: Record<string, number> = {}
+      sections.forEach(section => {
+        if (["خرید", "همکاری", "فروش"].includes(section.sectionName)) {
+          const sectionItems = items[section._id] || []
+          sectionItems.forEach(item => {
+            const itemKey = `${section.sectionName}_${item.itemName}`
+            if (itemCalculationType[itemKey] === 'fixed') {
+              fixedItems[itemKey] = itemFixedValues[itemKey] || 0
+            }
+          })
         }
       })
 
@@ -534,14 +699,17 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
           }
         }
 
-        // محاسبه درآمد بخش بر اساس نوع محاسبه
+        // محاسبه درآمد بخش بر اساس نوع محاسبه (بخش یا آیتم)
+        let sectionRawTotal = 0
+        let sectionFinalTotal = 0
+        
+        // اگر کل بخش حالت ثابت دارد
         if (calculationType[section.sectionName] === 'fixed') {
-          // در حالت ثابت: مقدار ثابت به عنوان مقدار خام
           const fixedAmount = fixedValues[section.sectionName] || 0
           const systemPercentage = systemPercentages[section.sectionName as keyof typeof systemPercentages] || 0
           const finalFixedValue = fixedAmount * (1 - systemPercentage / 100)
           
-          console.log(`Fixed calculation for ${section.sectionName}:`, {
+          console.log(`Fixed calculation for section ${section.sectionName}:`, {
             fixedAmount,
             systemPercentage,
             finalFixedValue
@@ -555,7 +723,7 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
           )
           
           if (activeItems.length > 0) {
-            console.log(`Setting finalFixedValue (${finalFixedValue}) in all active fields for ${section.sectionName}`)
+            console.log(`Setting finalFixedValue (${finalFixedValue}) in all active fields for section ${section.sectionName}`)
             
             // قرار دادن مقدار نهایی در همه فیلدهای فعال
             for (const item of activeItems) {
@@ -565,7 +733,6 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
                 const isFieldActiveValue = item.details?.[field]?.isActive !== false
                 
                 if (isFieldActiveValue) {
-                  // قرار دادن مقدار نهایی (بدون تقسیم) در فیلد فعال
                   details[key] = {
                     value: Math.round(finalFixedValue),
                     isActive: isFieldActiveValue
@@ -576,46 +743,70 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
             }
           }
           
-          if (section.sectionName === "خرید") {
-            rawSectionTotals.rawPurchaseProfit = fixedAmount // مقدار خام
-            sectionTotals.purchaseProfit = finalFixedValue // مقدار نهایی
-          } else if (section.sectionName === "همکاری") {
-            rawSectionTotals.rawCollaborationProfit = fixedAmount
-            sectionTotals.collaborationProfit = finalFixedValue
-          } else if (section.sectionName === "فروش") {
-            rawSectionTotals.rawSalesProfit = fixedAmount
-            sectionTotals.salesProfit = finalFixedValue
-          }
-        } else {
-          // در حالت متغیر: مجموع فیلدهای فعال
-          let sectionRawTotal = 0
-          let sectionFinalTotal = 0
-          
+          sectionRawTotal = fixedAmount
+          sectionFinalTotal = finalFixedValue
+        } 
+        // اگر بخش حالت متغیر دارد، آیتم‌ها را جداگانه بررسی کن
+        else {
           for (const item of sectionItems) {
+            const itemKey = `${section.sectionName}_${item.itemName}`
             const fields = getFieldsForSection(section.sectionName)
-            for (const field of fields) {
-              const key = `${section.sectionName}_${item.itemName}_${field}`
-              const rawValue = incomeValues[key] || 0
-              const isFieldActiveValue = item.details?.[field]?.isActive ?? true
+            
+            // اگر آیتم حالت ثابت دارد
+            if (itemCalculationType[itemKey] === 'fixed') {
+              const itemFixedAmount = itemFixedValues[itemKey] || 0
+              const systemPercentage = systemPercentages[section.sectionName as keyof typeof systemPercentages] || 0
+              const itemFinalFixedValue = itemFixedAmount * (1 - systemPercentage / 100)
               
-              if (isFieldActiveValue) {
-                sectionRawTotal += rawValue // مقدار خام
-                const finalValue = calculateFinalValue(section.sectionName, rawValue)
-                sectionFinalTotal += finalValue // مقدار نهایی
+              console.log(`Fixed calculation for item ${itemKey}:`, {
+                itemFixedAmount,
+                systemPercentage,
+                itemFinalFixedValue
+              })
+              
+              // قرار دادن مقدار نهایی در همه فیلدهای فعال آیتم
+              for (const field of fields) {
+                const key = `${section.sectionName}_${item.itemName}_${field}`
+                const isFieldActiveValue = item.details?.[field]?.isActive !== false
+                
+                if (isFieldActiveValue) {
+                  details[key] = {
+                    value: Math.round(itemFinalFixedValue),
+                    isActive: isFieldActiveValue
+                  }
+                  console.log(`Set item field ${key} to fixed value:`, Math.round(itemFinalFixedValue))
+                }
+              }
+              
+              sectionRawTotal += itemFixedAmount
+              sectionFinalTotal += itemFinalFixedValue
+            } 
+            // اگر آیتم حالت متغیر دارد
+            else {
+              for (const field of fields) {
+                const key = `${section.sectionName}_${item.itemName}_${field}`
+                const rawValue = incomeValues[key] || 0
+                const isFieldActiveValue = item.details?.[field]?.isActive ?? true
+                
+                if (isFieldActiveValue) {
+                  sectionRawTotal += rawValue // مقدار خام
+                  const finalValue = calculateFinalValue(section.sectionName, rawValue)
+                  sectionFinalTotal += finalValue // مقدار نهایی
+                }
               }
             }
           }
-          
-          if (section.sectionName === "خرید") {
-            rawSectionTotals.rawPurchaseProfit = sectionRawTotal
-            sectionTotals.purchaseProfit = sectionFinalTotal
-          } else if (section.sectionName === "همکاری") {
-            rawSectionTotals.rawCollaborationProfit = sectionRawTotal
-            sectionTotals.collaborationProfit = sectionFinalTotal
-          } else if (section.sectionName === "فروش") {
-            rawSectionTotals.rawSalesProfit = sectionRawTotal
-            sectionTotals.salesProfit = sectionFinalTotal
-          }
+        }
+        
+        if (section.sectionName === "خرید") {
+          rawSectionTotals.rawPurchaseProfit = sectionRawTotal
+          sectionTotals.purchaseProfit = sectionFinalTotal
+        } else if (section.sectionName === "همکاری") {
+          rawSectionTotals.rawCollaborationProfit = sectionRawTotal
+          sectionTotals.collaborationProfit = sectionFinalTotal
+        } else if (section.sectionName === "فروش") {
+          rawSectionTotals.rawSalesProfit = sectionRawTotal
+          sectionTotals.salesProfit = sectionFinalTotal
         }
       }
 
@@ -750,6 +941,8 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
       console.log("calculationType type:", typeof calculationType, "empty?", Object.keys(calculationType).length === 0)
       console.log("Sending fixedValues:", fixedValues)
       console.log("fixedValues type:", typeof fixedValues, "empty?", Object.keys(fixedValues).length === 0)
+      console.log("Sending itemCalculationType:", itemCalculationType)
+      console.log("Sending itemFixedValues:", itemFixedValues)
       console.log("Sending sectionTotals:", sectionTotals)
       console.log("Sending rawSectionTotals:", rawSectionTotals)
       
@@ -763,8 +956,10 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
           // ذخیره مقادیر خام در details برای اطمینان
           _rawTotals: rawSectionTotals
         },
-        calculationType: calculationType, // ذخیره نوع محاسبه (ثابت/متغیر)
-        fixedValues: fixedValues, // ذخیره مقادیر ثابت
+        calculationType: calculationType, // ذخیره نوع محاسبه (ثابت/متغیر) برای بخش‌ها
+        fixedValues: fixedValues, // ذخیره مقادیر ثابت برای بخش‌ها
+        itemCalculationType: itemCalculationType, // ذخیره نوع محاسبه (ثابت/متغیر) برای آیتم‌ها
+        itemFixedValues: itemFixedValues, // ذخیره مقادیر ثابت برای آیتم‌ها
       }
       
       console.log("Full request body:", requestBody)
@@ -931,14 +1126,71 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
                         )}
                         {(items[section._id] || []).map((item) => (
                           <div key={item._id} className="space-y-4">
-                            <h4 className="font-medium text-sm bg-muted/20 p-2 rounded-md">■ {item.itemName || "(بدون نام)"}</h4>
+                            <div className="flex justify-between items-center">
+                              <h4 className="font-medium text-sm bg-muted/20 p-2 rounded-md flex-1">■ {item.itemName || "(بدون نام)"}</h4>
+                              
+                              {/* انتخاب نوع محاسبه برای هر آیتم */}
+                              <div className="flex items-center gap-4 mr-4">
+                                <RadioGroup
+                                  value={itemCalculationType[`${section.sectionName}_${item.itemName}`] || 'variable'}
+                                  onValueChange={(value: 'variable' | 'fixed') => handleItemCalculationTypeChange(section.sectionName, item.itemName, value)}
+                                  className="flex items-center gap-4"
+                                >
+                                  <div className="flex items-center space-x-2">
+                                    <RadioGroupItem value="variable" id={`item-variable-${item._id}`} />
+                                    <Label htmlFor={`item-variable-${item._id}`} className="text-xs">متغیر</Label>
+                                  </div>
+                                  <div className="flex items-center space-x-2">
+                                    <RadioGroupItem value="fixed" id={`item-fixed-${item._id}`} />
+                                    <Label htmlFor={`item-fixed-${item._id}`} className="text-xs">ثابت</Label>
+                                  </div>
+                                </RadioGroup>
+                                
+                                {itemCalculationType[`${section.sectionName}_${item.itemName}`] === 'fixed' && (
+                                  <div className="flex items-center gap-2">
+                                    <Label className="text-xs">مقدار:</Label>
+                                    <Input
+                                      type="text"
+                                      className="w-24 h-6 text-xs"
+                                      value={itemFixedInputValues[`${section.sectionName}_${item.itemName}`] !== undefined 
+                                        ? itemFixedInputValues[`${section.sectionName}_${item.itemName}`] 
+                                        : formatNumber(itemFixedValues[`${section.sectionName}_${item.itemName}`] || 0)}
+                                      onChange={(e) => handleItemFixedValueChange(section.sectionName, item.itemName, e.target.value)}
+                                      onBlur={() => handleItemFixedValueBlur(section.sectionName, item.itemName)}
+                                      placeholder="مقدار ثابت"
+                                    />
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            
+                            {/* نمایش اطلاعات مقدار ثابت آیتم */}
+                            {itemCalculationType[`${section.sectionName}_${item.itemName}`] === 'fixed' && (
+                              <div className="bg-gradient-to-r from-orange-50 to-yellow-50 rounded-lg p-3 border border-orange-200">
+                                <p className="text-xs text-orange-700 font-medium mb-1">
+                                  💡 مقدار ثابت آیتم: {formatNumber(itemFixedValues[`${section.sectionName}_${item.itemName}`] || 0)} ریال
+                                </p>
+                                <p className="text-xs text-gray-600">
+                                  پس از کسر {systemPercentages[section.sectionName as keyof typeof systemPercentages]}% سیستم: <span className="font-bold text-green-600">
+                                    {formatNumber(Math.round((itemFixedValues[`${section.sectionName}_${item.itemName}`] || 0) * (1 - (systemPercentages[section.sectionName as keyof typeof systemPercentages] || 0) / 100)))} ریال
+                                  </span>
+                                </p>
+                                <p className="text-xs text-gray-500 mt-1">
+                                  این مقدار در همه فیلدهای فعال این آیتم قرار داده شده است
+                                </p>
+                              </div>
+                            )}
+                            
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                               {getFieldsForSection(section.sectionName)
                                 .filter(field => isFieldActive(section.sectionName, item.itemName, field))
                                 .map((field) => {
                                   const key = `${section.sectionName}_${item.itemName}_${field}`
                                   const value = incomeValues[key] || 0
-                                  const finalValue = calculationType[section.sectionName] === 'fixed' 
+                                  const isItemFixed = itemCalculationType[`${section.sectionName}_${item.itemName}`] === 'fixed'
+                                  const isSectionFixed = calculationType[section.sectionName] === 'fixed'
+                                  const isFixedMode = isItemFixed || isSectionFixed
+                                  const finalValue = isFixedMode 
                                     ? value 
                                     : calculateFinalValue(section.sectionName, value)
                                   
@@ -949,19 +1201,21 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
                                         <Input
                                           type="text"
                                           className={`w-1/2 h-8 text-sm focus-visible:ring-1 ${
-                                            calculationType[section.sectionName] === 'fixed' 
-                                              ? 'bg-blue-100 border-blue-300 text-blue-800 font-medium' 
+                                            isFixedMode
+                                              ? (isItemFixed 
+                                                  ? 'bg-orange-100 border-orange-300 text-orange-800 font-medium' 
+                                                  : 'bg-blue-100 border-blue-300 text-blue-800 font-medium')
                                               : ''
                                           }`}
                                           value={inputValues[key] !== undefined ? inputValues[key] : formatNumber(value)}
                                           onChange={(e) => handleValueChange(key, e.target.value)}
                                           onBlur={() => handleValueBlur(key)}
-                                          placeholder={calculationType[section.sectionName] === 'fixed' ? 'خودکار' : '0'}
-                                          readOnly={calculationType[section.sectionName] === 'fixed'}
+                                          placeholder={isFixedMode ? 'خودکار' : '0'}
+                                          readOnly={isFixedMode}
                                         />
                                       </div>
                                       <div className="text-xs text-blue-500 text-left pl-2">
-                                        {calculationType[section.sectionName] === 'fixed' 
+                                        {isFixedMode 
                                           ? (
                                             <div>
                                               <div>مقدار: {formatNumber(finalValue)} ریال</div>
@@ -973,8 +1227,9 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
                                           : `پس از کسر ${systemPercentages[section.sectionName as keyof typeof systemPercentages]}% سیستم: ${formatNumber(finalValue)} ریال`
                                         }
                                       </div>
-                                    </div>                              )
-                            })}
+                                    </div>
+                                  )
+                                })}
                             </div>
                           </div>
                         ))}
