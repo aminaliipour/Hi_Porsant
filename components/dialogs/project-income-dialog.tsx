@@ -82,16 +82,25 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
 
   const [sectionWeights, setSectionWeights] = useState<Record<string, Record<string, number>>>({})
 
+  // Debug useEffect
+  useEffect(() => {
+    console.log("🔥 DEBUG - State changed:")
+    console.log("  - itemCalculationType:", itemCalculationType)
+    console.log("  - itemFixedValues:", itemFixedValues)
+    console.log("  - itemFixedInputValues:", itemFixedInputValues)
+    console.log("  - incomeValues:", incomeValues)
+  }, [itemCalculationType, itemFixedValues, itemFixedInputValues, incomeValues])
+
   useEffect(() => {
     if (open) {
       fetchData()
       fetchSectionWeights()
     } else {
       // هنگام بسته شدن دیالوگ، فقط state های موقت ورودی را پاک کن
-      // مقادیر اصلی (fixedValues) را پاک نکن تا هنگام باز شدن مجدد، نمایش داده شوند
+      // مقادیر اصلی (fixedValues و itemFixedValues) را پاک نکن تا هنگام باز شدن مجدد، نمایش داده شوند
       setInputValues({})
-      setFixedInputValues({})
-      setItemFixedInputValues({})
+      // نباید fixedInputValues و itemFixedInputValues را پاک کنیم
+      // چون باید هنگام باز شدن مجدد، مقادیر ثابت نمایش داده شوند
     }
   }, [open, project._id])
 
@@ -211,19 +220,82 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
       const incomeDataArr = await incomeResponse.json()
       const incomeData = Array.isArray(incomeDataArr) ? incomeDataArr[0] : incomeDataArr
       
+      console.log("🔥 RAW API RESPONSE:", incomeDataArr)
       console.log("Fetched income data:", incomeData)
+      console.log("🔥 CHECK API FIELDS:")
+      console.log("  - incomeData.itemCalculationType exists:", !!incomeData?.itemCalculationType)
+      console.log("  - incomeData.itemFixedValues exists:", !!incomeData?.itemFixedValues)
+      console.log("  - incomeData.calculationType exists:", !!incomeData?.calculationType)
+      console.log("  - incomeData.fixedValues exists:", !!incomeData?.fixedValues)
       
       if (incomeData) {
-        const values: Record<string, number> = {}
+        let values: Record<string, number> = {}
         if (incomeData.details) {
           Object.entries(incomeData.details).forEach(([key, detail]) => {
             if (typeof detail === "object" && detail !== null && "value" in detail && typeof detail.value === "number") {
-              values[key] = detail.value
+              // بررسی اینکه آیا این مقدار از حالت متغیر آمده است یا ثابت
+              const detailValue = detail.value
+              
+              // استخراج نام بخش از key
+              let sectionName = ""
+              if (key.includes("_")) {
+                const parts = key.split("_")
+                sectionName = parts[0]
+              }
+              
+              // اگر بخش یا آیتم در حالت متغیر است، باید مقدار خام را بازسازی کنیم
+              let isVariableMode = false
+              
+              // بررسی نوع محاسبه برای بخش‌های بدون آیتم
+              if (["طراحی", "پیمانکاری", "مشاوره"].includes(sectionName)) {
+                isVariableMode = !incomeData.calculationType || incomeData.calculationType[sectionName] !== 'fixed'
+              } 
+              // بررسی نوع محاسبه برای آیتم‌ها
+              else if (["خرید", "همکاری", "فروش"].includes(sectionName)) {
+                const parts = key.split("_")
+                if (parts.length >= 3) {
+                  const itemKey = `${parts[0]}_${parts[1]}`
+                  isVariableMode = !incomeData.itemCalculationType || incomeData.itemCalculationType[itemKey] !== 'fixed'
+                }
+              }
+              
+              // اگر حالت متغیر است، مقدار خام را بازسازی کن
+              // در حالت ثابت، مقدار ذخیره شده همان مقدار خام است (برای بخش‌ها) یا مقدار نهایی (برای آیتم‌ها)
+              if (isVariableMode && sectionName && latestPercentages[sectionName as keyof typeof latestPercentages]) {
+                const systemPercentage = latestPercentages[sectionName as keyof typeof latestPercentages] || 0
+                // بازسازی مقدار خام: finalValue = rawValue * (1 - systemPercentage/100)
+                // پس rawValue = finalValue / (1 - systemPercentage/100)
+                const rawValue = systemPercentage > 0 
+                  ? Math.round(detailValue / (1 - systemPercentage / 100))
+                  : detailValue
+                console.log(`Reconstructing raw value for ${key}: stored=${detailValue}, reconstructed=${rawValue}, systemPercentage=${systemPercentage}%`)
+                values[key] = rawValue
+              } else {
+                // در حالت ثابت:
+                // - برای بخش‌های بدون آیتم: مقدار ذخیره شده همان مقدار خام است
+                // - برای آیتم‌ها: مقدار ذخیره شده مقدار نهایی است که نمایش داده می‌شود
+                const parts = key.split("_")
+                if (["خرید", "همکاری", "فروش"].includes(sectionName) && parts.length >= 3) {
+                  // این یک آیتم است در حالت ثابت
+                  const itemKey = `${parts[0]}_${parts[1]}`
+                  if (incomeData.itemCalculationType && incomeData.itemCalculationType[itemKey] === 'fixed') {
+                    // برای آیتم‌های ثابت، مقدار ذخیره شده (مقدار نهایی) را نمایش بده
+                    console.log(`Using stored final value for fixed item ${key}: ${detailValue}`)
+                    values[key] = detailValue
+                  } else {
+                    console.log(`Using stored value for variable item ${key}: ${detailValue}`)
+                    values[key] = detailValue
+                  }
+                } else {
+                  // این یک بخش بدون آیتم است - مقدار ذخیره شده همان مقدار خام است
+                  console.log(`Using stored value for section ${key}: ${detailValue} (fixed mode)`)
+                  values[key] = detailValue
+                }
+              }
             }
           })
         }
-        setIncomeValues(values)
-
+        
         // بازیابی نوع محاسبه (ثابت/متغیر) برای بخش‌ها
         if (incomeData.calculationType) {
           console.log("Retrieved calculationType:", incomeData.calculationType)
@@ -254,7 +326,9 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
 
         // بازیابی مقادیر ثابت برای آیتم‌ها
         if (incomeData.itemFixedValues) {
-          console.log("Retrieved itemFixedValues:", incomeData.itemFixedValues)
+          console.log("🔥🔥🔥 Retrieved itemFixedValues:", incomeData.itemFixedValues)
+          console.log("🔥🔥🔥 itemFixedValues type:", typeof incomeData.itemFixedValues)
+          console.log("🔥🔥🔥 itemFixedValues keys:", Object.keys(incomeData.itemFixedValues))
           setItemFixedValues(incomeData.itemFixedValues)
           
           // آماده‌سازی itemFixedInputValues برای نمایش مقادیر ثابت در فیلدهای input
@@ -262,24 +336,71 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
           Object.entries(incomeData.itemFixedValues).forEach(([key, value]) => {
             if (typeof value === 'number' && value > 0) {
               formattedItemFixedInputs[key] = formatNumber(value)
+              console.log(`🔥🔥🔥 Formatted itemFixedValue: ${key} = ${value} -> ${formattedItemFixedInputs[key]}`)
             }
           })
-          console.log("Formatted itemFixedInputValues:", formattedItemFixedInputs)
+          console.log("🔥🔥🔥 Formatted itemFixedInputValues:", formattedItemFixedInputs)
           setItemFixedInputValues(formattedItemFixedInputs)
-        }
+          
+          // پر کردن فیلدهای آیتم‌های ثابت
+          console.log("🔥 Processing fixed items for auto-fill...")
+          Object.entries(incomeData.itemFixedValues).forEach(([itemKey, fixedAmount]) => {
+            if (typeof fixedAmount === 'number' && fixedAmount > 0) {
+              const parts = itemKey.split("_")
+              if (parts.length >= 2) {
+                const sectionName = parts[0]
+                const itemName = parts[1]
+                
+                console.log(`🔥 Processing fixed item: ${itemKey}, raw value: ${fixedAmount}`)
+                
+                // پر کردن فیلدهای آیتم با مقدار ذخیره‌شده که از API آمده
+                const fields = getFieldsForSection(sectionName)
+                
+                for (const field of fields) {
+                  const fieldKey = `${sectionName}_${itemName}_${field}`
+                  
+                  // بررسی اینکه فیلد فعال است
+                  const sectionItems = itemsMap[sectionsData.find((s: any) => s.sectionName === sectionName)?._id || ""] || []
+                  const item = sectionItems.find((i: any) => i.itemName === itemName)
+                  const isFieldActiveValue = item?.details?.[field]?.isActive !== false
+                  
+                  // بررسی اینکه در details مقدار وجود دارد یا نه
+                  const detailValue = incomeData.details?.[fieldKey]?.value
+                  
+                  if (isFieldActiveValue) {
+                    if (detailValue !== undefined && detailValue !== null) {
+                      // اگر مقدار در details موجود است، از آن استفاده کن
+                      values[fieldKey] = detailValue
+                      console.log(`🔥 Used stored detail value for ${fieldKey}: ${detailValue}`)
+                    } else {
+                      // اگر مقدار در details موجود نیست، محاسبه کن
+                      const systemPercentage = latestPercentages[sectionName as keyof typeof latestPercentages] || 0
+                      const finalFixedValue = Math.round(fixedAmount * (1 - systemPercentage / 100))
+                      values[fieldKey] = finalFixedValue
+                      console.log(`🔥 Calculated final value for ${fieldKey}: ${finalFixedValue} (from raw: ${fixedAmount})`)
+                    }
+                  }
+                }
+              }
+            }
+          })
+        } else {
+          console.log("🔥 No itemFixedValues found in income data")        }
+        setIncomeValues(values)
+        console.log("🔥 Final incomeValues set:", values)
         
         // تمیزسازی state های موقت برای نمایش درست (فقط inputValues)
         setInputValues({})
       } else {
-        // اگر هیچ داده‌ای وجود نداشت، state ها را خالی کن
+        // اگر هیچ داده‌ای وجود نداشت، فقط state های اصلی را خالی کن
+        // state های input را پاک نکن تا مقادیر کاربر حفظ شوند
         setIncomeValues({})
         setCalculationType({})
         setFixedValues({})
-        setInputValues({})
-        setFixedInputValues({})
         setItemCalculationType({})
         setItemFixedValues({})
-        setItemFixedInputValues({})
+        // تنها inputValues موقت را پاک کن
+        setInputValues({})
       }
     } catch (error) {
       console.error('Error fetching data:', error)
@@ -353,6 +474,12 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
   }
 
   const handleCalculationTypeChange = (sectionName: string, type: 'variable' | 'fixed') => {
+    // فقط برای بخش‌های بدون آیتم
+    if (!["طراحی", "پیمانکاری", "مشاوره"].includes(sectionName)) {
+      console.warn(`handleCalculationTypeChange called for section with items: ${sectionName}. This should not happen.`)
+      return
+    }
+    
     console.log(`Changing calculation type for ${sectionName} to ${type}`)
     
     setCalculationType(prev => {
@@ -385,14 +512,14 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
   // توابع مدیریت نوع محاسبه آیتم‌ها
   const handleItemCalculationTypeChange = (sectionName: string, itemName: string, type: 'variable' | 'fixed') => {
     const itemKey = `${sectionName}_${itemName}`
-    console.log(`Changing item calculation type for ${itemKey} to ${type}`)
+    console.log(`🔥 ITEM CALCULATION TYPE CHANGE: ${itemKey} -> ${type}`)
     
     setItemCalculationType(prev => {
       const newType = {
         ...prev,
         [itemKey]: type
       }
-      console.log("New itemCalculationType state:", newType)
+      console.log("🔥 NEW itemCalculationType state:", newType)
       return newType
     })
     
@@ -417,7 +544,7 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
   // مدیریت مقدار ثابت آیتم‌ها
   const handleItemFixedValueChange = (sectionName: string, itemName: string, value: string) => {
     const itemKey = `${sectionName}_${itemName}`
-    console.log(`Changing item fixed value for ${itemKey} to ${value}`)
+    console.log(`🔥🔥🔥 ITEM FIXED VALUE CHANGE: ${itemKey} -> ${value}`)
     
     // پاک کردن کاما و حروف غیر عددی
     const numericOnly = value.replace(/[^\d]/g, '')
@@ -425,15 +552,19 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
     // تبدیل به عدد
     const numericValue = numericOnly === '' ? 0 : parseFloat(numericOnly)
     
-    console.log(`Parsed numeric value: ${numericValue}`)
+    console.log(`🔥🔥🔥 Parsed numeric value: ${numericValue}`)
     
     // فرمت کردن با کاما برای نمایش
     const formattedValue = numericValue === 0 ? '' : formatNumber(numericValue)
     
     // ذخیره مقدار فرمت شده برای نمایش
-    setItemFixedInputValues({
-      ...itemFixedInputValues,
-      [itemKey]: formattedValue,
+    setItemFixedInputValues(prev => {
+      const newValues = {
+        ...prev,
+        [itemKey]: formattedValue,
+      }
+      console.log(`🔥🔥🔥 Updated itemFixedInputValues:`, newValues)
+      return newValues
     })
     
     // ذخیره مقدار عددی خالص
@@ -442,16 +573,17 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
         ...prev,
         [itemKey]: numericValue
       }
-      console.log("Updated itemFixedValues:", newValues)
+      console.log("🔥🔥🔥 Updated itemFixedValues:", newValues)
       return newValues
     })
 
-    // پر کردن خودکار همه فیلدهای فعال آیتم
+    // پر کردن خودکار همه فیلدهای فعال آیتم با مقدار نهایی
+    // برای حالت ثابت، مقدار نهایی (پس از کسر درصد سیستم) در فیلدها قرار می‌گیرد
     if (numericValue > 0) {
       const systemPercentage = systemPercentages[sectionName as keyof typeof systemPercentages] || 0
       const finalFixedValue = Math.round(numericValue * (1 - systemPercentage / 100))
       
-      console.log(`Auto-filling item fields for ${itemKey} with finalValue: ${finalFixedValue}`)
+      console.log(`Auto-filling item fields for ${itemKey} with final value: ${finalFixedValue} (from raw: ${numericValue}, system: ${systemPercentage}%)`)
       
       const newIncomeValues = { ...incomeValues }
       const fields = getFieldsForSection(sectionName)
@@ -461,8 +593,9 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
         const isFieldActiveValue = isFieldActive(sectionName, itemName, field)
         
         if (isFieldActiveValue) {
+          // قرار دادن مقدار نهایی (پس از کسر درصد سیستم) در فیلدها
           newIncomeValues[fieldKey] = finalFixedValue
-          console.log(`Auto-set field ${fieldKey} to:`, finalFixedValue)
+          console.log(`Auto-set field ${fieldKey} to final value:`, finalFixedValue)
         }
       }
       
@@ -494,8 +627,13 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
       }))
     }
   }
-
   const handleFixedValueChange = (sectionName: string, value: string) => {
+    // فقط برای بخش‌های بدون آیتم
+    if (!["طراحی", "پیمانکاری", "مشاوره"].includes(sectionName)) {
+      console.warn(`handleFixedValueChange called for section with items: ${sectionName}. This should not happen.`)
+      return
+    }
+    
     console.log(`Changing fixed value for ${sectionName} to ${value}`)
     
     // پاک کردن کاما و حروف غیر عددی
@@ -524,7 +662,7 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
       console.log("Updated fixedValues:", newValues)
       return newValues
     })
-
+    
     // پر کردن خودکار همه فیلدهای فعال همان لحظه
     if (numericValue > 0) {
       const systemPercentage = systemPercentages[sectionName as keyof typeof systemPercentages] || 0
@@ -538,35 +676,8 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
       
       const newIncomeValues = { ...incomeValues }
       
-      // برای بخش‌های دارای آیتم
-      if (["خرید", "همکاری", "فروش"].includes(sectionName)) {
-        const sectionItems = items[section._id] || []
-        const activeItems = sectionItems.filter(item => 
-          getFieldsForSection(sectionName).some(field => 
-            item.details?.[field]?.isActive !== false
-          )
-        )
-        
-        if (activeItems.length > 0) {
-          // تقسیم مقدار نهایی بین آیتم‌های فعال
-          const perItemValue = Math.round(finalFixedValue / activeItems.length)
-          
-          for (const item of activeItems) {
-            const fields = getFieldsForSection(sectionName)
-            for (const field of fields) {
-              const key = `${sectionName}_${item.itemName}_${field}`
-              const isFieldActiveValue = item.details?.[field]?.isActive !== false
-              
-              if (isFieldActiveValue) {
-                newIncomeValues[key] = perItemValue
-                console.log(`Auto-set field ${key} to:`, perItemValue)
-              }
-            }
-          }
-        }
-      }
-      // برای بخش‌های بدون آیتم
-      else if (["طراحی", "پیمانکاری", "مشاوره"].includes(sectionName)) {
+      // فقط برای بخش‌های بدون آیتم
+      if (["طراحی", "پیمانکاری", "مشاوره"].includes(sectionName)) {
         const fields = getFieldsForSection(sectionName)
         const activeFields = fields.filter(field => 
           isFieldActive(sectionName, undefined, field)
@@ -593,19 +704,8 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
       
       const newIncomeValues = { ...incomeValues }
       
-      // برای بخش‌های دارای آیتم
-      if (["خرید", "همکاری", "فروش"].includes(sectionName)) {
-        const sectionItems = items[section._id] || []
-        for (const item of sectionItems) {
-          const fields = getFieldsForSection(sectionName)
-          for (const field of fields) {
-            const key = `${sectionName}_${item.itemName}_${field}`
-            newIncomeValues[key] = 0
-          }
-        }
-      }
-      // برای بخش‌های بدون آیتم
-      else if (["طراحی", "پیمانکاری", "مشاوره"].includes(sectionName)) {
+      // فقط برای بخش‌های بدون آیتم
+      if (["طراحی", "پیمانکاری", "مشاوره"].includes(sectionName)) {
         const fields = getFieldsForSection(sectionName)
         for (const field of fields) {
           const key = `${sectionName}_${field}`
@@ -618,6 +718,11 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
   }
 
   const handleFixedValueBlur = (sectionName: string) => {
+    // فقط برای بخش‌های بدون آیتم
+    if (!["طراحی", "پیمانکاری", "مشاوره"].includes(sectionName)) {
+      return
+    }
+    
     // هنگام از دست دادن focus، مقدار را format کن
     const currentValue = fixedValues[sectionName] || 0
     if (currentValue > 0) {
@@ -655,10 +760,10 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
 
       const details: Record<string, { value: number; isActive: boolean }> = {}
 
-      // محاسبه مقادیر ثابت (بخش‌ها)
+      // محاسبه مقادیر ثابت (بخش‌ها) - فقط برای بخش‌های بدون آیتم
       const fixedSections: Record<string, number> = {}
       sections.forEach(section => {
-        if (calculationType[section.sectionName] === 'fixed') {
+        if (["طراحی", "پیمانکاری", "مشاوره"].includes(section.sectionName) && calculationType[section.sectionName] === 'fixed') {
           fixedSections[section.sectionName] = fixedValues[section.sectionName] || 0
         }
       })
@@ -682,117 +787,76 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
       for (const section of sections.filter((s) => sectionsWithItems.includes(s.sectionName))) {
         const sectionItems = items[section._id] || []
 
-        // ذخیره همه فیلدها بدون توجه به نوع محاسبه
+        // ذخیره همه فیلدها با منطق صحیح برای هر نوع محاسبه
         for (const item of sectionItems) {
           const fields = getFieldsForSection(section.sectionName)
+          const itemKey = `${section.sectionName}_${item.itemName}`
 
+          // ذخیره فیلدها بر اساس نوع محاسبه آیتم
           for (const field of fields) {
             const key = `${section.sectionName}_${item.itemName}_${field}`
             const rawValue = incomeValues[key] || 0
             const isFieldActiveValue = item.details?.[field]?.isActive ?? true
             
-            // ذخیره مقدار (حتی اگر صفر باشد)
-            details[key] = {
-              value: rawValue,
-              isActive: isFieldActiveValue
+            console.log(`🔥 Processing field ${key} for item ${itemKey}:`)
+            console.log(`  - itemCalculationType: ${itemCalculationType[itemKey]}`)
+            console.log(`  - rawValue from incomeValues: ${rawValue}`)
+            console.log(`  - isFieldActive: ${isFieldActiveValue}`)
+            
+            if (itemCalculationType[itemKey] === 'fixed') {
+              // حالت ثابت: مقدار موجود در incomeValues همان مقدار نهایی است که باید ذخیره شود
+              details[key] = {
+                value: rawValue, // این مقدار نهایی است (پس از کسر درصد سیستم)
+                isActive: isFieldActiveValue
+              }
+              console.log(`  - Saved as fixed item with final value: ${rawValue}`)
+            } else {
+              // حالت متغیر: ذخیره مقدار نهایی (پس از کسر درصد سیستم)
+              const finalValue = calculateFinalValue(section.sectionName, rawValue)
+              details[key] = {
+                value: Math.round(finalValue),
+                isActive: isFieldActiveValue
+              }
+              console.log(`  - Saved as variable item with calculated final value: ${Math.round(finalValue)} (from raw: ${rawValue})`)
             }
           }
         }
 
-        // محاسبه درآمد بخش بر اساس نوع محاسبه (بخش یا آیتم)
+        // محاسبه درآمد بخش - فقط بر اساس آیتم‌ها
         let sectionRawTotal = 0
         let sectionFinalTotal = 0
         
-        // اگر کل بخش حالت ثابت دارد
-        if (calculationType[section.sectionName] === 'fixed') {
-          const fixedAmount = fixedValues[section.sectionName] || 0
-          const systemPercentage = systemPercentages[section.sectionName as keyof typeof systemPercentages] || 0
-          const finalFixedValue = fixedAmount * (1 - systemPercentage / 100)
+        // محاسبه بر اساس آیتم‌ها (هیچ محاسبه‌ای برای کل بخش وجود ندارد)
+        for (const item of sectionItems) {
+          const itemKey = `${section.sectionName}_${item.itemName}`
+          const fields = getFieldsForSection(section.sectionName)
           
-          console.log(`Fixed calculation for section ${section.sectionName}:`, {
-            fixedAmount,
-            systemPercentage,
-            finalFixedValue
-          })
-          
-          // قرار دادن مقدار نهایی در همه فیلدهای فعال (بدون تقسیم)
-          const activeItems = sectionItems.filter(item => 
-            getFieldsForSection(section.sectionName).some(field => 
-              item.details?.[field]?.isActive !== false
-            )
-          )
-          
-          if (activeItems.length > 0) {
-            console.log(`Setting finalFixedValue (${finalFixedValue}) in all active fields for section ${section.sectionName}`)
+          // اگر آیتم حالت ثابت دارد
+          if (itemCalculationType[itemKey] === 'fixed') {
+            const itemFixedAmount = itemFixedValues[itemKey] || 0
+            const systemPercentage = systemPercentages[section.sectionName as keyof typeof systemPercentages] || 0
+            const itemFinalFixedValue = itemFixedAmount * (1 - systemPercentage / 100)
             
-            // قرار دادن مقدار نهایی در همه فیلدهای فعال
-            for (const item of activeItems) {
-              const fields = getFieldsForSection(section.sectionName)
-              for (const field of fields) {
-                const key = `${section.sectionName}_${item.itemName}_${field}`
-                const isFieldActiveValue = item.details?.[field]?.isActive !== false
-                
-                if (isFieldActiveValue) {
-                  details[key] = {
-                    value: Math.round(finalFixedValue),
-                    isActive: isFieldActiveValue
-                  }
-                  console.log(`Set field ${key} to full value:`, Math.round(finalFixedValue))
-                }
-              }
-            }
-          }
-          
-          sectionRawTotal = fixedAmount
-          sectionFinalTotal = finalFixedValue
-        } 
-        // اگر بخش حالت متغیر دارد، آیتم‌ها را جداگانه بررسی کن
-        else {
-          for (const item of sectionItems) {
-            const itemKey = `${section.sectionName}_${item.itemName}`
-            const fields = getFieldsForSection(section.sectionName)
+            console.log(`Fixed calculation for item ${itemKey}:`, {
+              itemFixedAmount,
+              systemPercentage,
+              itemFinalFixedValue
+            })
             
-            // اگر آیتم حالت ثابت دارد
-            if (itemCalculationType[itemKey] === 'fixed') {
-              const itemFixedAmount = itemFixedValues[itemKey] || 0
-              const systemPercentage = systemPercentages[section.sectionName as keyof typeof systemPercentages] || 0
-              const itemFinalFixedValue = itemFixedAmount * (1 - systemPercentage / 100)
+            sectionRawTotal += itemFixedAmount
+            sectionFinalTotal += itemFinalFixedValue
+          } 
+          // اگر آیتم حالت متغیر دارد
+          else {
+            for (const field of fields) {
+              const key = `${section.sectionName}_${item.itemName}_${field}`
+              const rawValue = incomeValues[key] || 0
+              const isFieldActiveValue = item.details?.[field]?.isActive ?? true
               
-              console.log(`Fixed calculation for item ${itemKey}:`, {
-                itemFixedAmount,
-                systemPercentage,
-                itemFinalFixedValue
-              })
-              
-              // قرار دادن مقدار نهایی در همه فیلدهای فعال آیتم
-              for (const field of fields) {
-                const key = `${section.sectionName}_${item.itemName}_${field}`
-                const isFieldActiveValue = item.details?.[field]?.isActive !== false
-                
-                if (isFieldActiveValue) {
-                  details[key] = {
-                    value: Math.round(itemFinalFixedValue),
-                    isActive: isFieldActiveValue
-                  }
-                  console.log(`Set item field ${key} to fixed value:`, Math.round(itemFinalFixedValue))
-                }
-              }
-              
-              sectionRawTotal += itemFixedAmount
-              sectionFinalTotal += itemFinalFixedValue
-            } 
-            // اگر آیتم حالت متغیر دارد
-            else {
-              for (const field of fields) {
-                const key = `${section.sectionName}_${item.itemName}_${field}`
-                const rawValue = incomeValues[key] || 0
-                const isFieldActiveValue = item.details?.[field]?.isActive ?? true
-                
-                if (isFieldActiveValue) {
-                  sectionRawTotal += rawValue // مقدار خام
-                  const finalValue = calculateFinalValue(section.sectionName, rawValue)
-                  sectionFinalTotal += finalValue // مقدار نهایی
-                }
+              if (isFieldActiveValue) {
+                sectionRawTotal += rawValue // مقدار خام
+                const finalValue = calculateFinalValue(section.sectionName, rawValue)
+                sectionFinalTotal += finalValue // مقدار نهایی
               }
             }
           }
@@ -838,10 +902,19 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
             isActive = fieldStates[field].isActive !== false
           }
 
-          // ذخیره همه مقادیر (حتی صفر) با وضعیت فعال/غیرفعال
-          details[key] = {
-            value: rawValue,
-            isActive
+          // در حالت متغیر: همیشه مقدار نهایی را ذخیره کن (حتی اگر صفر باشد)
+          if (calculationType[section.sectionName] !== 'fixed') {
+            const finalValue = calculateFinalValue(section.sectionName, rawValue)
+            details[key] = {
+              value: Math.round(finalValue),
+              isActive
+            }
+          } else {
+            // در حالت ثابت: مقدار خام را ذخیره کن
+            details[key] = {
+              value: rawValue,
+              isActive
+            }
           }
         }
 
@@ -937,14 +1010,40 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
         console.warn("No activeArchive found in localStorage")
       }
       // ذخیره اطلاعات درآمد
-      console.log("Sending calculationType:", calculationType)
-      console.log("calculationType type:", typeof calculationType, "empty?", Object.keys(calculationType).length === 0)
-      console.log("Sending fixedValues:", fixedValues)
-      console.log("fixedValues type:", typeof fixedValues, "empty?", Object.keys(fixedValues).length === 0)
-      console.log("Sending itemCalculationType:", itemCalculationType)
-      console.log("Sending itemFixedValues:", itemFixedValues)
-      console.log("Sending sectionTotals:", sectionTotals)
-      console.log("Sending rawSectionTotals:", rawSectionTotals)
+      console.log("=== BEFORE SAVE DEBUG ===")
+      console.log("calculationType (all sections):", calculationType)
+      console.log("fixedValues (all sections):", fixedValues)
+      console.log("itemCalculationType:", itemCalculationType)
+      console.log("itemFixedValues:", itemFixedValues)
+      console.log("incomeValues (fields):", incomeValues)
+      console.log("=== AFTER FILTERING ===")
+      
+      // فیلتر کردن calculationType و fixedValues فقط برای بخش‌های بدون آیتم
+      const filteredCalculationType: Record<string, 'variable' | 'fixed'> = {}
+      const filteredFixedValues: Record<string, number> = {}
+      
+      Object.entries(calculationType).forEach(([sectionName, type]) => {
+        if (["طراحی", "پیمانکاری", "مشاوره"].includes(sectionName)) {
+          filteredCalculationType[sectionName] = type
+          console.log(`Including calculationType: ${sectionName} = ${type}`)
+        } else {
+          console.log(`Excluding calculationType: ${sectionName} = ${type} (not in target sections)`)
+        }
+      })
+      
+      Object.entries(fixedValues).forEach(([sectionName, value]) => {
+        if (["طراحی", "پیمانکاری", "مشاوره"].includes(sectionName)) {
+          filteredFixedValues[sectionName] = value
+          console.log(`Including fixedValue: ${sectionName} = ${value}`)
+        } else {
+          console.log(`Excluding fixedValue: ${sectionName} = ${value} (not in target sections)`)
+        }
+      })
+      
+      console.log("filteredCalculationType:", filteredCalculationType)
+      console.log("filteredFixedValues:", filteredFixedValues)
+      console.log("Final itemCalculationType:", itemCalculationType)
+      console.log("Final itemFixedValues:", itemFixedValues)
       
       const requestBody = {
         projectId: project._id,
@@ -956,13 +1055,16 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
           // ذخیره مقادیر خام در details برای اطمینان
           _rawTotals: rawSectionTotals
         },
-        calculationType: calculationType, // ذخیره نوع محاسبه (ثابت/متغیر) برای بخش‌ها
-        fixedValues: fixedValues, // ذخیره مقادیر ثابت برای بخش‌ها
+        calculationType: filteredCalculationType, // فقط برای بخش‌های بدون آیتم
+        fixedValues: filteredFixedValues, // فقط برای بخش‌های بدون آیتم
         itemCalculationType: itemCalculationType, // ذخیره نوع محاسبه (ثابت/متغیر) برای آیتم‌ها
         itemFixedValues: itemFixedValues, // ذخیره مقادیر ثابت برای آیتم‌ها
       }
       
       console.log("Full request body:", requestBody)
+      console.log("🔥 FINAL CHECK BEFORE SEND:")
+      console.log("  - itemCalculationType in body:", requestBody.itemCalculationType)
+      console.log("  - itemFixedValues in body:", requestBody.itemFixedValues)
       
       const response = await fetch("/api/project-incomes", {
         method: "POST",
@@ -1075,55 +1177,13 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
                           {section.sectionName} (درصد سیستم: {systemPercentages[section.sectionName as keyof typeof systemPercentages]}%)
                         </CardTitle>
                         
-                        <div className="flex items-center gap-4">
-                          <RadioGroup
-                            value={calculationType[section.sectionName] || 'variable'}
-                            onValueChange={(value: 'variable' | 'fixed') => handleCalculationTypeChange(section.sectionName, value)}
-                            className="flex items-center gap-4"
-                          >
-                            <div className="flex items-center space-x-2">
-                              <RadioGroupItem value="variable" id={`variable-${section._id}`} />
-                              <Label htmlFor={`variable-${section._id}`} className="text-sm">مقدار متغیر</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              <RadioGroupItem value="fixed" id={`fixed-${section._id}`} />
-                              <Label htmlFor={`fixed-${section._id}`} className="text-sm">مقدار ثابت</Label>
-                            </div>
-                          </RadioGroup>
-                          
-                          {calculationType[section.sectionName] === 'fixed' && (
-                            <div className="flex items-center gap-2">
-                              <Label className="text-sm">مقدار ثابت:</Label>
-                              <Input
-                                type="text"
-                                className="w-32 h-8 text-sm"
-                                value={fixedInputValues[section.sectionName] !== undefined ? fixedInputValues[section.sectionName] : formatNumber(fixedValues[section.sectionName] || 0)}
-                                onChange={(e) => handleFixedValueChange(section.sectionName, e.target.value)}
-                                onBlur={() => handleFixedValueBlur(section.sectionName)}
-                                placeholder="مقدار ثابت"
-                              />
-                            </div>
-                          )}
+                        <div className="text-sm text-orange-600 bg-orange-50 px-3 py-1 rounded-lg border border-orange-200">
+                          💡 درآمد فقط به آیتم‌ها تخصیص داده می‌شود
                         </div>
                       </div>
                     </CardHeader>
                     <CardContent className="pt-4">
                       <div className="space-y-6">
-                        {calculationType[section.sectionName] === 'fixed' && (
-                          <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-lg p-4 border border-blue-200">
-                            <p className="text-sm text-blue-700 font-medium mb-2">
-                              💡 مقدار ثابت: {formatNumber(fixedValues[section.sectionName] || 0)} ریال
-                            </p>
-                            <p className="text-sm text-gray-600">
-                              پس از کسر {systemPercentages[section.sectionName as keyof typeof systemPercentages]}% سیستم: <span className="font-bold text-green-600">
-                                {formatNumber(Math.round((fixedValues[section.sectionName] || 0) * (1 - (systemPercentages[section.sectionName as keyof typeof systemPercentages] || 0) / 100)))} ریال
-                              </span>
-                            </p>
-                            <p className="text-xs text-gray-500 mt-1">
-                              این مقدار به طور خودکار در همه فیلدهای فعال قرار داده شده است
-                            </p>
-                          </div>
-                        )}
                         {(items[section._id] || []).map((item) => (
                           <div key={item._id} className="space-y-4">
                             <div className="flex justify-between items-center">
@@ -1152,9 +1212,23 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
                                     <Input
                                       type="text"
                                       className="w-24 h-6 text-xs"
-                                      value={itemFixedInputValues[`${section.sectionName}_${item.itemName}`] !== undefined 
-                                        ? itemFixedInputValues[`${section.sectionName}_${item.itemName}`] 
-                                        : formatNumber(itemFixedValues[`${section.sectionName}_${item.itemName}`] || 0)}
+                                      value={(() => {
+                                        const itemKey = `${section.sectionName}_${item.itemName}`
+                                        const fixedInputValue = itemFixedInputValues[itemKey]
+                                        const fixedValue = itemFixedValues[itemKey] || 0
+                                        const calculationType = itemCalculationType[itemKey]
+                                        
+                                        console.log(`🔥 UI Render for ${itemKey}:`, {
+                                          fixedInputValue,
+                                          fixedValue,
+                                          calculationType,
+                                          formatted: formatNumber(fixedValue)
+                                        })
+                                        
+                                        return fixedInputValue !== undefined 
+                                          ? fixedInputValue 
+                                          : formatNumber(fixedValue)
+                                      })()}
                                       onChange={(e) => handleItemFixedValueChange(section.sectionName, item.itemName, e.target.value)}
                                       onBlur={() => handleItemFixedValueBlur(section.sectionName, item.itemName)}
                                       placeholder="مقدار ثابت"
@@ -1224,7 +1298,14 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
                                               </div>
                                             </div>
                                           )
-                                          : `پس از کسر ${systemPercentages[section.sectionName as keyof typeof systemPercentages]}% سیستم: ${formatNumber(finalValue)} ریال`
+                                          : (
+                                            <div>
+                                              <div>پس از کسر {systemPercentages[section.sectionName as keyof typeof systemPercentages]}% سیستم: {formatNumber(finalValue)} ریال</div>
+                                              <div className="text-orange-600 font-medium text-xs mt-1">
+                                                ⚠️ مقدار نهایی ذخیره می‌شود
+                                              </div>
+                                            </div>
+                                          )
                                         }
                                       </div>
                                     </div>
@@ -1334,7 +1415,14 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
                                         </div>
                                       </div>
                                     )
-                                    : `پس از کسر ${systemPercentages[section.sectionName as keyof typeof systemPercentages]}% سیستم: ${formatNumber(finalValue)} ریال`
+                                    : (
+                                      <div>
+                                        <div>پس از کسر {systemPercentages[section.sectionName as keyof typeof systemPercentages]}% سیستم: {formatNumber(finalValue)} ریال</div>
+                                        <div className="text-orange-600 font-medium text-xs mt-1">
+                                          ⚠️ مقدار نهایی ذخیره می‌شود
+                                        </div>
+                                      </div>
+                                    )
                                   }
                                 </div>
                               </div>
