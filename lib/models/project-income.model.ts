@@ -11,6 +11,8 @@ export interface IProjectIncome extends Document {
   details: Record<string, any>
   calculationType?: Record<string, 'variable' | 'fixed'>
   fixedValues?: Record<string, number>
+  itemCalculationType?: Record<string, 'variable' | 'fixed'>
+  itemFixedValues?: Record<string, number>
   // مقادیر خام (قبل از کسر درصد سیستم)
   rawPurchaseProfit: number
   rawDesignProfit: number
@@ -36,8 +38,10 @@ const ProjectIncomeSchema: Schema = new Schema(
     salesProfit: { type: Number, default: 0 },
     consultationProfit: { type: Number, default: 0 },
     details: { type: Map, of: Schema.Types.Mixed, default: {} },
-    calculationType: { type: Map, of: String, default: {} },
-    fixedValues: { type: Map, of: Number, default: {} },
+    calculationType: { type: Schema.Types.Mixed, default: {} },
+    fixedValues: { type: Schema.Types.Mixed, default: {} },
+    itemCalculationType: { type: Schema.Types.Mixed, default: {} },
+    itemFixedValues: { type: Schema.Types.Mixed, default: {} },
     // مقادیر خام (قبل از کسر درصد سیستم)
     rawPurchaseProfit: { type: Number, default: 0 },
     rawDesignProfit: { type: Number, default: 0 },
@@ -84,3 +88,8 @@ ProjectIncomeSchema.pre("save", function (next) {
 
 export const ProjectIncome =
   mongoose.models.ProjectIncome || mongoose.model<IProjectIncome>("ProjectIncome", ProjectIncomeSchema)
+
+// Clear cache for development
+if (process.env.NODE_ENV === 'development') {
+  delete mongoose.models.ProjectIncome
+}
