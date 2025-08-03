@@ -258,25 +258,38 @@ export const CommissionInvoicePdf: React.FC<CommissionInvoicePdfProps> = ({
           <table style="width: 100%; border-collapse: collapse; font-size: 11px; font-family: 'Morabba', Arial, sans-serif;">
             <thead>
               <tr style="background: #58595B; color: #FBCC0A;">
-                <th style="padding: 8px; border: 1px solid #58595B; text-align: center; vertical-align: middle; font-weight: bold; width: 10%; font-family: 'Morabba', Arial, sans-serif;">ردیف</th>
-                <th style="padding: 8px; border: 1px solid #58595B; text-align: center; vertical-align: middle; font-weight: bold; width: 45%; font-family: 'Morabba', Arial, sans-serif;">نام پروژه</th>
-                <th style="padding: 8px; border: 1px solid #58595B; text-align: center; vertical-align: middle; font-weight: bold; width: 25%; font-family: 'Morabba', Arial, sans-serif;">بخش</th>
-                <th style="padding: 8px; border: 1px solid #58595B; text-align: center; vertical-align: middle; font-weight: bold; width: 20%; font-family: 'Morabba', Arial, sans-serif;">جمع پورسانت (ریال)</th>
+                <th style="padding: 8px; border: 1px solid #58595B; text-align: center; vertical-align: middle; font-weight: bold; width: 8%; font-family: 'Morabba', Arial, sans-serif;">ردیف</th>
+                <th style="padding: 8px; border: 1px solid #58595B; text-align: center; vertical-align: middle; font-weight: bold; width: 35%; font-family: 'Morabba', Arial, sans-serif;">نام پروژه</th>
+                <th style="padding: 8px; border: 1px solid #58595B; text-align: center; vertical-align: middle; font-weight: bold; width: 20%; font-family: 'Morabba', Arial, sans-serif;">بخش</th>
+                <th style="padding: 8px; border: 1px solid #58595B; text-align: center; vertical-align: middle; font-weight: bold; width: 22%; font-family: 'Morabba', Arial, sans-serif;">آیتم‌های پورسانت</th>
+                <th style="padding: 8px; border: 1px solid #58595B; text-align: center; vertical-align: middle; font-weight: bold; width: 15%; font-family: 'Morabba', Arial, sans-serif;">جمع پورسانت (ریال)</th>
               </tr>
             </thead>
             <tbody>
-              ${Object.values(groupedAssignments).map((group, index) => `
-                <tr style="background: white; color: #58595B;">
-                  <td style="padding: 6px; border: 1px solid #58595B; text-align: center; vertical-align: middle; font-weight: bold; font-family: 'Morabba', Arial, sans-serif;">${(index + 1).toLocaleString('fa-IR')}</td>
-                  <td style="padding: 6px; border: 1px solid #58595B; text-align: center; vertical-align: middle; font-weight: 600; font-family: 'Morabba', Arial, sans-serif;">${group.projectName}</td>
-                  <td style="padding: 6px; border: 1px solid #58595B; text-align: center; vertical-align: middle; font-weight: 500; font-family: 'Morabba', Arial, sans-serif;">${group.sectionName}</td>
-                  <td style="padding: 6px; border: 1px solid #58595B; text-align: center; vertical-align: middle; font-weight: bold; color: #2563eb; font-family: 'Morabba', Arial, sans-serif;">${group.totalCommission.toLocaleString('fa-IR')}</td>
-                </tr>
-              `).join('')}
+              ${Object.values(groupedAssignments).map((group, index) => {
+                // جمع‌آوری تمام آیتم‌های فعال این بخش
+                const activeItems = group.items.filter(item => item.isActive !== false)
+                
+                // حذف آیتم‌های تکراری با استفاده از Set
+                const uniqueItemNames = [...new Set(activeItems.map(item => item.itemName || item.fieldName || 'آیتم نامشخص'))]
+                const itemNames = uniqueItemNames.join(' + ')
+                
+                const totalCommission = activeItems.reduce((sum, item) => sum + item.commission, 0)
+                
+                return `
+                  <tr style="background: white; color: #58595B;">
+                    <td style="padding: 6px; border: 1px solid #58595B; text-align: center; vertical-align: middle; font-weight: bold; font-family: 'Morabba', Arial, sans-serif;">${(index + 1).toLocaleString('fa-IR')}</td>
+                    <td style="padding: 6px; border: 1px solid #58595B; text-align: center; vertical-align: middle; font-weight: 600; font-family: 'Morabba', Arial, sans-serif;">${group.projectName}</td>
+                    <td style="padding: 6px; border: 1px solid #58595B; text-align: center; vertical-align: middle; font-weight: 500; font-family: 'Morabba', Arial, sans-serif;">${group.sectionName}</td>
+                    <td style="padding: 6px; border: 1px solid #58595B; text-align: center; vertical-align: middle; font-weight: 500; font-family: 'Morabba', Arial, sans-serif; font-size: 10px;">${itemNames || 'آیتم‌های غیرفعال'}</td>
+                    <td style="padding: 6px; border: 1px solid #58595B; text-align: center; vertical-align: middle; font-weight: bold; color: #2563eb; font-family: 'Morabba', Arial, sans-serif;">${totalCommission.toLocaleString('fa-IR')}</td>
+                  </tr>
+                `
+              }).join('')}
             </tbody>
             <tfoot>
               <tr style="background: white; color: #58595B; border: 2px solid #FBCC0A;">
-                <td colspan="3" style="padding: 10px; border: 1px solid #58595B; text-align: center; vertical-align: middle; font-weight: bold; font-size: 13px; font-family: 'Morabba', Arial, sans-serif;">🎯 مجموع کل پورسانت دریافتی</td>
+                <td colspan="4" style="padding: 10px; border: 1px solid #58595B; text-align: center; vertical-align: middle; font-weight: bold; font-size: 13px; font-family: 'Morabba', Arial, sans-serif;">🎯 مجموع کل پورسانت دریافتی</td>
                 <td style="padding: 10px; border: 1px solid #58595B; text-align: center; vertical-align: middle; font-weight: bold; font-size: 13px; color: #2563eb; font-family: 'Morabba', Arial, sans-serif;">${totalCommission.toLocaleString('fa-IR')} ریال</td>
               </tr>
             </tfoot>
