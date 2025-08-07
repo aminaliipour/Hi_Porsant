@@ -684,13 +684,11 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
         )
         
         if (activeFields.length > 0) {
-          // تقسیم مقدار نهایی بین فیلدهای فعال
-          const perFieldValue = Math.round(finalFixedValue / activeFields.length)
-          
+          // قرار دادن مقدار کامل در هر فیلد فعال (بدون تقسیم)
           for (const field of activeFields) {
             const key = `${sectionName}_${field}`
-            newIncomeValues[key] = perFieldValue
-            console.log(`Auto-set field ${key} to:`, perFieldValue)
+            newIncomeValues[key] = finalFixedValue
+            console.log(`Auto-set field ${key} to full value:`, finalFixedValue)
           }
         }
       }
