@@ -23,6 +23,7 @@ interface CommissionInvoicePdfProps {
   baseSalary?: number
   additions?: number
   deductions?: number
+  description?: string // فیلد توضیحات اضافه شد
   onComplete?: () => void
 }
 
@@ -34,6 +35,7 @@ export const CommissionInvoicePdf: React.FC<CommissionInvoicePdfProps> = ({
   baseSalary = 0,
   additions = 0,
   deductions = 0,
+  description = "", // فیلد توضیحات اضافه شد
   onComplete,
 }) => {
   const [isClient, setIsClient] = useState(false)
@@ -75,39 +77,59 @@ export const CommissionInvoicePdf: React.FC<CommissionInvoicePdfProps> = ({
       tempDiv.style.backgroundColor = 'white'
       tempDiv.style.fontFamily = 'Morabba, Arial, sans-serif'
       tempDiv.style.direction = 'rtl'
+      tempDiv.style.textRendering = 'optimizeLegibility' // بهبود رندر متن
+      ;(tempDiv.style as any).webkitFontSmoothing = 'antialiased' // نرم‌تر کردن فونت
       document.body.appendChild(tempDiv)
 
-      // تبدیل HTML به canvas
+      // تبدیل HTML به canvas با کیفیت بالاتر
       const canvas = await html2canvas(tempDiv, {
-        scale: 2,
+        scale: 1.8, // افزایش کیفیت از 1.5 به 1.8
         useCORS: true,
         allowTaint: true,
         backgroundColor: '#ffffff',
         width: 750,
-        height: tempDiv.scrollHeight
+        height: tempDiv.scrollHeight,
+        logging: false,
+        imageTimeout: 0,
+        onclone: (cloned) => {
+          // اطمینان از بارگیری فونت‌ها
+          cloned.querySelectorAll('*').forEach(el => {
+            const htmlEl = el as HTMLElement;
+            if (htmlEl.style) {
+              htmlEl.style.fontFamily = 'Morabba, Arial, sans-serif';
+            }
+          });
+        }
       })
 
       // حذف div موقت
       document.body.removeChild(tempDiv)
 
-      // ایجاد PDF
+      // ایجاد PDF با فشرده‌سازی بهینه
       const imgWidth = 210 // A4 width in mm
       const pageHeight = 295 // A4 height in mm
       const imgHeight = (canvas.height * imgWidth) / canvas.width
       let heightLeft = imgHeight
 
-      const doc = new jsPDF('p', 'mm', 'a4')
+      // ایجاد PDF با تنظیمات بهینه
+      const doc = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4',
+        compress: true
+      })
       let position = 0
 
-      // اضافه کردن صفحه اول
-      doc.addImage(canvas.toDataURL('image/png'), 'PNG', 0, position, imgWidth, imgHeight)
+      // استفاده از JPEG با کیفیت بالاتر
+      const imageData = canvas.toDataURL('image/jpeg', 0.95) // افزایش کیفیت از 92% به 95%
+      doc.addImage(imageData, 'JPEG', 0, position, imgWidth, imgHeight)
       heightLeft -= pageHeight
 
       // اضافه کردن صفحات بعدی در صورت نیاز
       while (heightLeft >= 0) {
         position = heightLeft - imgHeight
         doc.addPage()
-        doc.addImage(canvas.toDataURL('image/png'), 'PNG', 0, position, imgWidth, imgHeight)
+        doc.addImage(imageData, 'JPEG', 0, position, imgWidth, imgHeight)
         heightLeft -= pageHeight
       }
 
@@ -186,20 +208,19 @@ export const CommissionInvoicePdf: React.FC<CommissionInvoicePdfProps> = ({
           font-display: swap;
         }
         
-        /* فونت fallback برای production */
-        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap');
-        
-        /* اطمینان از استفاده از فونت مناسب */
         body, * {
-          font-family: 'Morabba', 'Vazirmatn', 'Tahoma', 'Arial', sans-serif !important;
+          font-family: 'Morabba', 'Tahoma', 'Arial', sans-serif !important;
+          text-rendering: optimizeLegibility;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
         }
       </style>
-      <div style="width: 750px; min-height: 800px; background: white; font-family: 'Morabba', 'Vazirmatn', 'Tahoma', 'Arial', sans-serif; font-size: 12px; direction: rtl; padding: 12px; box-sizing: border-box;">
+      <div style="width: 750px; min-height: 800px; background: white; font-family: 'Morabba', 'Tahoma', 'Arial', sans-serif; font-size: 12px; direction: rtl; padding: 12px; box-sizing: border-box;">
         
         <!-- هدر -->
         <div style="background: linear-gradient(135deg, #FBCC0A, #FDD835); padding: 15px; border-radius: 6px; margin-bottom: 15px; position: relative;">
           <div style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%);">
-            <img src="/factor_logo.png" alt="لوگو" style="width: 255px; height: auto; max-height: 250px; object-fit: contain; border-radius: 4px;" />
+            <img src="/factor_logo.png" alt="لوگو" style="width: 200px; height: auto; max-height: 200px; object-fit: contain; border-radius: 4px;" />
           </div>
           <div style="text-align: right; padding-right: 12px;">
             <h1 style="color:rgb(42, 41, 41); font-size: 25px; margin: 0 0 5px 0; font-weight: bold; font-family: 'Morabba', Arial, sans-serif;">فیش حقوق و دستمزد${archiveName ? ` - ${archiveName}` : ''}</h1>
@@ -244,6 +265,16 @@ export const CommissionInvoicePdf: React.FC<CommissionInvoicePdfProps> = ({
               <td style="padding: 8px; border: 1px solid #58595B; text-align: center; vertical-align: middle; color: #58595B; font-weight: bold; font-family: 'Morabba', Arial, sans-serif;">${deductions.toLocaleString('fa-IR')} ریال</td>
             </tr>
           </table>
+          
+          <!-- توضیحات -->
+          ${description ? `
+          <div style="margin: 15px 0;">
+            <h3 style="color: #58595B; font-size: 14px; margin-bottom: 8px; border-bottom: 2px solid #FBCC0A; padding-bottom: 2px; font-family: 'Morabba', Arial, sans-serif;">📝 توضیحات</h3>
+            <div style="background: #f8f9fa; padding: 12px; border-radius: 5px; border-right: 3px solid #FBCC0A; color: #58595B; font-family: 'Morabba', Arial, sans-serif; line-height: 1.6; font-size: 12px;">
+              ${description.replace(/\n/g, '<br>')}
+            </div>
+          </div>
+          ` : ''}
           
           <div style="background: white; color: #58595B; padding: 10px; border-radius: 5px; text-align: center; border: 2px solid #FBCC0A;">
             <span style="font-size: 15px; font-weight: bold; font-family: 'Morabba', Arial, sans-serif;">💵 جمع کل دریافتی: ${totalPayment.toLocaleString('fa-IR')} ریال</span>

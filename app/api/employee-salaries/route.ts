@@ -39,6 +39,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json()
+    console.log("Received body in API:", body)
     await dbConnect()
 
     if (!body.employeeId) {
@@ -64,23 +65,32 @@ export async function POST(request: Request) {
       ...(findArchiveId && { archiveId: findArchiveId }),
     }
 
-    let salary = await EmployeeSalary.findOne(query)
-    if (salary) {
-      salary.baseSalary = body.baseSalary
-      salary.additions = body.additions
-      salary.deductions = body.deductions
-      await salary.save()
-    } else {
-      salary = new EmployeeSalary({
-        employeeId: body.employeeId,
-        baseSalary: body.baseSalary || 0,
-        additions: body.additions || 0,
-        deductions: body.deductions || 0,
-        date: body.date || new Date().toISOString().split("T")[0],
-        archiveId: findArchiveId,
-      })
+    // استفاده از updateOne برای اطمینان از ذخیره فیلد description
+    const updateData = {
+      baseSalary: body.baseSalary,
+      additions: body.additions,
+      deductions: body.deductions,
+      description: body.description || "",
+    }
+
+    console.log("Update data:", updateData)
+
+    let salary = await EmployeeSalary.findOneAndUpdate(
+      query,
+      { $set: updateData },
+      { new: true, upsert: true, setDefaultsOnInsert: true }
+    )
+
+    // اگر document جدید است، date و archiveId را تنظیم کن
+    if (!salary.date) {
+      salary.date = body.date || new Date().toISOString().split("T")[0]
+      if (findArchiveId) {
+        salary.archiveId = findArchiveId
+      }
       await salary.save()
     }
+
+    console.log("Final saved salary:", salary)
     return NextResponse.json(salary, { status: 201 })
   } catch (error) {
     console.error("Error saving salary data:", error)

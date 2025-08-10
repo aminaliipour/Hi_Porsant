@@ -5,6 +5,7 @@ export interface IEmployeeSalary extends Document {
   baseSalary: number
   additions: number
   deductions: number
+  description?: string // فیلد توضیحات اضافه شد
   date: string
   archiveId?: mongoose.Types.ObjectId // اضافه شد
   createdAt: Date
@@ -17,10 +18,14 @@ const EmployeeSalarySchema: Schema = new Schema(
     baseSalary: { type: Number, default: 0 },
     additions: { type: Number, default: 0 },
     deductions: { type: Number, default: 0 },
+    description: { type: String, default: "" }, // فیلد توضیحات - حذف required: false
     date: { type: String, required: true },
     archiveId: { type: Schema.Types.ObjectId, ref: "Archive" }, // اضافه شد
   },
-  { timestamps: true },
+  { 
+    timestamps: true,
+    strict: false // اجازه فیلدهای اضافی
+  },
 )
 
 export const EmployeeSalary =

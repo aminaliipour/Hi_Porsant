@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/components/ui/use-toast"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -43,6 +44,7 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
     baseSalary: 0,
     additions: 0,
     deductions: 0,
+    description: "", // فیلد توضیحات اضافه شد
   })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -98,18 +100,22 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
         throw new Error("خطا در دریافت اطلاعات حقوق")
       }
       const salaryData = await salaryResponse.json()
+      console.log("Fetched salary data:", salaryData)
       if (Array.isArray(salaryData) && salaryData.length > 0) {
         const latestSalary = salaryData[0]
+        console.log("Latest salary:", latestSalary)
         setSalary({
           baseSalary: latestSalary.baseSalary || 0,
           additions: latestSalary.additions || 0,
           deductions: latestSalary.deductions || 0,
+          description: latestSalary.description || "", // فیلد توضیحات اضافه شد
         })
       } else {
         setSalary({
           baseSalary: 0,
           additions: 0,
           deductions: 0,
+          description: "", // فیلد توضیحات اضافه شد
         })
       }
     } catch (error) {
@@ -124,11 +130,16 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
     }
   }
 
-  const handleSalaryChange = (field: string, value: number) => {
-    setSalary(prev => ({
-      ...prev,
-      [field]: value,
-    }))
+  const handleSalaryChange = (field: string, value: number | string) => {
+    console.log(`Salary field ${field} changed to:`, value)
+    setSalary(prev => {
+      const newSalary = {
+        ...prev,
+        [field]: value,
+      }
+      console.log("New salary state:", newSalary)
+      return newSalary
+    })
   }
 
   const handleCommissionToggle = (key: string, index: number) => {
@@ -172,6 +183,15 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
     }
     try {
       // ذخیره حقوق پایه
+      console.log("Sending salary data:", {
+        employeeId: employee._id,
+        baseSalary: salary.baseSalary,
+        additions: salary.additions,
+        deductions: salary.deductions,
+        description: salary.description,
+        archiveId,
+      })
+      
       const response = await fetch("/api/employee-salaries", {
         method: "POST",
         headers: {
@@ -182,6 +202,7 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
           baseSalary: salary.baseSalary,
           additions: salary.additions,
           deductions: salary.deductions,
+          description: salary.description, // فیلد توضیحات اضافه شد
           archiveId,
         }),
       })
@@ -189,6 +210,9 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
       if (!response.ok) {
         throw new Error("خطا در ذخیره اطلاعات حقوق")
       }
+
+      const savedData = await response.json()
+      console.log("Saved salary data:", savedData)
 
       // ذخیره حالت toggle های پورسانت‌ها
       const commissionStatesResponse = await fetch("/api/user-commissions/update-status", {
@@ -282,6 +306,23 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
                     </div>
                   </div>
 
+                  {/* قسمت توضیحات */}
+                  <div className="space-y-2 mt-4">
+                    <label>توضیحات:</label>
+                    <Textarea
+                      value={salary.description}
+                      onChange={(e) => {
+                        console.log("Description changed to:", e.target.value)
+                        handleSalaryChange("description", e.target.value)
+                      }}
+                      placeholder="توضیحات مربوط به حقوق و مزایا..."
+                      className="min-h-[100px]"
+                    />
+                    <div className="text-xs text-gray-500">
+                      طول فعلی: {salary.description?.length || 0} کاراکتر
+                    </div>
+                  </div>
+
                   <div className="mt-4 pt-4 border-t">
                     <div className="flex justify-between items-center">
                       <span className="font-bold">جمع کل دریافتی:</span>
@@ -359,6 +400,7 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
             baseSalary={salary.baseSalary}
             additions={salary.additions}
             deductions={salary.deductions}
+            description={salary.description} // فیلد توضیحات اضافه شد
             onComplete={() => {
               toast({
                 title: "موفق",

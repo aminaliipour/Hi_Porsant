@@ -1,18 +1,5 @@
 {
-  "/api/sale-details/route": "app/api/sale-details/route.js",
-  "/api/system-percentages/route": "app/api/system-percentages/route.js",
-  "/api/project-sections/route": "app/api/project-sections/route.js",
   "/page": "app/page.js",
-  "/api/section-weights/route": "app/api/section-weights/route.js",
-  "/api/purchase-details/route": "app/api/purchase-details/route.js",
-  "/api/design-details/route": "app/api/design-details/route.js",
-  "/api/consultation-details/route": "app/api/consultation-details/route.js",
-  "/api/collaboration-details/route": "app/api/collaboration-details/route.js",
-  "/api/project-tax/route": "app/api/project-tax/route.js",
-  "/api/contracting-details/route": "app/api/contracting-details/route.js",
-  "/api/projects/route": "app/api/projects/route.js",
-  "/api/project-incomes/route": "app/api/project-incomes/route.js",
-  "/api/team-members/route": "app/api/team-members/route.js",
-  "/api/guest-referrals/route": "app/api/guest-referrals/route.js",
-  "/api/system-expenses/route": "app/api/system-expenses/route.js"
+  "/api/user-commissions/[id]/route": "app/api/user-commissions/[id]/route.js",
+  "/api/employee-salaries/route": "app/api/employee-salaries/route.js"
 }
