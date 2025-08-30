@@ -13,6 +13,8 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { NumberInput } from "@/components/number-input"
 import { CommissionInvoicePdf } from "@/components/CommissionInvoicePdf"
 import { Switch } from "@/components/ui/switch"
+import { AdditionsDialog } from "./additions-dialog"
+import { DeductionsDialog } from "./deductions-dialog"
 
 interface TeamMember {
   _id: string
@@ -42,8 +44,9 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
   const [assignments, setAssignments] = useState<UserAssignment[]>([])
   const [salary, setSalary] = useState({
     baseSalary: 0,
-    additions: 0,
-    deductions: 0,
+    additions: [] as Array<{title: string, amount: number}>, // تفصیلی شد
+    deductions: [] as Array<{title: string, amount: number}>, // تفصیلی شد
+    taxDeduction: 0, // کسر 7% مالیات اضافه شد
     description: "", // فیلد توضیحات اضافه شد
   })
   const [loading, setLoading] = useState(true)
@@ -106,15 +109,17 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
         console.log("Latest salary:", latestSalary)
         setSalary({
           baseSalary: latestSalary.baseSalary || 0,
-          additions: latestSalary.additions || 0,
-          deductions: latestSalary.deductions || 0,
+          additions: Array.isArray(latestSalary.additions) ? latestSalary.additions : [],
+          deductions: Array.isArray(latestSalary.deductions) ? latestSalary.deductions : [],
+          taxDeduction: latestSalary.taxDeduction || Math.round((latestSalary.baseSalary || 0) * 0.07), // محاسبه 7%
           description: latestSalary.description || "", // فیلد توضیحات اضافه شد
         })
       } else {
         setSalary({
           baseSalary: 0,
-          additions: 0,
-          deductions: 0,
+          additions: [],
+          deductions: [],
+          taxDeduction: 0, // کسر 7% مالیات اضافه شد
           description: "", // فیلد توضیحات اضافه شد
         })
       }
@@ -137,6 +142,12 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
         ...prev,
         [field]: value,
       }
+      
+      // اگر حقوق پایه تغییر کرد، 7% آن را محاسبه کن
+      if (field === 'baseSalary' && typeof value === 'number') {
+        newSalary.taxDeduction = Math.round(value * 0.07)
+      }
+      
       console.log("New salary state:", newSalary)
       return newSalary
     })
@@ -163,10 +174,13 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
   }
 
   const getTotalPayment = () => {
-    return salary.baseSalary + salary.additions + getTotalCommission() - salary.deductions
+    const totalAdditions = salary.additions.reduce((sum, item) => sum + item.amount, 0)
+    const totalDeductions = salary.deductions.reduce((sum, item) => sum + item.amount, 0)
+    return salary.baseSalary + totalAdditions + getTotalCommission() - totalDeductions - salary.taxDeduction
   }
 
   const saveSalary = async () => {
+    console.log("Save salary called with:", salary)
     // دریافت archiveId فعال
     let archiveId = ""
     const stored = localStorage.getItem("activeArchive")
@@ -202,6 +216,7 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
           baseSalary: salary.baseSalary,
           additions: salary.additions,
           deductions: salary.deductions,
+          taxDeduction: salary.taxDeduction, // کسر 7% اضافه شد
           description: salary.description, // فیلد توضیحات اضافه شد
           archiveId,
         }),
@@ -285,18 +300,60 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
                       />
                     </div>
                     <div className="space-y-2">
-                      <label>اضافات:</label>
-                      <NumberInput
-                        value={salary.additions.toString()}
-                        onChange={(value) => handleSalaryChange("additions", value)}
-                      />
+                      <label className="font-medium">اضافات (پاداش و مزایا):</label>
+                      <div className="flex items-center justify-between p-3 border rounded-md bg-green-50">
+                        <div className="text-sm">
+                          <span className="font-medium">تعداد آیتم‌ها: </span>
+                          <span>{salary.additions.length}</span>
+                          <br />
+                          <span className="font-medium text-green-700">مجموع: </span>
+                          <span className="text-green-700">
+                            {new Intl.NumberFormat('fa-IR').format(salary.additions.reduce((sum, item) => sum + item.amount, 0))} ریال
+                          </span>
+                        </div>
+                        <AdditionsDialog 
+                          additions={salary.additions}
+                          onAdditionsChange={(newAdditions) => {
+                            console.log("Additions updated:", newAdditions)
+                            setSalary({...salary, additions: newAdditions})
+                          }}
+                        >
+                          <Button variant="outline" size="sm">
+                            مدیریت اضافات
+                          </Button>
+                        </AdditionsDialog>
+                      </div>
                     </div>
                     <div className="space-y-2">
-                      <label>کسورات:</label>
-                      <NumberInput
-                        value={salary.deductions.toString()}
-                        onChange={(value) => handleSalaryChange("deductions", value)}
-                      />
+                      <label className="font-medium">کسورات (بیمه، مالیات و سایر):</label>
+                      <div className="flex items-center justify-between p-3 border rounded-md bg-red-50">
+                        <div className="text-sm">
+                          <span className="font-medium">تعداد آیتم‌ها: </span>
+                          <span>{salary.deductions.length}</span>
+                          <br />
+                          <span className="font-medium text-red-700">مجموع: </span>
+                          <span className="text-red-700">
+                            {new Intl.NumberFormat('fa-IR').format(salary.deductions.reduce((sum, item) => sum + item.amount, 0))} ریال
+                          </span>
+                        </div>
+                        <DeductionsDialog 
+                          deductions={salary.deductions}
+                          onDeductionsChange={(newDeductions) => {
+                            console.log("Deductions updated:", newDeductions)
+                            setSalary({...salary, deductions: newDeductions})
+                          }}
+                        >
+                          <Button variant="outline" size="sm">
+                            مدیریت کسورات
+                          </Button>
+                        </DeductionsDialog>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <label>کسر 7% (بیمه):</label>
+                      <div className="p-2 bg-red-50 rounded-md text-red-600 font-medium">
+                        {new Intl.NumberFormat('fa-IR').format(salary.taxDeduction)} ریال
+                      </div>
                     </div>
                     <div className="space-y-2">
                       <label>مجموع پورسانت:</label>
@@ -400,6 +457,7 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
             baseSalary={salary.baseSalary}
             additions={salary.additions}
             deductions={salary.deductions}
+            taxDeduction={salary.taxDeduction} // کسر 7% اضافه شد
             description={salary.description} // فیلد توضیحات اضافه شد
             onComplete={() => {
               toast({

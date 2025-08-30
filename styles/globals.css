@@ -1,3 +1,42 @@
+@layer utilities {
+  .no-print {
+    display: none !important;
+  }
+}
+@font-face {
+  font-family: 'IRANSansWeb';
+  src: url('/IRANSansWeb (1).ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@layer utilities {
+  .font-iransans {
+    font-family: 'IRANSansWeb', Arial, Helvetica, sans-serif !important;
+    letter-spacing: 0 !important;
+    direction: rtl;
+  }
+}
+/* Specific title styling to ensure Arabic/Persian ligatures and smoothing */
+.report-title {
+  font-family: 'IRANSansWeb', 'Morabba', Arial, Helvetica, sans-serif !important;
+  font-variant-ligatures: common-ligatures discretionary-ligatures; /* enable ligatures */
+  font-feature-settings: "rlig" 1, "liga" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: normal !important;
+  white-space: normal; /* allow wrapping if needed */
+  word-break: keep-all; /* prevent breaking between letters */
+  display: inline-block;
+  direction: rtl;
+}
+@layer utilities {
+  .font-iran {
+    font-family: 'Morabba', Arial, Helvetica, sans-serif !important;
+    letter-spacing: 0 !important;
+    direction: rtl;
+  }
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

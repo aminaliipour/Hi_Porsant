@@ -10,6 +10,7 @@ import CommissionTab from "@/components/tabs/commission-tab"
 import SystemTab from "@/components/tabs/system-tab"
 import SalaryTab from "@/components/tabs/salary-tab"
 import TaadolTab from "@/components/tabs/taadol-tab"
+import ReportTab from "@/components/tabs/report-tab"
 import LoginPage from "@/components/login-page"
 
 export default function Home() {
@@ -81,6 +82,9 @@ export default function Home() {
         </TabsContent>
         <TabsContent value="taadol">
           <TaadolTab />
+        </TabsContent>
+        <TabsContent value="report">
+          <ReportTab />
         </TabsContent>
       </Tabs>
     </MainLayout>

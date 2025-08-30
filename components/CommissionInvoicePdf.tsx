@@ -21,8 +21,9 @@ interface CommissionInvoicePdfProps {
   assignments: CommissionAssignment[]
   totalCommission: number
   baseSalary?: number
-  additions?: number
-  deductions?: number
+  additions?: Array<{title: string, amount: number}>
+  deductions?: Array<{title: string, amount: number}>
+  taxDeduction?: number // کسر 7% اضافه شد
   description?: string // فیلد توضیحات اضافه شد
   onComplete?: () => void
 }
@@ -33,8 +34,9 @@ export const CommissionInvoicePdf: React.FC<CommissionInvoicePdfProps> = ({
   assignments,
   totalCommission,
   baseSalary = 0,
-  additions = 0,
-  deductions = 0,
+  additions = [],
+  deductions = [],
+  taxDeduction = 0, // کسر 7% اضافه شد
   description = "", // فیلد توضیحات اضافه شد
   onComplete,
 }) => {
@@ -190,7 +192,10 @@ export const CommissionInvoicePdf: React.FC<CommissionInvoicePdfProps> = ({
       totalCommission: number
     }>)
     
-    const totalPayment = baseSalary + additions + totalCommission - deductions
+    // محاسبه مجموع اضافات و کسورات
+    const totalAdditions = additions.reduce((sum, item) => sum + item.amount, 0)
+    const totalDeductions = deductions.reduce((sum, item) => sum + item.amount, 0)
+    const totalPayment = baseSalary + totalAdditions + totalCommission - totalDeductions - taxDeduction
 
     return `
       <style>
@@ -254,16 +259,34 @@ export const CommissionInvoicePdf: React.FC<CommissionInvoicePdfProps> = ({
             </tr>
             <tr style="background: white;">
               <td style="padding: 8px; border: 1px solid #58595B; font-weight: bold; text-align: center; vertical-align: middle; color: #58595B; font-family: 'Morabba', Arial, sans-serif;">➕ اضافات (پاداش و مزایا)</td>
-              <td style="padding: 8px; border: 1px solid #58595B; text-align: center; vertical-align: middle; color: #58595B; font-weight: bold; font-family: 'Morabba', Arial, sans-serif;">${additions.toLocaleString('fa-IR')} ریال</td>
+              <td style="padding: 8px; border: 1px solid #58595B; text-align: center; vertical-align: middle; color: #58595B; font-weight: bold; font-family: 'Morabba', Arial, sans-serif;">${totalAdditions.toLocaleString('fa-IR')} ریال</td>
             </tr>
+            ${additions.length > 0 ? additions.map(addition => `
+            <tr style="background: #f8f9fa;">
+              <td style="padding: 4px 8px; border: 1px solid #58595B; font-size: 10px; text-align: center; vertical-align: middle; color: #58595B; font-family: 'Morabba', Arial, sans-serif;">   • ${addition.title}</td>
+              <td style="padding: 4px 8px; border: 1px solid #58595B; font-size: 10px; text-align: center; vertical-align: middle; color: #58595B; font-family: 'Morabba', Arial, sans-serif;">${addition.amount.toLocaleString('fa-IR')} ریال</td>
+            </tr>
+            `).join('') : ''}
             <tr style="background: #FBCC0A;">
               <td style="padding: 8px; border: 1px solid #58595B; font-weight: bold; text-align: center; vertical-align: middle; color: #58595B; font-family: 'Morabba', Arial, sans-serif;">🎯 مجموع پورسانت (سهم از پروژه‌ها)</td>
               <td style="padding: 8px; border: 1px solid #58595B; text-align: center; vertical-align: middle; color: #58595B; font-weight: bold; font-family: 'Morabba', Arial, sans-serif;">${totalCommission.toLocaleString('fa-IR')} ریال</td>
             </tr>
             <tr style="background: white;">
               <td style="padding: 8px; border: 1px solid #58595B; font-weight: bold; text-align: center; vertical-align: middle; color: #58595B; font-family: 'Morabba', Arial, sans-serif;">➖ کسورات (بیمه، مالیات و سایر)</td>
-              <td style="padding: 8px; border: 1px solid #58595B; text-align: center; vertical-align: middle; color: #58595B; font-weight: bold; font-family: 'Morabba', Arial, sans-serif;">${deductions.toLocaleString('fa-IR')} ریال</td>
+              <td style="padding: 8px; border: 1px solid #58595B; text-align: center; vertical-align: middle; color: #58595B; font-weight: bold; font-family: 'Morabba', Arial, sans-serif;">${totalDeductions.toLocaleString('fa-IR')} ریال</td>
             </tr>
+            ${deductions.length > 0 ? deductions.map(deduction => `
+            <tr style="background: #f8f9fa;">
+              <td style="padding: 4px 8px; border: 1px solid #58595B; font-size: 10px; text-align: center; vertical-align: middle; color: #58595B; font-family: 'Morabba', Arial, sans-serif;">   • ${deduction.title}</td>
+              <td style="padding: 4px 8px; border: 1px solid #58595B; font-size: 10px; text-align: center; vertical-align: middle; color: #58595B; font-family: 'Morabba', Arial, sans-serif;">${deduction.amount.toLocaleString('fa-IR')} ریال</td>
+            </tr>
+            `).join('') : ''}
+            ${taxDeduction > 0 ? `
+            <tr style="background: #FBCC0A;">
+              <td style="padding: 8px; border: 1px solid #58595B; font-weight: bold; text-align: center; vertical-align: middle; color: #58595B; font-family: 'Morabba', Arial, sans-serif;">🏛️ کسر بیمه (7% حقوق پایه)</td>
+              <td style="padding: 8px; border: 1px solid #58595B; text-align: center; vertical-align: middle; color: #dc2626; font-weight: bold; font-family: 'Morabba', Arial, sans-serif;">${taxDeduction.toLocaleString('fa-IR')} ریال</td>
+            </tr>
+            ` : ''}
           </table>
           
           <!-- توضیحات -->

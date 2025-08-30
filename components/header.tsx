@@ -36,6 +36,7 @@ export function Header({ activeTab, setActiveTab, onLogout }: HeaderProps) {
     { value: "system", label: "سیستم" },
     { value: "salary", label: "حقوق و مزایا" },
     { value: "taadol", label: "سیستم تعادل" },
+    { value: "report", label: "گزارش" },
   ]
 
   useEffect(() => {

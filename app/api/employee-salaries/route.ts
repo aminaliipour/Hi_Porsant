@@ -70,6 +70,7 @@ export async function POST(request: Request) {
       baseSalary: body.baseSalary,
       additions: body.additions,
       deductions: body.deductions,
+      taxDeduction: body.taxDeduction || 0, // کسر 7% اضافه شد
       description: body.description || "",
     }
 
