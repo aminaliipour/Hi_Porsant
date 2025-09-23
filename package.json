@@ -43,6 +43,8 @@
     "cmdk": "1.0.4",
     "date-fns": "^2.30.0",
     "embla-carousel-react": "8.5.1",
+    "form-data": "^4.0.4",
+    "googleapis": "^159.0.0",
     "html2canvas": "^1.4.1",
     "input-otp": "1.4.1",
     "jspdf": "^3.0.1",

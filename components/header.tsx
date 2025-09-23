@@ -5,11 +5,9 @@ import { ModeToggle } from "@/components/mode-toggle"
 import { useToast } from "@/components/ui/use-toast"
 import { LogOut, User, Menu, Edit2, Trash2 } from "lucide-react"
 import Image from "next/image"
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState } from "react"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Select } from "@/components/ui/select"
-import { Calendar } from "@/components/ui/calendar"
 
 interface HeaderProps {
   activeTab: string;
@@ -26,8 +24,7 @@ export function Header({ activeTab, setActiveTab, onLogout }: HeaderProps) {
   const [newArchive, setNewArchive] = useState({ name: "", month: 0, year: 0 })
   const [editArchive, setEditArchive] = useState<any>(null)
   const [editArchiveData, setEditArchiveData] = useState({ name: "", month: 0, year: 0 })
-  const [archiveDropdownOpen, setArchiveDropdownOpen] = useState(false)
-  const archiveDropdownRef = useRef<HTMLDivElement>(null)
+  const [showArchiveSelect, setShowArchiveSelect] = useState(false)
 
   const tabs = [
     { value: "projects", label: "پروژه‌ها" },
@@ -145,7 +142,7 @@ export function Header({ activeTab, setActiveTab, onLogout }: HeaderProps) {
   }
 
   // انتقال پروژه‌ها و اعضای تیم فعلی به آرشیو انتخابی
-  const copyCurrentDataToArchive = async (archive) => {
+  const copyCurrentDataToArchive = async (archive: any) => {
     // انتقال پروژه‌ها بدون تکرار
     const projectsRes = await fetch("/api/projects")
     const projects = await projectsRes.json()
@@ -153,7 +150,7 @@ export function Header({ activeTab, setActiveTab, onLogout }: HeaderProps) {
     const destRes = await fetch(`/api/projects?archiveId=${archive._id}`)
     const destProjects = await destRes.json()
     for (const p of projects) {
-      const exists = destProjects.find(dp => dp.name === p.name)
+      const exists = destProjects.find((dp: any) => dp.name === p.name)
       if (!exists) {
         await fetch("/api/projects", {
           method: "POST",
@@ -178,20 +175,6 @@ export function Header({ activeTab, setActiveTab, onLogout }: HeaderProps) {
       setActiveArchive(null)
     }
   }, [archives])
-
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (archiveDropdownRef.current && !archiveDropdownRef.current.contains(event.target as Node)) {
-        setArchiveDropdownOpen(false)
-      }
-    }
-    if (archiveDropdownOpen) {
-      document.addEventListener("mousedown", handleClickOutside)
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-    return () => document.removeEventListener("mousedown", handleClickOutside)
-  }, [archiveDropdownOpen])
 
   // حذف آرشیو
   const handleDeleteArchive = async (archiveId: string) => {
@@ -292,61 +275,124 @@ export function Header({ activeTab, setActiveTab, onLogout }: HeaderProps) {
       </div>
       {/* Archive Section زیر لوگو */}
       <div className="container flex flex-col items-start gap-2 pb-2">
-        <div className="flex items-center gap-2" ref={archiveDropdownRef}>
+        <div className="flex items-center gap-2">
           <Button
             size="sm"
             variant="outline"
             className="min-w-[120px] justify-between"
-            onClick={() => setArchiveDropdownOpen((v) => !v)}
+            onClick={() => setShowArchiveSelect(true)}
           >
             {activeArchive ? activeArchive.name : "انتخاب آرشیو"}
             <span className="ml-2">▼</span>
           </Button>
-          {archiveDropdownOpen && (
-            <div className="absolute mt-12 bg-white dark:bg-gray-900 border rounded shadow-lg z-50 w-64 max-h-72 overflow-y-auto scrollbar-thin scrollbar-thumb-yellow-400 scrollbar-track-gray-100"
-                 style={{ maxHeight: '320px', overflowY: 'auto', width: '320px' }}>
-              <div
-                className="flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-red-100 dark:hover:bg-red-900/20 text-red-600 font-bold border-b"
-                onClick={() => {
-                  setActiveArchive(null)
-                  localStorage.removeItem("activeArchive")
-                  setArchiveDropdownOpen(false)
-                  window.location.reload()
-                }}
-              >
-                بدون آرشیو (خروج از آرشیو)
-              </div>
-              {archives.length === 0 && (
-                <div className="p-4 text-center text-gray-400">آرشیوی وجود ندارد</div>
-              )}
-              {archives.map((a) => (
-                <div
-                  key={a._id}
-                  className={`flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-yellow-100 dark:hover:bg-yellow-900/20 ${activeArchive && activeArchive._id === a._id ? "bg-yellow-50 dark:bg-yellow-800/40 font-bold" : ""}`}
-                >
-                  <span onClick={() => {
-                    setActiveArchive(a)
-                    localStorage.setItem("activeArchive", JSON.stringify(a))
-                    setArchiveDropdownOpen(false)
-                    window.location.reload()
-                  }} style={{ flex: 1, cursor: "pointer" }}>
-                    {a.name} <span className="text-xs text-gray-400">({a.month}/{a.year})</span>
-                  </span>
-                  <Button size="icon" variant="ghost" onClick={() => handleEditArchive(a)} title="ویرایش" className="ml-1">
-                    <Edit2 className="w-4 h-4" />
-                  </Button>
-                  <Button size="icon" variant="ghost" onClick={() => handleDeleteArchive(a._id)} title="حذف" className="ml-1">
-                    <Trash2 className="w-4 h-4 text-red-500" />
-                  </Button>
-                </div>
-              ))}
-            </div>
-          )}
           <Button size="sm" variant="outline" onClick={() => setShowNewArchive(true)}>
             آرشیو جدید
           </Button>
         </div>
       </div>
+      
+      {/* Archive Selection Dialog */}
+      {showArchiveSelect && (
+        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg w-96 max-h-[500px] overflow-hidden">
+            <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+              <h2 className="text-lg font-bold">انتخاب آرشیو</h2>
+            </div>
+            <div className="max-h-80 overflow-y-auto">
+              {/* گزینه بدون آرشیو */}
+              <div
+                className="flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-red-100 dark:hover:bg-red-900/20 text-red-600 font-medium border-b border-gray-100 dark:border-gray-800"
+                onClick={() => {
+                  setActiveArchive(null)
+                  localStorage.removeItem("activeArchive")
+                  setShowArchiveSelect(false)
+                  window.location.reload()
+                }}
+              >
+                <span>🚫 بدون آرشیو (خروج از آرشیو)</span>
+              </div>
+              
+              {/* لیست آرشیوها */}
+              {archives.length === 0 && (
+                <div className="p-8 text-center text-gray-400">
+                  <div className="text-4xl mb-2">📁</div>
+                  <div>آرشیوی وجود ندارد</div>
+                </div>
+              )}
+              {archives.map((archive) => (
+                <div
+                  key={archive._id}
+                  className={`flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-yellow-50 dark:hover:bg-yellow-900/20 border-b border-gray-100 dark:border-gray-800 ${
+                    activeArchive && activeArchive._id === archive._id 
+                      ? "bg-yellow-100 dark:bg-yellow-800/40 border-l-4 border-l-yellow-500" 
+                      : ""
+                  }`}
+                >
+                  <div
+                    className="flex-1 flex items-center gap-3 cursor-pointer"
+                    onClick={() => {
+                      setActiveArchive(archive)
+                      localStorage.setItem("activeArchive", JSON.stringify(archive))
+                      setShowArchiveSelect(false)
+                      window.location.reload()
+                    }}
+                  >
+                    <span className="text-xl">
+                      {activeArchive && activeArchive._id === archive._id ? "✅" : "📁"}
+                    </span>
+                    <div>
+                      <div className={`font-medium ${activeArchive && activeArchive._id === archive._id ? "text-yellow-700 dark:text-yellow-300" : ""}`}>
+                        {archive.name}
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        {archive.month}/{archive.year}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Button 
+                      size="sm" 
+                      variant="ghost" 
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleEditArchive(archive)
+                        setShowArchiveSelect(false)
+                      }} 
+                      title="ویرایش"
+                      className="h-8 w-8 p-0 hover:bg-blue-100 dark:hover:bg-blue-900/30"
+                    >
+                      <Edit2 className="w-3 h-3 text-blue-600 dark:text-blue-400" />
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      variant="ghost" 
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleDeleteArchive(archive._id)
+                        setShowArchiveSelect(false)
+                      }} 
+                      title="حذف"
+                      className="h-8 w-8 p-0 hover:bg-red-100 dark:hover:bg-red-900/30"
+                    >
+                      <Trash2 className="w-3 h-3 text-red-500" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="p-4 border-t border-gray-200 dark:border-gray-700 flex justify-end">
+              <Button 
+                variant="outline" 
+                onClick={() => setShowArchiveSelect(false)}
+                className="text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100"
+              >
+                انصراف
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* New Archive Dialog */}
       {showNewArchive && (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">

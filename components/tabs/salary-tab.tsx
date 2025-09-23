@@ -28,6 +28,7 @@ interface GuestReferral {
 
 export default function SalaryTab() {
   const [employees, setEmployees] = useState<TeamMember[]>([])
+  const [filteredEmployees, setFilteredEmployees] = useState<TeamMember[]>([])
   const [guests, setGuests] = useState<GuestReferral[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedEmployee, setSelectedEmployee] = useState<TeamMember | null>(null)
@@ -65,6 +66,10 @@ export default function SalaryTab() {
       const employeesResponse = await fetch(employeesUrl)
       const employeesData = await employeesResponse.json()
       setEmployees(employeesData)
+
+      // فیلتر کردن کارمندانی که مقادیر غیرصفر دارند
+      await filterEmployeesWithNonZeroValues(employeesData, archiveId)
+
       const guestsResponse = await fetch(guestsUrl)
       const guestsData = await guestsResponse.json()
       setGuests(guestsData)
@@ -76,6 +81,70 @@ export default function SalaryTab() {
       })
     } finally {
       setLoading(false)
+    }
+  }
+
+  // تابع بررسی اینکه آیا کاربر مقادیر غیرصفر دارد یا نه
+  const hasNonZeroValues = (member: any) => {
+    const baseSalary = member.baseSalary || 0;
+    const commission = member.commission || 0;
+    const totalAdditions = member.additions?.reduce((sum: number, addition: any) => sum + (addition.amount || 0), 0) || 0;
+    const totalDeductions = member.deductions?.reduce((sum: number, deduction: any) => sum + (deduction.amount || 0), 0) || 0;
+    
+    // اگر هر یک از مقادیر غیرصفر باشد، true برگردان
+    return baseSalary > 0 || commission > 0 || totalAdditions > 0 || totalDeductions > 0;
+  }
+
+  // فیلتر کردن کارمندان با مقادیر غیرصفر
+  const filterEmployeesWithNonZeroValues = async (employeesData: TeamMember[], archiveId?: string) => {
+    try {
+      const employeesWithData = await Promise.all(
+        employeesData.map(async (employee) => {
+          // دریافت حقوق کارمند
+          const salaryUrl = archiveId 
+            ? `/api/all-salaries?archiveId=${archiveId}`
+            : '/api/all-salaries'
+          
+          const salaryResponse = await fetch(salaryUrl)
+          let employeeSalary = null
+          if (salaryResponse.ok) {
+            const allSalaries = await salaryResponse.json()
+            employeeSalary = allSalaries.find((salary: any) => 
+              salary.employeeId?.toString() === employee._id?.toString()
+            )
+          }
+
+          // دریافت پورسانت کارمند
+          const commissionUrl = archiveId 
+            ? `/api/user-commissions/${employee._id}?archiveId=${archiveId}`
+            : `/api/user-commissions/${employee._id}`
+          
+          const commissionResponse = await fetch(commissionUrl)
+          let totalCommission = 0
+          if (commissionResponse.ok) {
+            const commissions = await commissionResponse.json()
+            totalCommission = commissions
+              .filter((c: any) => c.isActive !== false)
+              .reduce((sum: number, c: any) => sum + (c.commission || 0), 0)
+          }
+
+          return {
+            ...employee,
+            baseSalary: employeeSalary?.baseSalary || 0,
+            commission: totalCommission,
+            additions: employeeSalary?.additions || [],
+            deductions: employeeSalary?.deductions || []
+          }
+        })
+      )
+
+      // فیلتر کردن کارمندان با مقادیر غیرصفر
+      const filtered = employeesWithData.filter(hasNonZeroValues)
+      setFilteredEmployees(filtered)
+
+    } catch (error) {
+      console.error('Error filtering employees:', error)
+      setFilteredEmployees(employeesData) // در صورت خطا، همه کارمندان را نشان بده
     }
   }
 
@@ -190,7 +259,7 @@ export default function SalaryTab() {
         <CardContent>
           <ScrollArea className="h-[500px]">
             <div className="space-y-2">
-              {employees.map((employee) => (
+              {filteredEmployees.map((employee) => (
                 <div
                   key={employee._id}
                   className="flex justify-between items-center p-3 border rounded-md cursor-pointer hover:bg-accent"
@@ -200,6 +269,11 @@ export default function SalaryTab() {
                   <span className="text-sm text-muted-foreground">{employee.position}</span>
                 </div>
               ))}
+              {filteredEmployees.length === 0 && !loading && (
+                <div className="text-center py-8 text-gray-500">
+                  هیچ کارمندی با مقادیر غیرصفر یافت نشد
+                </div>
+              )}
             </div>
           </ScrollArea>
         </CardContent>

@@ -22,6 +22,7 @@ interface TeamMember {
 export default function CommissionTab() {
   const [projects, setProjects] = useState<Project[]>([])
   const [members, setMembers] = useState<TeamMember[]>([])
+  const [filteredMembers, setFilteredMembers] = useState<TeamMember[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null)
@@ -57,6 +58,9 @@ export default function CommissionTab() {
       const membersResponse = await fetch(membersUrl)
       const membersData = await membersResponse.json()
       setMembers(membersData)
+
+      // فیلتر کردن اعضای تیم که پورسانت دارند
+      await filterMembersWithCommission(membersData, archiveId)
     } catch (error) {
       toast({
         title: "خطا",
@@ -65,6 +69,42 @@ export default function CommissionTab() {
       })
     } finally {
       setLoading(false)
+    }
+  }
+
+  // فیلتر کردن اعضای تیم که پورسانت دارند
+  const filterMembersWithCommission = async (membersData: TeamMember[], archiveId?: string) => {
+    try {
+      const membersWithCommission = await Promise.all(
+        membersData.map(async (member) => {
+          // دریافت پورسانت عضو
+          const commissionUrl = archiveId 
+            ? `/api/user-commissions/${member._id}?archiveId=${archiveId}`
+            : `/api/user-commissions/${member._id}`
+          
+          const commissionResponse = await fetch(commissionUrl)
+          let totalCommission = 0
+          if (commissionResponse.ok) {
+            const commissions = await commissionResponse.json()
+            totalCommission = commissions
+              .filter((c: any) => c.isActive !== false)
+              .reduce((sum: number, c: any) => sum + (c.commission || 0), 0)
+          }
+
+          return {
+            ...member,
+            totalCommission
+          }
+        })
+      )
+
+      // فیلتر کردن اعضای تیم که پورسانت دارند (بیشتر از صفر)
+      const filtered = membersWithCommission.filter(member => member.totalCommission > 0)
+      setFilteredMembers(filtered)
+
+    } catch (error) {
+      console.error('Error filtering members:', error)
+      setFilteredMembers(membersData) // در صورت خطا، همه اعضا را نشان بده
     }
   }
 
@@ -126,7 +166,7 @@ export default function CommissionTab() {
         <CardContent>
           <ScrollArea className="h-[500px]">
             <div className="space-y-2">
-              {members.map((member) => (
+              {filteredMembers.map((member) => (
                 <div
                   key={member._id}
                   className="flex justify-between items-center p-3 border rounded-md cursor-pointer hover:bg-accent"
@@ -136,6 +176,11 @@ export default function CommissionTab() {
                   <span className="text-sm text-muted-foreground">{member.position}</span>
                 </div>
               ))}
+              {filteredMembers.length === 0 && !loading && (
+                <div className="text-center py-8 text-gray-500">
+                  هیچ عضو تیمی با پورسانت یافت نشد
+                </div>
+              )}
             </div>
           </ScrollArea>
         </CardContent>
