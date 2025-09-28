@@ -1,5 +1,0 @@
-{
-  "/page": "app/page.js",
-  "/api/user-commissions/[id]/route": "app/api/user-commissions/[id]/route.js",
-  "/_not-found/page": "app/_not-found/page.js"
-}
