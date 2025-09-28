@@ -5,9 +5,27 @@ import fs from "fs"
 import path from "path"
 
 export async function POST(request: Request) {
+  console.log('Upload payslip API called')
+  
   try {
-    const body = await request.json()
+    let body
+    try {
+      body = await request.json()
+      console.log('Request body parsed successfully')
+    } catch (parseError) {
+      console.error('JSON parsing error:', parseError)
+      return NextResponse.json(
+        { error: "خطا در پردازش درخواست - فرمت JSON نامعتبر" },
+        { status: 400 }
+      )
+    }
+
     const { employeeId, pdfData, fileName } = body
+    console.log('Request data:', { 
+      employeeId, 
+      fileName, 
+      pdfDataLength: pdfData?.length 
+    })
 
     if (!employeeId || !pdfData || !fileName) {
       return NextResponse.json(
@@ -36,47 +54,70 @@ export async function POST(request: Request) {
 
     try {
       // تشخیص محیط - آیا روی VPS اجرا می‌شود یا خیر
-      const isVPS = fs.existsSync('/root/hiarchitectweb/public/files/') || 
-                    process.env.VPS_MODE === 'true' || 
-                    process.env.NODE_ENV === 'production'
+      let isVPS = false
+      
+      try {
+        isVPS = fs.existsSync('/root/hiarchitectweb/public/files/') || 
+                process.env.VPS_MODE === 'true'
+        console.log('VPS detection:', { isVPS, vpsMode: process.env.VPS_MODE })
+      } catch (fsError) {
+        console.log('File system check failed, assuming non-VPS:', fsError)
+        isVPS = false
+      }
 
       if (isVPS) {
         // اجرا روی VPS - ذخیره مستقیم در فایل سیستم
         console.log('Running on VPS - Direct file system access')
         
-        // مسیر پوشه اصلی
-        const baseDir = '/root/hiarchitectweb/public/files'
-        const employeeDir = path.join(baseDir, employee.nationalCode)
-        const filePath = path.join(employeeDir, fileName)
+        try {
+          // مسیر پوشه اصلی
+          const baseDir = process.env.FILES_DIR || '/root/hiarchitectweb/public/files'
+          const employeeDir = path.join(baseDir, employee.nationalCode)
+          const filePath = path.join(employeeDir, fileName)
 
-        console.log('Target directory:', employeeDir)
-        console.log('Target file path:', filePath)
+          console.log('Target directory:', employeeDir)
+          console.log('Target file path:', filePath)
 
-        // ایجاد پوشه کد ملی اگر وجود نداشته باشد
-        if (!fs.existsSync(employeeDir)) {
-          fs.mkdirSync(employeeDir, { recursive: true })
-          console.log('Created directory:', employeeDir)
+          // ایجاد پوشه کد ملی اگر وجود نداشته باشد
+          if (!fs.existsSync(employeeDir)) {
+            fs.mkdirSync(employeeDir, { recursive: true })
+            console.log('Created directory:', employeeDir)
+          }
+
+          // تبدیل base64 به buffer
+          const pdfBuffer = Buffer.from(pdfData.split(',')[1], 'base64')
+          console.log('PDF buffer created, size:', pdfBuffer.length)
+          
+          // نوشتن فایل PDF
+          fs.writeFileSync(filePath, pdfBuffer)
+          console.log('File saved successfully:', filePath)
+
+          // تنظیم دسترسی فایل
+          try {
+            fs.chmodSync(filePath, 0o644)
+          } catch (chmodError) {
+            console.warn('chmod failed:', chmodError)
+          }
+
+          const siteUrl = process.env.SITE_URL || 'https://hiarchitectweb.com'
+          
+          return NextResponse.json({
+            success: true,
+            message: "فیش حقوقی با موفقیت در VPS ذخیره شد",
+            filePath: filePath,
+            url: `${siteUrl}/files/${employee.nationalCode}/${fileName}`,
+            localPath: filePath,
+            employeeName: employee.fullName,
+            nationalCode: employee.nationalCode
+          })
+          
+        } catch (vpsError: any) {
+          console.error('VPS file operation error:', vpsError)
+          return NextResponse.json(
+            { error: `خطا در ذخیره فایل در VPS: ${vpsError.message}` },
+            { status: 500 }
+          )
         }
-
-        // تبدیل base64 به buffer
-        const pdfBuffer = Buffer.from(pdfData.split(',')[1], 'base64')
-        
-        // نوشتن فایل PDF
-        fs.writeFileSync(filePath, pdfBuffer)
-        console.log('File saved successfully:', filePath)
-
-        // تنظیم دسترسی فایل
-        fs.chmodSync(filePath, 0o644)
-
-        return NextResponse.json({
-          success: true,
-          message: "فیش حقوقی با موفقیت در VPS ذخیره شد",
-          filePath: filePath,
-          url: `https://hiarchitectweb.com/files/${employee.nationalCode}/${fileName}`,
-          localPath: filePath,
-          employeeName: employee.fullName,
-          nationalCode: employee.nationalCode
-        })
 
       } else {
         // اجرا در محیط development - استفاده از temp storage

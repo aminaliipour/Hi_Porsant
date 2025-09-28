@@ -129,6 +129,20 @@ sudo systemctl reload nginx
 
 ## 🔧 عیب‌یابی
 
+### مشکل SSH2 Binary Files:
+```bash
+# پاکسازی کامل
+chmod +x vps-clean-install.sh
+./vps-clean-install.sh
+```
+
+### خطای JSON parsing:
+```bash
+# بررسی logs
+tail -f ~/.pm2/logs/hi-porsant-out.log
+tail -f ~/.pm2/logs/hi-porsant-error.log
+```
+
 ### خطای دسترسی به فایل:
 ```bash
 sudo chown -R www-data:www-data /root/hiarchitectweb/public/files
@@ -147,6 +161,15 @@ tail -f ~/.pm2/logs/hi-porsant-error.log
 ### Restart کردن سرویس:
 ```bash
 pm2 restart hi-porsant
+```
+
+### بررسی وضعیت فایل‌ها:
+```bash
+# بررسی پوشه فایل‌ها
+ls -la /root/hiarchitectweb/public/files/
+
+# تست API
+curl http://localhost:3000/api/vps-files
 ```
 
 ## 📞 پشتیبانی

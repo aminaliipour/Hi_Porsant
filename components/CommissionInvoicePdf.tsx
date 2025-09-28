@@ -156,10 +156,23 @@ export const CommissionInvoicePdf: React.FC<CommissionInvoicePdfProps> = ({
         })
       })
 
-      const result = await response.json()
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
 
-      if (response.ok) {
-        alert(`فیش حقوقی با موفقیت آپلود شد!\nآدرس فایل: ${result.url}`)
+      const responseText = await response.text()
+      let result
+      
+      try {
+        result = JSON.parse(responseText)
+      } catch (parseError) {
+        console.error('Response parsing error:', parseError)
+        console.error('Response text:', responseText)
+        throw new Error('سرور پاسخ نامعتبری ارسال کرد')
+      }
+
+      if (result.success) {
+        alert(`فیش حقوقی با موفقیت آپلود شد!\nآدرس فایل: ${result.url || result.filePath}`)
         if (onComplete) {
           onComplete()
         }
