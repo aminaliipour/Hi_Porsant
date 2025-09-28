@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server"
 import dbConnect from "@/lib/db"
 import { TeamMember } from "@/lib/models"
+import fs from "fs"
+import path from "path"
 
 export async function POST(request: Request) {
   try {
@@ -32,52 +34,84 @@ export async function POST(request: Request) {
       )
     }
 
-    // در production از upload service استفاده می‌کنیم
-    const isProduction = process.env.NODE_ENV === 'production'
-    
     try {
-      // فعلاً فایل رو در temp storage ذخیره می‌کنیم
-      // و یه service جداگانه برای انتقال به VPS می‌سازیم
-      const tempResponse = await fetch(`${request.headers.get('origin') || 'https://hi-porsant.vercel.app'}/api/download-payslips`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          nationalCode: employee.nationalCode,
-          fileName: fileName,
-          pdfData: pdfData,
-          employeeName: employee.fullName
-        })
-      })
+      // تشخیص محیط - آیا روی VPS اجرا می‌شود یا خیر
+      const isVPS = fs.existsSync('/root/hiarchitectweb/public/files/') || 
+                    process.env.VPS_MODE === 'true' || 
+                    process.env.NODE_ENV === 'production'
 
-      if (!tempResponse.ok) {
-        throw new Error(`Temp storage failed: ${tempResponse.status}`)
-      }
+      if (isVPS) {
+        // اجرا روی VPS - ذخیره مستقیم در فایل سیستم
+        console.log('Running on VPS - Direct file system access')
+        
+        // مسیر پوشه اصلی
+        const baseDir = '/root/hiarchitectweb/public/files'
+        const employeeDir = path.join(baseDir, employee.nationalCode)
+        const filePath = path.join(employeeDir, fileName)
 
-      // در production پیام ویژه نمایش می‌دهیم
-      if (isProduction) {
+        console.log('Target directory:', employeeDir)
+        console.log('Target file path:', filePath)
+
+        // ایجاد پوشه کد ملی اگر وجود نداشته باشد
+        if (!fs.existsSync(employeeDir)) {
+          fs.mkdirSync(employeeDir, { recursive: true })
+          console.log('Created directory:', employeeDir)
+        }
+
+        // تبدیل base64 به buffer
+        const pdfBuffer = Buffer.from(pdfData.split(',')[1], 'base64')
+        
+        // نوشتن فایل PDF
+        fs.writeFileSync(filePath, pdfBuffer)
+        console.log('File saved successfully:', filePath)
+
+        // تنظیم دسترسی فایل
+        fs.chmodSync(filePath, 0o644)
+
         return NextResponse.json({
           success: true,
-          message: "فیش حقوقی آپلود شد - فایل در حال انتقال به سرور اصلی است",
-          filePath: `/root/hiarchitectweb/public/files/${employee.nationalCode}/${fileName}`,
+          message: "فیش حقوقی با موفقیت در VPS ذخیره شد",
+          filePath: filePath,
           url: `https://hiarchitectweb.com/files/${employee.nationalCode}/${fileName}`,
-          vpsPath: `/root/hiarchitectweb/public/files/${employee.nationalCode}/${fileName}`,
-          note: "فایل موقتاً ذخیره شده و به زودی به VPS منتقل خواهد شد"
+          localPath: filePath,
+          employeeName: employee.fullName,
+          nationalCode: employee.nationalCode
         })
+
       } else {
+        // اجرا در محیط development - استفاده از temp storage
+        console.log('Running in development - Using temp storage')
+        
+        const tempResponse = await fetch(`${request.headers.get('origin') || 'http://localhost:3000'}/api/download-payslips`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            nationalCode: employee.nationalCode,
+            fileName: fileName,
+            pdfData: pdfData,
+            employeeName: employee.fullName
+          })
+        })
+
+        if (!tempResponse.ok) {
+          throw new Error(`Temp storage failed: ${tempResponse.status}`)
+        }
+
         return NextResponse.json({
           success: true,
-          message: "فیش حقوقی در محیط تست آپلود شد",
+          message: "فیش حقوقی در محیط تست ذخیره شد",
           filePath: `/temp/${employee.nationalCode}/${fileName}`,
-          url: `http://localhost:3000/temp/${employee.nationalCode}/${fileName}`
+          url: `http://localhost:3000/temp/${employee.nationalCode}/${fileName}`,
+          note: "در محیط development - فایل در temp storage قرار گرفت"
         })
       }
 
-    } catch (error) {
-      console.error('Upload error:', error)
+    } catch (fileError: any) {
+      console.error('File system error:', fileError)
       return NextResponse.json(
-        { error: "خطا در آپلود فایل - لطفاً دوباره تلاش کنید" },
+        { error: `خطا در ذخیره فایل: ${fileError.message}` },
         { status: 500 }
       )
     }
