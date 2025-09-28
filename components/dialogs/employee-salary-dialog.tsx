@@ -459,10 +459,11 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
             deductions={salary.deductions}
             taxDeduction={salary.taxDeduction} // کسر 7% اضافه شد
             description={salary.description} // فیلد توضیحات اضافه شد
+            employeeId={employee._id} // اضافه شد برای آپلود
             onComplete={() => {
               toast({
                 title: "موفق",
-                description: "فیش حقوقی با موفقیت دانلود شد",
+                description: "عملیات با موفقیت انجام شد",
               })
             }}
           />

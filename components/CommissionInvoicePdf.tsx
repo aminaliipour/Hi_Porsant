@@ -25,6 +25,7 @@ interface CommissionInvoicePdfProps {
   deductions?: Array<{title: string, amount: number}>
   taxDeduction?: number // کسر 7% اضافه شد
   description?: string // فیلد توضیحات اضافه شد
+  employeeId?: string // اضافه شد برای آپلود
   onComplete?: () => void
 }
 
@@ -38,14 +39,141 @@ export const CommissionInvoicePdf: React.FC<CommissionInvoicePdfProps> = ({
   deductions = [],
   taxDeduction = 0, // کسر 7% اضافه شد
   description = "", // فیلد توضیحات اضافه شد
+  employeeId, // اضافه شد
   onComplete,
 }) => {
   const [isClient, setIsClient] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [isUploading, setIsUploading] = useState(false)
 
   useEffect(() => {
     setIsClient(true)
   }, [])
+
+  const handleUploadPdf = async () => {
+    if (!isClient || !employeeId) {
+      alert("اطلاعات کافی برای آپلود موجود نیست")
+      return
+    }
+    
+    setIsUploading(true)
+    try {
+      // Dynamic import with better error handling
+      const [html2canvasModule, jsPDFModule] = await Promise.all([
+        import("html2canvas"),
+        import("jspdf")
+      ])
+      const html2canvas = html2canvasModule.default
+      const jsPDF = jsPDFModule.default
+
+      // بررسی بارگیری کتابخانه‌ها
+      if (!html2canvas || !jsPDF) {
+        throw new Error('Failed to load PDF libraries')
+      }
+
+      // ایجاد HTML برای تبدیل به PDF
+      const htmlContent = createPdfHtml()
+
+      // ایجاد div موقت در DOM
+      const tempDiv = document.createElement('div')
+      tempDiv.innerHTML = htmlContent
+      tempDiv.style.position = 'absolute'
+      tempDiv.style.left = '-9999px'
+      tempDiv.style.top = '0'
+      tempDiv.style.width = '794px' // A4 width in px
+      tempDiv.style.fontFamily = 'IRANSansWeb, Arial, sans-serif'
+      tempDiv.style.fontSize = '14px'
+      tempDiv.style.lineHeight = '1.6'
+      tempDiv.style.color = '#000'
+      tempDiv.style.background = '#fff'
+      tempDiv.style.padding = '40px'
+
+      document.body.appendChild(tempDiv)
+
+      // تنظیم فونت
+      const allElements = tempDiv.querySelectorAll('*')
+      allElements.forEach((el) => {
+        const htmlEl = el as HTMLElement
+        if (htmlEl.style) {
+          htmlEl.style.fontFamily = 'IRANSansWeb, Arial, sans-serif';
+        }
+      });
+
+      // تبدیل به canvas
+      const canvas = await html2canvas(tempDiv, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff',
+        onclone: (clonedDoc) => {
+          const clonedDiv = clonedDoc.querySelector('div')
+          if (clonedDiv) {
+            const allElements = clonedDiv.querySelectorAll('*')
+            allElements.forEach((el) => {
+              const htmlEl = el as HTMLElement
+              if (htmlEl.style) {
+                htmlEl.style.fontFamily = 'IRANSansWeb, Arial, sans-serif';
+              }
+            });
+          }
+        }
+      })
+
+      // حذف div موقت
+      document.body.removeChild(tempDiv)
+
+      // ایجاد PDF
+      const imgWidth = 210 // A4 width in mm
+      const pageHeight = 295 // A4 height in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width
+
+      const doc = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4',
+        compress: true
+      })
+
+      const imageData = canvas.toDataURL('image/jpeg', 0.95)
+      doc.addImage(imageData, 'JPEG', 0, 0, imgWidth, imgHeight)
+
+      // تبدیل PDF به base64
+      const pdfData = doc.output('datauristring')
+      
+      // نام فایل
+      const fileName = `فیش-حقوقی-${fullName.replace(/\s+/g, '-')}-${new Date().toISOString().slice(0, 10)}.pdf`
+
+      // ارسال به API برای آپلود
+      const response = await fetch('/api/upload-payslip', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          employeeId,
+          pdfData,
+          fileName
+        })
+      })
+
+      const result = await response.json()
+
+      if (response.ok) {
+        alert(`فیش حقوقی با موفقیت آپلود شد!\nآدرس فایل: ${result.url}`)
+        if (onComplete) {
+          onComplete()
+        }
+      } else {
+        throw new Error(result.error || 'خطا در آپلود فایل')
+      }
+
+    } catch (error) {
+      console.error("خطا در آپلود PDF:", error)
+      alert(`خطا در آپلود PDF: ${error instanceof Error ? error.message : 'خطای نامشخص'}`)
+    } finally {
+      setIsUploading(false)
+    }
+  }
 
   const handleDownloadPdf = async () => {
     if (!isClient) return
@@ -374,25 +502,52 @@ export const CommissionInvoicePdf: React.FC<CommissionInvoicePdfProps> = ({
   }
 
   return (
-    <Button 
-      onClick={handleDownloadPdf} 
-      variant="outline"
-      className="bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200"
-      disabled={isLoading}
-    >
-      {isLoading ? (
-        <>
-          <div className="w-4 h-4 ml-2 animate-spin rounded-full border-2 border-blue-700 border-t-transparent"></div>
-          در حال تولید...
-        </>
-      ) : (
-        <>
-          <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
-          دریافت فیش حقوقی
-        </>
+    <div className="flex gap-2">
+      {/* دکمه دریافت فیش حقوقی */}
+      <Button 
+        onClick={handleDownloadPdf} 
+        variant="outline"
+        className="bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200"
+        disabled={isLoading || isUploading}
+      >
+        {isLoading ? (
+          <>
+            <div className="w-4 h-4 ml-2 animate-spin rounded-full border-2 border-blue-700 border-t-transparent"></div>
+            در حال تولید...
+          </>
+        ) : (
+          <>
+            <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            دریافت فیش حقوقی
+          </>
+        )}
+      </Button>
+
+      {/* دکمه آپلود فیش حقوقی */}
+      {employeeId && (
+        <Button 
+          onClick={handleUploadPdf} 
+          variant="outline"
+          className="bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
+          disabled={isLoading || isUploading}
+        >
+          {isUploading ? (
+            <>
+              <div className="w-4 h-4 ml-2 animate-spin rounded-full border-2 border-green-700 border-t-transparent"></div>
+              در حال آپلود...
+            </>
+          ) : (
+            <>
+              <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+              </svg>
+              آپلود فیش حقوقی
+            </>
+          )}
+        </Button>
       )}
-    </Button>
+    </div>
   )
 }

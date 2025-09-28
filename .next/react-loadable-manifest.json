@@ -1,26 +1,27 @@
 {
   "components\\CommissionInvoicePdf.tsx -> html2canvas": {
-    "id": "components\\CommissionInvoicePdf.tsx -> html2canvas",
+    "id": 24457,
     "files": []
   },
   "components\\CommissionInvoicePdf.tsx -> jspdf": {
-    "id": "components\\CommissionInvoicePdf.tsx -> jspdf",
+    "id": 53375,
     "files": []
   },
   "node_modules\\jspdf\\dist\\jspdf.es.min.js -> canvg": {
-    "id": "node_modules\\jspdf\\dist\\jspdf.es.min.js -> canvg",
+    "id": 12396,
     "files": [
-      "static/chunks/_app-pages-browser_node_modules_canvg_lib_index_es_js.js"
+      "static/chunks/bc98253f.2a86d0955713b458.js",
+      "static/chunks/969.6f51bc121afff541.js"
     ]
   },
   "node_modules\\jspdf\\dist\\jspdf.es.min.js -> dompurify": {
-    "id": "node_modules\\jspdf\\dist\\jspdf.es.min.js -> dompurify",
+    "id": 18848,
     "files": [
-      "static/chunks/_app-pages-browser_node_modules_dompurify_dist_purify_es_mjs.js"
+      "static/chunks/848.0cc8e36bc1adb4f8.js"
     ]
   },
   "node_modules\\jspdf\\dist\\jspdf.es.min.js -> html2canvas": {
-    "id": "node_modules\\jspdf\\dist\\jspdf.es.min.js -> html2canvas",
+    "id": 24457,
     "files": []
   }
 }
