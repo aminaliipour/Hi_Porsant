@@ -2,11 +2,13 @@ import { NextRequest, NextResponse } from 'next/server'
 import connectMongoDB from "@/lib/db"
 import { UserCommission, TeamMember } from "@/lib/models"
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
   try {
     await connectMongoDB()
     
-    const { searchParams } = new URL(request.url)
+    const { searchParams } = new URL(request.nextUrl)
     const archiveId = searchParams.get('archiveId')
     
     console.log("Fetching user commissions for archiveId:", archiveId)
@@ -21,7 +23,8 @@ export async function GET(request: NextRequest) {
     for (const member of teamMembers) {
       try {
         // Make internal API call to get individual commission calculation
-        const url = `http://localhost:3001/api/user-commissions/${member._id}${archiveId ? `?archiveId=${archiveId}` : ''}`
+        const baseUrl = request.nextUrl.origin
+        const url = `${baseUrl}/api/user-commissions/${member._id}${archiveId ? `?archiveId=${archiveId}` : ''}`
         
         const response = await fetch(url)
         if (response.ok) {

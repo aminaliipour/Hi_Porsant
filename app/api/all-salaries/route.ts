@@ -3,11 +3,13 @@ import dbConnect from "@/lib/db"
 import { EmployeeSalary, TeamMember } from "@/lib/models"
 import mongoose from "mongoose"
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: Request) {
   try {
     await dbConnect()
-    const { searchParams } = new URL(request.url)
-    const archiveId = searchParams.get("archiveId")
+    const url = new URL(request.url)
+    const archiveId = url.searchParams.get("archiveId")
 
     let query: any = {}
     if (archiveId) query.archiveId = new mongoose.Types.ObjectId(archiveId)
