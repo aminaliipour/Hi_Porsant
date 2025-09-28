@@ -32,18 +32,18 @@ export async function POST(request: Request) {
       )
     }
 
-    // در محیط production (Vercel) از webhook استفاده می‌کنیم
-    // در محیط development از فایل سیستم محلی استفاده می‌کنیم
+    // در محیط production (Vercel) فعلاً فقط فایل رو ذخیره می‌کنیم
+    // بعداً می‌تونیم webhook یا manual sync بزاریم
     const isProduction = process.env.NODE_ENV === 'production'
     
     if (isProduction) {
-      // ارسال درخواست به webhook سرور برای آپلود فایل
+      // فعلاً فایل رو در temp endpoint نگه می‌داریم
       try {
-        const uploadResponse = await fetch('https://hiarchitectweb.com/upload-webhook', {
+        // ارسال فایل به temp storage
+        const tempResponse = await fetch(`${request.headers.get('origin') || 'https://hi-porsant.vercel.app'}/api/download-payslips`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${process.env.UPLOAD_SECRET || '1muys'}` // کلید امنیتی
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify({
             nationalCode: employee.nationalCode,
@@ -53,22 +53,21 @@ export async function POST(request: Request) {
           })
         })
 
-        if (!uploadResponse.ok) {
-          throw new Error(`Server responded with status: ${uploadResponse.status}`)
+        if (!tempResponse.ok) {
+          throw new Error(`Temp storage failed: ${tempResponse.status}`)
         }
-
-        const uploadResult = await uploadResponse.json()
         
         return NextResponse.json({
           success: true,
-          message: "فیش حقوقی با موفقیت آپلود شد",
-          filePath: uploadResult.filePath,
-          url: `https://hiarchitectweb.com/files/${employee.nationalCode}/${fileName}`
+          message: "فیش حقوقی موقتاً ذخیره شد - برای انتقال به سرور اصلی با پشتیبانی تماس بگیرید",
+          tempPath: `/temp/${employee.nationalCode}/${fileName}`,
+          note: "فایل در سیستم موقت ذخیره شده و آماده انتقال به سرور اصلی است"
         })
+        
       } catch (error) {
-        console.error('Webhook upload error:', error)
+        console.error('Production upload error:', error)
         return NextResponse.json(
-          { error: "خطا در آپلود فایل به سرور - لطفاً دوباره تلاش کنید" },
+          { error: "خطا در آپلود فایل - لطفاً دوباره تلاش کنید" },
           { status: 500 }
         )
       }
