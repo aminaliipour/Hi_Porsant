@@ -73,6 +73,11 @@
   body {
     @apply bg-background text-foreground;
     direction: rtl;
+    /* بهبود نمایش در موبایل */
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   /* تنظیمات برای متن فارسی */
@@ -100,6 +105,8 @@
   select {
     text-align: right;
     direction: rtl;
+    /* بهبود نمایش در موبایل */
+    font-size: 16px; /* جلوگیری از zoom در iOS */
   }
 
   /* تنظیمات برای فلکس باکس‌ها */
@@ -115,6 +122,27 @@
   /* تنظیمات برای گرید‌ها */
   .grid {
     direction: rtl;
+  }
+
+  /* بهبود نمایش در موبایل */
+  @media (max-width: 640px) {
+    html {
+      font-size: 14px;
+    }
+    
+    .container {
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+    }
+    
+    /* بهبود touch targets */
+    button, 
+    [role="button"],
+    input[type="submit"],
+    input[type="button"] {
+      min-height: 44px;
+      min-width: 44px;
+    }
   }
 }
 
@@ -161,4 +189,61 @@
 .card-content {
   text-align: right;
   direction: rtl;
+}
+
+/* بهبودهای موبایل */
+@media (max-width: 768px) {
+  /* بهبود scroll در موبایل */
+  .overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* بهبود نمایش جداول در موبایل */
+  table {
+    font-size: 0.875rem;
+  }
+  
+  /* بهبود نمایش modal ها در موبایل */
+  .fixed.inset-0 {
+    padding: 1rem;
+  }
+  
+  /* بهبود نمایش form ها در موبایل */
+  .space-y-6 > * + * {
+    margin-top: 1rem !important;
+  }
+  
+  /* بهبود نمایش button ها در موبایل */
+  button {
+    touch-action: manipulation;
+  }
+  
+  /* جلوگیری از zoom در input ها در iOS */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+
+/* بهبود نمایش در landscape موبایل */
+@media (max-width: 768px) and (orientation: landscape) {
+  .min-h-screen {
+    min-height: 100vh;
+    min-height: 100dvh; /* Dynamic viewport height */
+  }
+}
+
+/* بهبود نمایش در iPhone X و بالاتر */
+@supports (padding: max(0px)) {
+  .safe-area-inset-top {
+    padding-top: max(1rem, env(safe-area-inset-top));
+  }
+  
+  .safe-area-inset-bottom {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
 }

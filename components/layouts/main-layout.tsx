@@ -31,7 +31,7 @@ export function MainLayout({ children, activeTab, setActiveTab, onLogout }: Main
   return (
     <div className="flex min-h-screen flex-col">
       <Header activeTab={activeTab} setActiveTab={setActiveTab} onLogout={onLogout} />
-      <main className="flex-1 container py-6">{children}</main>
+      <main className="flex-1 container px-2 sm:px-4 md:px-6 py-3 sm:py-4 md:py-6">{children}</main>
     </div>
   )
 }
