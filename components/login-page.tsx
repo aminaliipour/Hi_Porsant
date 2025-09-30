@@ -39,31 +39,31 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#FBCC0A]/20 to-[#58595B]/10 flex items-center justify-center p-3 sm:p-4">
-      <div className="w-full max-w-sm sm:max-w-md">
+    <div className="min-h-screen bg-gradient-to-br from-[#FBCC0A]/20 to-[#58595B]/10 flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
         {/* لوگو و عنوان */}
-        <div className="text-center mb-6 sm:mb-8">
-          <div className="mx-auto mb-3 sm:mb-4 w-16 h-16 sm:w-20 sm:h-20 bg-[#FBCC0A] rounded-2xl flex items-center justify-center shadow-lg">
-            <Building2 className="w-8 h-8 sm:w-10 sm:h-10 text-[#58595B]" />
+        <div className="text-center mb-8">
+          <div className="mx-auto mb-4 w-20 h-20 bg-[#FBCC0A] rounded-2xl flex items-center justify-center shadow-lg">
+            <Building2 className="w-10 h-10 text-[#58595B]" />
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-[#58595B] mb-2">Hi Architect</h1>
-          <p className="text-[#58595B]/70 text-xs sm:text-sm">سیستم مدیریت پروژه و محاسبه پورسانت</p>
+          <h1 className="text-3xl font-bold text-[#58595B] mb-2">Hi Architect</h1>
+          <p className="text-[#58595B]/70 text-sm">سیستم مدیریت پروژه و محاسبه پورسانت</p>
         </div>
 
         {/* کارت لاگین */}
         <Card className="shadow-xl border-0 bg-white/90 backdrop-blur-sm">
-          <CardHeader className="text-center pb-3 sm:pb-4 px-4 sm:px-6">
-            <CardTitle className="text-xl sm:text-2xl text-[#58595B] flex items-center justify-center gap-2">
-              <Lock className="w-5 h-5 sm:w-6 sm:h-6 text-[#FBCC0A]" />
+          <CardHeader className="text-center pb-4">
+            <CardTitle className="text-2xl text-[#58595B] flex items-center justify-center gap-2">
+              <Lock className="w-6 h-6 text-[#FBCC0A]" />
               ورود به سیستم
             </CardTitle>
-            <CardDescription className="text-[#58595B]/70 text-sm">
+            <CardDescription className="text-[#58595B]/70">
               لطفاً رمز عبور خود را وارد کنید
             </CardDescription>
           </CardHeader>
           
-          <CardContent className="px-4 sm:px-6">
-            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-6">
               {/* فیلد رمز عبور */}
               <div className="space-y-2">
                 <label htmlFor="password" className="text-sm font-medium text-[#58595B]">
@@ -76,14 +76,14 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="رمز عبور را وارد کنید"
-                    className="pr-12 border-[#58595B]/20 focus:border-[#FBCC0A] focus:ring-[#FBCC0A] h-11 sm:h-12 text-base"
+                    className="pr-12 border-[#58595B]/20 focus:border-[#FBCC0A] focus:ring-[#FBCC0A]"
                     disabled={isLoading}
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#58595B]/50 hover:text-[#58595B] transition-colors p-1"
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#58595B]/50 hover:text-[#58595B] transition-colors"
                     disabled={isLoading}
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -94,7 +94,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
               {/* پیام خطا */}
               {error && (
                 <Alert variant="destructive" className="border-red-200 bg-red-50">
-                  <AlertDescription className="text-red-700 text-sm">
+                  <AlertDescription className="text-red-700">
                     {error}
                   </AlertDescription>
                 </Alert>
@@ -103,7 +103,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
               {/* دکمه ورود */}
               <Button
                 type="submit"
-                className="w-full bg-[#FBCC0A] hover:bg-[#FBCC0A]/90 text-[#58595B] font-bold py-3 sm:py-4 h-auto transition-all duration-200 transform hover:scale-[1.02] text-base"
+                className="w-full bg-[#FBCC0A] hover:bg-[#FBCC0A]/90 text-[#58595B] font-bold py-3 h-auto transition-all duration-200 transform hover:scale-[1.02]"
                 disabled={isLoading || !password}
               >
                 {isLoading ? (
@@ -120,7 +120,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
         </Card>
 
         {/* اطلاعات تماس */}
-        <div className="text-center mt-4 sm:mt-6 text-xs text-[#58595B]/50">
+        <div className="text-center mt-6 text-xs text-[#58595B]/50">
           <p>© ۲۰۲۵ Hi Architect - تمامی حقوق محفوظ است</p>
         </div>
       </div>

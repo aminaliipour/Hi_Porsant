@@ -15,6 +15,7 @@ import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@
 interface Project {
   _id: string
   name: string
+  archiveId?: string | null
 }
 
 export default function ProjectsTab() {
@@ -355,32 +356,32 @@ export default function ProjectsTab() {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">پروژه‌ها</h2>
-        <div className="flex gap-2 items-center">
+    <div className="space-y-4 pb-4">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3">
+        <h2 className="text-xl md:text-2xl font-bold text-gray-800 dark:text-gray-100">پروژه‌ها</h2>
+        <div className="flex flex-wrap gap-2 items-center w-full md:w-auto">
           <div className="relative">
             <Input
               placeholder="جستجو در پروژه‌ها..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="pr-8 w-48 border-gray-200 dark:border-gray-700"
+              className="pr-8 w-40 md:w-48 h-9 border-gray-200 dark:border-gray-700 text-sm"
             />
             <Search className="absolute right-2 top-2.5 h-5 w-5 text-gray-400 pointer-events-none" />
           </div>
           <Checkbox
             checked={selectedProjects.length === projects.length && projects.length > 0}
             onCheckedChange={handleSelectAll}
-            className="mr-2"
+            className="mr-2 scale-90 md:scale-100"
           />
-          <span className="text-sm">انتخاب همه</span>
+          <span className="text-xs md:text-sm">انتخاب همه</span>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
                 size="sm"
                 disabled={selectedProjects.length === 0}
-                className="flex items-center"
+                className="flex items-center h-9 text-xs md:text-sm"
               >
                 گزینه‌ها
               </Button>
@@ -422,15 +423,10 @@ export default function ProjectsTab() {
           </Dialog>
           <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
             <DialogTrigger asChild>
-              <Button
-                onClick={() => {
-                  setSelectedProject(null)
-                  setNewProjectName("")
-                }}
-                className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 btn-hover flex items-center"
-              >
-                <Plus className="ml-2 h-4 w-4" />
-                افزودن پروژه
+              <Button onClick={() => { setSelectedProject(null); setNewProjectName("") }} className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 btn-hover flex items-center h-9 px-3 text-xs md:text-sm">
+                <Plus className="ml-1 h-4 w-4" />
+                <span className="hidden sm:inline">افزودن پروژه</span>
+                <span className="sm:hidden">افزودن</span>
               </Button>
             </DialogTrigger>
             <DialogContent className="bg-white dark:bg-gray-800 border-yellow-200 dark:border-yellow-900/30">
@@ -475,18 +471,18 @@ export default function ProjectsTab() {
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-yellow-500"></div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
           {filteredProjects.map((project) => (
-            <Card key={project._id} className="overflow-hidden border-gray-200 dark:border-gray-700 card-hover">
+            <Card key={project._id} className="overflow-hidden border-gray-200 dark:border-gray-700 card-hover text-sm">
               <CardContent className="p-0">
-                <div className="flex justify-between items-center p-4 border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
-                  <div className="flex items-center gap-2">
+                <div className="flex justify-between items-center p-3 md:p-4 border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
+                  <div className="flex items-center gap-2 md:gap-2.5">
                     <Checkbox
                       checked={selectedProjects.includes(project._id)}
                       onCheckedChange={(checked) => handleSelectProject(project._id, !!checked)}
                     />
                     <div className="flex flex-col">
-                      <h3 className="text-lg font-medium text-gray-800 dark:text-gray-100">{project.name}</h3>
+                      <h3 className="text-base md:text-lg font-medium text-gray-800 dark:text-gray-100 truncate max-w-[120px] md:max-w-[160px]">{project.name}</h3>
                     </div>
                   </div>
                   <DropdownMenu>
@@ -494,7 +490,7 @@ export default function ProjectsTab() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                        className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 h-8 w-8"
                       >
                         <MoreVertical className="h-4 w-4" />
                       </Button>
@@ -534,10 +530,10 @@ export default function ProjectsTab() {
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
-                <div className="p-4">
+                <div className="p-3 md:p-4">
                   <Button
                     variant="outline"
-                    className="w-full border-yellow-200 text-yellow-700 hover:bg-yellow-50 dark:border-yellow-900/30 dark:text-yellow-400 dark:hover:bg-yellow-900/20 btn-hover"
+                    className="w-full border-yellow-200 text-yellow-700 hover:bg-yellow-50 dark:border-yellow-900/30 dark:text-yellow-400 dark:hover:bg-yellow-900/20 btn-hover h-9 text-xs md:text-sm"
                     onClick={() => handleOpenSections(project)}
                   >
                     مشاهده بخش‌ها

@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { ModeToggle } from "@/components/mode-toggle"
 import { useToast } from "@/components/ui/use-toast"
-import { LogOut, User, Menu, Edit2, Trash2 } from "lucide-react"
+import { LogOut, User, Menu, Edit2, Trash2, Archive } from "lucide-react"
 import Image from "next/image"
 import { useEffect, useState } from "react"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -191,24 +191,24 @@ export function Header({ activeTab, setActiveTab, onLogout }: HeaderProps) {
   }
 
   return (
-    <header className="bg-background border-b sticky top-0 z-40 shadow-sm">
-      <div className="container flex h-14 sm:h-16 items-center px-2 sm:px-4 py-2 sm:py-4">
+    <header className="bg-background border-b sticky top-0 z-40 shadow-sm supports-[backdrop-filter]:bg-background/90 backdrop-blur">
+      <div className="container flex h-14 md:h-16 items-center py-2 md:py-4 gap-3 md:gap-4">
         {/* Logo and Mobile Menu */}
-        <div className="flex items-center gap-1 sm:gap-2">
+        <div className="flex items-center gap-2 md:gap-3">
           <div className="md:hidden">
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="outline" size="icon" className="h-8 w-8 sm:h-10 sm:w-10">
-                  <Menu className="h-4 w-4 sm:h-6 sm:w-6" />
+                <Button variant="outline" size="icon">
+                  <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-64 sm:w-72">
+              <SheetContent side="right" className="w-72">
                 <div className="flex flex-col space-y-2 mt-4">
                   {tabs.map((tab) => (
                     <Button
                       key={tab.value}
                       variant={activeTab === tab.value ? "default" : "ghost"}
-                      className="justify-start text-sm"
+                      className="justify-start"
                       onClick={() => {
                         setActiveTab(tab.value)
                       }}
@@ -216,22 +216,39 @@ export function Header({ activeTab, setActiveTab, onLogout }: HeaderProps) {
                       {tab.label}
                     </Button>
                   ))}
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowArchiveSelect(true)}
+                    className="justify-start"
+                  >
+                    مدیریت آرشیو
+                  </Button>
                 </div>
               </SheetContent>
             </Sheet>
           </div>
-          <Image src="/logo.png" alt="HiPorsant Logo" width={32} height={32} className="sm:w-10 sm:h-10 rounded-md shadow-sm" />
-          <h1 className="text-sm sm:text-xl font-bold text-yellow-600 dark:text-yellow-400 hidden xs:block">HiPorsant</h1>
+          {/* Mobile quick archive */}
+          <Button
+            variant="outline"
+            size="icon"
+            className="md:hidden"
+            onClick={() => setShowArchiveSelect(true)}
+            title="آرشیوها"
+          >
+            <Archive className="h-5 w-5" />
+          </Button>
+          <Image src="/logo.png" alt="HiPorsant Logo" width={40} height={40} className="rounded-md shadow-sm" />
+          <h1 className="text-lg md:text-xl font-bold text-yellow-600 dark:text-yellow-400">HiPorsant</h1>
         </div>
         {/* Center Tabs */}
-        <div className="flex-1 flex justify-center">
+        <div className="flex-1 hidden md:flex justify-center">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="hidden md:flex bg-gray-100 dark:bg-gray-800 p-1 rounded-xl justify-center gap-1 lg:gap-2">
+            <TabsList className="hidden md:flex bg-gray-100 dark:bg-gray-800 p-1 rounded-xl justify-center gap-2">
               {tabs.map((tab) => (
                 <TabsTrigger
                   key={tab.value}
                   value={tab.value}
-                  className="data-[state=active]:bg-yellow-500 data-[state=active]:text-gray-900 rounded-lg text-xs lg:text-sm px-2 lg:px-3"
+                  className="data-[state=active]:bg-yellow-500 data-[state=active]:text-gray-900 rounded-lg"
                 >
                   {tab.label}
                 </TabsTrigger>
@@ -240,69 +257,85 @@ export function Header({ activeTab, setActiveTab, onLogout }: HeaderProps) {
           </Tabs>
         </div>
         {/* User Info and Actions */}
-        <div className="flex items-center gap-1 sm:gap-2 lg:gap-4">
+        <div className="flex items-center gap-2 md:gap-4">
           {/* دکمه خروج از سیستم */}
           {onLogout && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onLogout}
-              className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200 text-xs sm:text-sm px-2 sm:px-3"
-            >
-              <LogOut size={14} className="sm:size-4 ml-1 sm:ml-2" />
-              <span className="hidden sm:inline">خروج از سیستم</span>
-              <span className="sm:hidden">خروج</span>
-            </Button>
+            <>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={onLogout}
+                className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200 md:hidden"
+                title="خروج"
+              >
+                <LogOut size={18} />
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={onLogout}
+                className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200 hidden md:inline-flex"
+              >
+                <LogOut size={16} className="ml-2" />
+                خروج از سیستم
+              </Button>
+            </>
           )}
           
           {user ? (
             <>
-              <div className="hidden sm:flex items-center gap-2 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full">
+              <div className="hidden md:flex items-center gap-2 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full">
                 <User size={16} className="text-yellow-600 dark:text-yellow-400" />
-                <span className="text-sm font-medium">{user}</span>
+                <span className="text-sm font-medium truncate max-w-[120px]">{user}</span>
               </div>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={handleLogout}
-                className="hidden sm:flex text-gray-600 hover:text-red-500 dark:text-gray-300 dark:hover:text-red-400"
+                className="text-gray-600 hover:text-red-500 dark:text-gray-300 dark:hover:text-red-400 md:hidden"
+                title="خروج"
+              >
+                <LogOut size={18} />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleLogout}
+                className="hidden md:inline-flex text-gray-600 hover:text-red-500 dark:text-gray-300 dark:hover:text-red-400"
               >
                 <LogOut size={18} />
               </Button>
             </>
           ) : null}
-          <div className="scale-75 sm:scale-100">
-            <ModeToggle />
-          </div>
+          <ModeToggle />
         </div>
       </div>
       {/* Archive Section زیر لوگو */}
-      <div className="container flex flex-col items-start gap-2 pb-2 px-2 sm:px-4">
-        <div className="flex items-center gap-2 w-full sm:w-auto">
+      <div className="hidden md:flex container flex-col items-start gap-2 pb-2">
+        <div className="flex items-center gap-2">
           <Button
             size="sm"
             variant="outline"
-            className="flex-1 sm:flex-initial sm:min-w-[120px] justify-between text-xs sm:text-sm"
+            className="min-w-[120px] justify-between"
             onClick={() => setShowArchiveSelect(true)}
           >
-            <span className="truncate">{activeArchive ? activeArchive.name : "انتخاب آرشیو"}</span>
+            {activeArchive ? activeArchive.name : "انتخاب آرشیو"}
             <span className="ml-2">▼</span>
           </Button>
-          <Button size="sm" variant="outline" onClick={() => setShowNewArchive(true)} className="text-xs sm:text-sm px-2 sm:px-3">
-            <span className="hidden sm:inline">آرشیو جدید</span>
-            <span className="sm:hidden">+</span>
+          <Button size="sm" variant="outline" onClick={() => setShowNewArchive(true)}>
+            آرشیو جدید
           </Button>
         </div>
       </div>
       
       {/* Archive Selection Dialog */}
       {showArchiveSelect && (
-        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg w-full max-w-md sm:max-w-lg max-h-[90vh] sm:max-h-[500px] overflow-hidden">
-            <div className="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-700">
-              <h2 className="text-base sm:text-lg font-bold">انتخاب آرشیو</h2>
+        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg w-96 max-h-[500px] overflow-hidden">
+            <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+              <h2 className="text-lg font-bold">انتخاب آرشیو</h2>
             </div>
-            <div className="max-h-60 sm:max-h-80 overflow-y-auto">
+            <div className="max-h-80 overflow-y-auto">
               {/* گزینه بدون آرشیو */}
               <div
                 className="flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-red-100 dark:hover:bg-red-900/20 text-red-600 font-medium border-b border-gray-100 dark:border-gray-800"
@@ -326,14 +359,14 @@ export function Header({ activeTab, setActiveTab, onLogout }: HeaderProps) {
               {archives.map((archive) => (
                 <div
                   key={archive._id}
-                  className={`flex items-center justify-between px-3 sm:px-4 py-3 cursor-pointer hover:bg-yellow-50 dark:hover:bg-yellow-900/20 border-b border-gray-100 dark:border-gray-800 ${
+                  className={`flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-yellow-50 dark:hover:bg-yellow-900/20 border-b border-gray-100 dark:border-gray-800 ${
                     activeArchive && activeArchive._id === archive._id 
                       ? "bg-yellow-100 dark:bg-yellow-800/40 border-l-4 border-l-yellow-500" 
                       : ""
                   }`}
                 >
                   <div
-                    className="flex-1 flex items-center gap-2 sm:gap-3 cursor-pointer"
+                    className="flex-1 flex items-center gap-3 cursor-pointer"
                     onClick={() => {
                       setActiveArchive(archive)
                       localStorage.setItem("activeArchive", JSON.stringify(archive))
@@ -341,11 +374,11 @@ export function Header({ activeTab, setActiveTab, onLogout }: HeaderProps) {
                       window.location.reload()
                     }}
                   >
-                    <span className="text-lg sm:text-xl">
+                    <span className="text-xl">
                       {activeArchive && activeArchive._id === archive._id ? "✅" : "📁"}
                     </span>
-                    <div className="flex-1 min-w-0">
-                      <div className={`font-medium text-sm sm:text-base truncate ${activeArchive && activeArchive._id === archive._id ? "text-yellow-700 dark:text-yellow-300" : ""}`}>
+                    <div>
+                      <div className={`font-medium ${activeArchive && activeArchive._id === archive._id ? "text-yellow-700 dark:text-yellow-300" : ""}`}>
                         {archive.name}
                       </div>
                       <div className="text-xs text-gray-500">
@@ -363,7 +396,7 @@ export function Header({ activeTab, setActiveTab, onLogout }: HeaderProps) {
                         setShowArchiveSelect(false)
                       }} 
                       title="ویرایش"
-                      className="h-7 w-7 sm:h-8 sm:w-8 p-0 hover:bg-blue-100 dark:hover:bg-blue-900/30"
+                      className="h-8 w-8 p-0 hover:bg-blue-100 dark:hover:bg-blue-900/30"
                     >
                       <Edit2 className="w-3 h-3 text-blue-600 dark:text-blue-400" />
                     </Button>
@@ -376,7 +409,7 @@ export function Header({ activeTab, setActiveTab, onLogout }: HeaderProps) {
                         setShowArchiveSelect(false)
                       }} 
                       title="حذف"
-                      className="h-7 w-7 sm:h-8 sm:w-8 p-0 hover:bg-red-100 dark:hover:bg-red-900/30"
+                      className="h-8 w-8 p-0 hover:bg-red-100 dark:hover:bg-red-900/30"
                     >
                       <Trash2 className="w-3 h-3 text-red-500" />
                     </Button>
@@ -384,11 +417,11 @@ export function Header({ activeTab, setActiveTab, onLogout }: HeaderProps) {
                 </div>
               ))}
             </div>
-            <div className="p-3 sm:p-4 border-t border-gray-200 dark:border-gray-700 flex justify-end">
+            <div className="p-4 border-t border-gray-200 dark:border-gray-700 flex justify-end">
               <Button 
                 variant="outline" 
                 onClick={() => setShowArchiveSelect(false)}
-                className="text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100 text-sm"
+                className="text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100"
               >
                 انصراف
               </Button>
@@ -399,25 +432,25 @@ export function Header({ activeTab, setActiveTab, onLogout }: HeaderProps) {
 
       {/* New Archive Dialog */}
       {showNewArchive && (
-        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-900 p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-sm sm:max-w-md">
-            <h2 className="font-bold mb-3 text-base sm:text-lg">ایجاد آرشیو جدید</h2>
+        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-lg w-80">
+            <h2 className="font-bold mb-2">ایجاد آرشیو جدید</h2>
             <input
-              className="w-full mb-3 p-2 sm:p-3 border rounded text-sm sm:text-base"
+              className="w-full mb-2 p-2 border rounded"
               placeholder="نام آرشیو (مثلاً خرداد 1404)"
               value={newArchive.name}
               onChange={e => setNewArchive({ ...newArchive, name: e.target.value })}
             />
-            <div className="flex gap-2 mb-3">
+            <div className="flex gap-2 mb-2">
               <input
-                className="w-1/2 p-2 sm:p-3 border rounded text-sm sm:text-base"
+                className="w-1/2 p-2 border rounded"
                 type="number"
                 placeholder="ماه"
                 value={newArchive.month || ""}
                 onChange={e => setNewArchive({ ...newArchive, month: +e.target.value })}
               />
               <input
-                className="w-1/2 p-2 sm:p-3 border rounded text-sm sm:text-base"
+                className="w-1/2 p-2 border rounded"
                 type="number"
                 placeholder="سال"
                 value={newArchive.year || ""}
@@ -425,33 +458,33 @@ export function Header({ activeTab, setActiveTab, onLogout }: HeaderProps) {
               />
             </div>
             <div className="flex gap-2">
-              <Button size="sm" onClick={handleNewArchive} className="text-sm">ایجاد</Button>
-              <Button size="sm" variant="outline" onClick={() => setShowNewArchive(false)} className="text-sm">انصراف</Button>
+              <Button size="sm" onClick={handleNewArchive}>ایجاد</Button>
+              <Button size="sm" variant="outline" onClick={() => setShowNewArchive(false)}>انصراف</Button>
             </div>
           </div>
         </div>
       )}
       {/* Edit Archive Dialog */}
       {editArchive && (
-        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-900 p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-sm sm:max-w-md">
-            <h2 className="font-bold mb-3 text-base sm:text-lg">ویرایش آرشیو</h2>
+        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-lg w-80">
+            <h2 className="font-bold mb-2">ویرایش آرشیو</h2>
             <input
-              className="w-full mb-3 p-2 sm:p-3 border rounded text-sm sm:text-base"
+              className="w-full mb-2 p-2 border rounded"
               placeholder="نام آرشیو"
               value={editArchiveData.name}
               onChange={e => setEditArchiveData({ ...editArchiveData, name: e.target.value })}
             />
-            <div className="flex gap-2 mb-3">
+            <div className="flex gap-2 mb-2">
               <input
-                className="w-1/2 p-2 sm:p-3 border rounded text-sm sm:text-base"
+                className="w-1/2 p-2 border rounded"
                 type="number"
                 placeholder="ماه"
                 value={editArchiveData.month || ""}
                 onChange={e => setEditArchiveData({ ...editArchiveData, month: +e.target.value })}
               />
               <input
-                className="w-1/2 p-2 sm:p-3 border rounded text-sm sm:text-base"
+                className="w-1/2 p-2 border rounded"
                 type="number"
                 placeholder="سال"
                 value={editArchiveData.year || ""}
@@ -459,8 +492,8 @@ export function Header({ activeTab, setActiveTab, onLogout }: HeaderProps) {
               />
             </div>
             <div className="flex gap-2">
-              <Button size="sm" onClick={handleUpdateArchive} className="text-sm">ذخیره</Button>
-              <Button size="sm" variant="outline" onClick={() => setEditArchive(null)} className="text-sm">انصراف</Button>
+              <Button size="sm" onClick={handleUpdateArchive}>ذخیره</Button>
+              <Button size="sm" variant="outline" onClick={() => setEditArchive(null)}>انصراف</Button>
             </div>
           </div>
         </div>

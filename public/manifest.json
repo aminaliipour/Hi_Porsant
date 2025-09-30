@@ -4,13 +4,8 @@
   "description": "سیستم مدیریت پروژه و محاسبه پورسانت",
   "start_url": "/",
   "display": "standalone",
-  "orientation": "portrait",
   "background_color": "#ffffff",
   "theme_color": "#ffeb3b",
-  "viewport": "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
-  "categories": ["business", "productivity"],
-  "lang": "fa",
-  "dir": "rtl",
   "icons": [
     {
       "src": "/icons/icon-192x192.png",

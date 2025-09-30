@@ -47,10 +47,10 @@ export default function Home() {
   // در حال بارگذاری
   if (isAuthenticated === null) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#FBCC0A]/20 to-[#58595B]/10 flex items-center justify-center p-4">
-        <div className="flex flex-col items-center gap-4 text-[#58595B]">
-          <div className="w-8 h-8 sm:w-10 sm:h-10 border-3 border-[#58595B]/30 border-t-[#FBCC0A] rounded-full animate-spin"></div>
-          <span className="text-base sm:text-lg font-medium">در حال بارگذاری...</span>
+      <div className="min-h-screen bg-gradient-to-br from-[#FBCC0A]/20 to-[#58595B]/10 flex items-center justify-center">
+        <div className="flex items-center gap-3 text-[#58595B]">
+          <div className="w-6 h-6 border-2 border-[#58595B]/30 border-t-[#FBCC0A] rounded-full animate-spin"></div>
+          <span className="text-lg">در حال بارگذاری...</span>
         </div>
       </div>
     )
