@@ -8,6 +8,10 @@ import Image from "next/image"
 import { useEffect, useState } from "react"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 
 interface HeaderProps {
   activeTab: string;
@@ -329,16 +333,16 @@ export function Header({ activeTab, setActiveTab, onLogout }: HeaderProps) {
       </div>
       
       {/* Archive Selection Dialog */}
-      {showArchiveSelect && (
-        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg w-96 max-h-[500px] overflow-hidden">
-            <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-              <h2 className="text-lg font-bold">انتخاب آرشیو</h2>
-            </div>
-            <div className="max-h-80 overflow-y-auto">
+      <Dialog open={showArchiveSelect} onOpenChange={setShowArchiveSelect}>
+        <DialogContent className="max-w-[90vw] md:max-w-md max-h-[90vh] flex flex-col p-0 overflow-hidden">
+          <DialogHeader className="p-4 pb-3 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
+            <DialogTitle className="text-lg font-bold">انتخاب آرشیو</DialogTitle>
+          </DialogHeader>
+          <ScrollArea className="flex-1 overflow-auto" style={{ maxHeight: 'calc(90vh - 140px)' }}>
+            <div className="px-3 py-2">
               {/* گزینه بدون آرشیو */}
               <div
-                className="flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-red-100 dark:hover:bg-red-900/20 text-red-600 font-medium border-b border-gray-100 dark:border-gray-800"
+                className="flex items-center justify-between px-4 py-3 mb-3 cursor-pointer hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 font-medium border border-red-200 dark:border-red-800 rounded-lg transition-colors"
                 onClick={() => {
                   setActiveArchive(null)
                   localStorage.removeItem("activeArchive")
@@ -356,148 +360,167 @@ export function Header({ activeTab, setActiveTab, onLogout }: HeaderProps) {
                   <div>آرشیوی وجود ندارد</div>
                 </div>
               )}
-              {archives.map((archive) => (
-                <div
-                  key={archive._id}
-                  className={`flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-yellow-50 dark:hover:bg-yellow-900/20 border-b border-gray-100 dark:border-gray-800 ${
-                    activeArchive && activeArchive._id === archive._id 
-                      ? "bg-yellow-100 dark:bg-yellow-800/40 border-l-4 border-l-yellow-500" 
-                      : ""
-                  }`}
-                >
+              <div className="space-y-2 pb-2">
+                {archives.map((archive) => (
                   <div
-                    className="flex-1 flex items-center gap-3 cursor-pointer"
-                    onClick={() => {
-                      setActiveArchive(archive)
-                      localStorage.setItem("activeArchive", JSON.stringify(archive))
-                      setShowArchiveSelect(false)
-                      window.location.reload()
-                    }}
+                    key={archive._id}
+                    className={`flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-yellow-50 dark:hover:bg-yellow-900/20 border rounded-lg transition-colors ${
+                      activeArchive && activeArchive._id === archive._id 
+                        ? "bg-yellow-100 dark:bg-yellow-800/40 border-yellow-500 shadow-sm" 
+                        : "border-gray-200 dark:border-gray-700"
+                    }`}
                   >
-                    <span className="text-xl">
-                      {activeArchive && activeArchive._id === archive._id ? "✅" : "📁"}
-                    </span>
-                    <div>
-                      <div className={`font-medium ${activeArchive && activeArchive._id === archive._id ? "text-yellow-700 dark:text-yellow-300" : ""}`}>
-                        {archive.name}
-                      </div>
-                      <div className="text-xs text-gray-500">
-                        {archive.month}/{archive.year}
+                    <div
+                      className="flex-1 flex items-center gap-3 cursor-pointer"
+                      onClick={() => {
+                        setActiveArchive(archive)
+                        localStorage.setItem("activeArchive", JSON.stringify(archive))
+                        setShowArchiveSelect(false)
+                        window.location.reload()
+                      }}
+                    >
+                      <span className="text-xl">
+                        {activeArchive && activeArchive._id === archive._id ? "✅" : "📁"}
+                      </span>
+                      <div>
+                        <div className={`font-medium ${activeArchive && activeArchive._id === archive._id ? "text-yellow-700 dark:text-yellow-300" : ""}`}>
+                          {archive.name}
+                        </div>
+                        <div className="text-xs text-gray-500">
+                          {archive.month}/{archive.year}
+                        </div>
                       </div>
                     </div>
+                    <div className="flex items-center gap-1">
+                      <Button 
+                        size="sm" 
+                        variant="ghost" 
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleEditArchive(archive)
+                          setShowArchiveSelect(false)
+                        }} 
+                        title="ویرایش"
+                        className="h-8 w-8 p-0 hover:bg-blue-100 dark:hover:bg-blue-900/30"
+                      >
+                        <Edit2 className="w-3 h-3 text-blue-600 dark:text-blue-400" />
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="ghost" 
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleDeleteArchive(archive._id)
+                          setShowArchiveSelect(false)
+                        }} 
+                        title="حذف"
+                        className="h-8 w-8 p-0 hover:bg-red-100 dark:hover:bg-red-900/30"
+                      >
+                        <Trash2 className="w-3 h-3 text-red-500" />
+                      </Button>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <Button 
-                      size="sm" 
-                      variant="ghost" 
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        handleEditArchive(archive)
-                        setShowArchiveSelect(false)
-                      }} 
-                      title="ویرایش"
-                      className="h-8 w-8 p-0 hover:bg-blue-100 dark:hover:bg-blue-900/30"
-                    >
-                      <Edit2 className="w-3 h-3 text-blue-600 dark:text-blue-400" />
-                    </Button>
-                    <Button 
-                      size="sm" 
-                      variant="ghost" 
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        handleDeleteArchive(archive._id)
-                        setShowArchiveSelect(false)
-                      }} 
-                      title="حذف"
-                      className="h-8 w-8 p-0 hover:bg-red-100 dark:hover:bg-red-900/30"
-                    >
-                      <Trash2 className="w-3 h-3 text-red-500" />
-                    </Button>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-            <div className="p-4 border-t border-gray-200 dark:border-gray-700 flex justify-end">
-              <Button 
-                variant="outline" 
-                onClick={() => setShowArchiveSelect(false)}
-                className="text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100"
-              >
-                انصراف
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
+          </ScrollArea>
+          <DialogFooter className="p-4 pt-3 border-t border-gray-200 dark:border-gray-700 flex-shrink-0">
+            <Button 
+              variant="outline" 
+              onClick={() => setShowArchiveSelect(false)}
+              className="text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100"
+            >
+              انصراف
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* New Archive Dialog */}
-      {showNewArchive && (
-        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-lg w-80">
-            <h2 className="font-bold mb-2">ایجاد آرشیو جدید</h2>
-            <input
-              className="w-full mb-2 p-2 border rounded"
-              placeholder="نام آرشیو (مثلاً خرداد 1404)"
-              value={newArchive.name}
-              onChange={e => setNewArchive({ ...newArchive, name: e.target.value })}
-            />
-            <div className="flex gap-2 mb-2">
-              <input
-                className="w-1/2 p-2 border rounded"
-                type="number"
-                placeholder="ماه"
-                value={newArchive.month || ""}
-                onChange={e => setNewArchive({ ...newArchive, month: +e.target.value })}
-              />
-              <input
-                className="w-1/2 p-2 border rounded"
-                type="number"
-                placeholder="سال"
-                value={newArchive.year || ""}
-                onChange={e => setNewArchive({ ...newArchive, year: +e.target.value })}
+      <Dialog open={showNewArchive} onOpenChange={setShowNewArchive}>
+        <DialogContent className="max-w-[90vw] md:max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="font-bold">ایجاد آرشیو جدید</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label>نام آرشیو</Label>
+              <Input
+                placeholder="مثلاً خرداد 1404"
+                value={newArchive.name}
+                onChange={e => setNewArchive({ ...newArchive, name: e.target.value })}
               />
             </div>
-            <div className="flex gap-2">
-              <Button size="sm" onClick={handleNewArchive}>ایجاد</Button>
-              <Button size="sm" variant="outline" onClick={() => setShowNewArchive(false)}>انصراف</Button>
+            <div className="grid grid-cols-2 gap-2">
+              <div className="space-y-2">
+                <Label>ماه</Label>
+                <Input
+                  type="number"
+                  placeholder="ماه"
+                  value={newArchive.month || ""}
+                  onChange={e => setNewArchive({ ...newArchive, month: +e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>سال</Label>
+                <Input
+                  type="number"
+                  placeholder="سال"
+                  value={newArchive.year || ""}
+                  onChange={e => setNewArchive({ ...newArchive, year: +e.target.value })}
+                />
+              </div>
             </div>
           </div>
-        </div>
-      )}
+          <DialogFooter className="gap-2">
+            <Button variant="outline" onClick={() => setShowNewArchive(false)}>انصراف</Button>
+            <Button onClick={handleNewArchive}>ایجاد</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       {/* Edit Archive Dialog */}
-      {editArchive && (
-        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-lg w-80">
-            <h2 className="font-bold mb-2">ویرایش آرشیو</h2>
-            <input
-              className="w-full mb-2 p-2 border rounded"
-              placeholder="نام آرشیو"
-              value={editArchiveData.name}
-              onChange={e => setEditArchiveData({ ...editArchiveData, name: e.target.value })}
-            />
-            <div className="flex gap-2 mb-2">
-              <input
-                className="w-1/2 p-2 border rounded"
-                type="number"
-                placeholder="ماه"
-                value={editArchiveData.month || ""}
-                onChange={e => setEditArchiveData({ ...editArchiveData, month: +e.target.value })}
-              />
-              <input
-                className="w-1/2 p-2 border rounded"
-                type="number"
-                placeholder="سال"
-                value={editArchiveData.year || ""}
-                onChange={e => setEditArchiveData({ ...editArchiveData, year: +e.target.value })}
+      <Dialog open={!!editArchive} onOpenChange={(open) => !open && setEditArchive(null)}>
+        <DialogContent className="max-w-[90vw] md:max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="font-bold">ویرایش آرشیو</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label>نام آرشیو</Label>
+              <Input
+                placeholder="نام آرشیو"
+                value={editArchiveData.name}
+                onChange={e => setEditArchiveData({ ...editArchiveData, name: e.target.value })}
               />
             </div>
-            <div className="flex gap-2">
-              <Button size="sm" onClick={handleUpdateArchive}>ذخیره</Button>
-              <Button size="sm" variant="outline" onClick={() => setEditArchive(null)}>انصراف</Button>
+            <div className="grid grid-cols-2 gap-2">
+              <div className="space-y-2">
+                <Label>ماه</Label>
+                <Input
+                  type="number"
+                  placeholder="ماه"
+                  value={editArchiveData.month || ""}
+                  onChange={e => setEditArchiveData({ ...editArchiveData, month: +e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>سال</Label>
+                <Input
+                  type="number"
+                  placeholder="سال"
+                  value={editArchiveData.year || ""}
+                  onChange={e => setEditArchiveData({ ...editArchiveData, year: +e.target.value })}
+                />
+              </div>
             </div>
           </div>
-        </div>
-      )}
+          <DialogFooter className="gap-2">
+            <Button variant="outline" onClick={() => setEditArchive(null)}>انصراف</Button>
+            <Button onClick={handleUpdateArchive}>ذخیره</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </header>
   )
 }

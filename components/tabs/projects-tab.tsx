@@ -7,15 +7,36 @@ import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from "@/components/ui/dialog"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useToast } from "@/components/ui/use-toast"
-import { Plus, MoreVertical, Trash, Edit, FolderOpen, Archive, Search } from "lucide-react"
+import { Plus, MoreVertical, Trash, Edit, FolderOpen, Archive, Search, Settings } from "lucide-react"
 import { ProjectSectionsDialog } from "@/components/dialogs/project-sections-dialog"
+import { CustomTaadolDialog } from "@/components/dialogs/custom-taadol-dialog"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select"
+import { Label } from "@/components/ui/label"
+import { ScrollArea } from "@/components/ui/scroll-area"
+
+interface CustomTaadolPercentages {
+  خرید: number
+  همکاری: number
+  فروش: number
+  طراحی: number
+  پیمانکاری: number
+  مشاوره: number
+}
+
+interface SectionWeight {
+  sectionName: string
+  fieldName: string
+  weight: number
+}
 
 interface Project {
   _id: string
   name: string
   archiveId?: string | null
+  useCustomTaadol?: boolean
+  customTaadolPercentages?: CustomTaadolPercentages
+  customSectionWeights?: SectionWeight[]
 }
 
 export default function ProjectsTab() {
@@ -25,6 +46,8 @@ export default function ProjectsTab() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [isSectionsDialogOpen, setIsSectionsDialogOpen] = useState(false)
+  const [isCustomTaadolDialogOpen, setIsCustomTaadolDialogOpen] = useState(false)
+  const [customTaadolProject, setCustomTaadolProject] = useState<Project | null>(null)
   const [selectedProjects, setSelectedProjects] = useState<string[]>([])
   const [search, setSearch] = useState("")
   const [archiveDialogOpen, setArchiveDialogOpen] = useState(false)
@@ -355,6 +378,60 @@ export default function ProjectsTab() {
     }
   }
 
+  // تغییر وضعیت استفاده از سیستم تعادل مخصوص
+  const handleToggleCustomTaadol = async (project: Project, checked: boolean) => {
+    try {
+      const response = await fetch(`/api/projects/${project._id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ useCustomTaadol: checked }),
+      })
+
+      if (!response.ok) {
+        throw new Error("خطا در تغییر وضعیت")
+      }
+
+      // بروزرسانی لیست پروژه‌ها
+      const updatedProject = await response.json()
+      setProjects(projects.map((p) => (p._id === updatedProject._id ? updatedProject : p)))
+
+      toast({
+        title: "موفق",
+        description: checked 
+          ? "سیستم تعادل مخصوص برای این پروژه فعال شد" 
+          : "پروژه به سیستم تعادل اصلی برگشت",
+      })
+    } catch (error) {
+      toast({
+        title: "خطا",
+        description: "خطا در تغییر تنظیمات",
+        variant: "destructive",
+      })
+    }
+  }
+
+  // باز کردن دیالوگ تنظیمات سیستم تعادل مخصوص
+  const handleOpenCustomTaadol = (project: Project) => {
+    setCustomTaadolProject(project)
+    setIsCustomTaadolDialogOpen(true)
+  }
+
+  // بستن دیالوگ و رفرش لیست
+  const handleCloseCustomTaadol = () => {
+    setIsCustomTaadolDialogOpen(false)
+    setCustomTaadolProject(null)
+  }
+
+  const handleUpdateCustomTaadol = () => {
+    // رفرش لیست پروژه‌ها
+    const stored = localStorage.getItem("activeArchive")
+    let archiveId = ""
+    if (stored) {
+      try { archiveId = JSON.parse(stored)._id } catch {}
+    }
+    fetchProjects(archiveId)
+  }
+
   return (
     <div className="space-y-4 pb-4">
       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3">
@@ -402,23 +479,43 @@ export default function ProjectsTab() {
             </DropdownMenuContent>
           </DropdownMenu>
           <Dialog open={groupArchiveDialogOpen} onOpenChange={setGroupArchiveDialogOpen}>
-            <DialogContent className="max-w-xs">
+            <DialogContent className="max-w-md max-h-[80vh] flex flex-col">
               <DialogHeader>
-                <DialogTitle>انتقال گروهی پروژه‌ها به آرشیو</DialogTitle>
+                <DialogTitle className="text-center">انتقال گروهی پروژه‌ها به آرشیو</DialogTitle>
               </DialogHeader>
-              <div className="space-y-4">
-                <Select value={groupSelectedArchiveId} onValueChange={setGroupSelectedArchiveId} disabled={groupArchiveLoading}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="انتخاب آرشیو" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {groupArchiveList.map((archive) => (
-                      <SelectItem key={archive._id} value={archive._id}>{archive.name}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Button onClick={handleMoveSelectedToArchive} disabled={!groupSelectedArchiveId || groupArchiveLoading} className="w-full bg-green-600 hover:bg-green-700 text-white">انتقال</Button>
-              </div>
+              <ScrollArea className="flex-1 max-h-[400px] px-2">
+                <div className="space-y-2">
+                  {groupArchiveLoading ? (
+                    <div className="flex justify-center items-center py-8">
+                      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
+                    </div>
+                  ) : (
+                    groupArchiveList.map((archive) => (
+                      <Button
+                        key={archive._id}
+                        variant={groupSelectedArchiveId === archive._id ? "default" : "outline"}
+                        className="w-full justify-start"
+                        onClick={() => setGroupSelectedArchiveId(archive._id)}
+                      >
+                        <Archive className="ml-2 h-4 w-4" />
+                        {archive.name}
+                      </Button>
+                    ))
+                  )}
+                </div>
+              </ScrollArea>
+              <DialogFooter className="gap-2">
+                <Button variant="outline" onClick={() => setGroupArchiveDialogOpen(false)}>
+                  لغو
+                </Button>
+                <Button 
+                  onClick={handleMoveSelectedToArchive} 
+                  disabled={!groupSelectedArchiveId || groupArchiveLoading} 
+                  className="bg-green-600 hover:bg-green-700 text-white"
+                >
+                  انتقال
+                </Button>
+              </DialogFooter>
             </DialogContent>
           </Dialog>
           <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
@@ -530,7 +627,29 @@ export default function ProjectsTab() {
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
-                <div className="p-3 md:p-4">
+                <div className="p-3 md:p-4 space-y-3">
+                  {/* چک باکس سیستم تعادل مخصوص */}
+                  <div className="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800/30 rounded-md">
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        checked={project.useCustomTaadol || false}
+                        onCheckedChange={(checked) => handleToggleCustomTaadol(project, !!checked)}
+                      />
+                      <Label className="text-xs md:text-sm cursor-pointer">سیستم تعادل مخصوص</Label>
+                    </div>
+                    {project.useCustomTaadol && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleOpenCustomTaadol(project)}
+                        className="h-7 w-7"
+                        title="تنظیمات سیستم تعادل"
+                      >
+                        <Settings className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                      </Button>
+                    )}
+                  </div>
+                  
                   <Button
                     variant="outline"
                     className="w-full border-yellow-200 text-yellow-700 hover:bg-yellow-50 dark:border-yellow-900/30 dark:text-yellow-400 dark:hover:bg-yellow-900/20 btn-hover h-9 text-xs md:text-sm"
@@ -553,28 +672,63 @@ export default function ProjectsTab() {
         />
       )}
 
+      {/* دیالوگ تنظیمات سیستم تعادل مخصوص */}
+      <CustomTaadolDialog
+        project={customTaadolProject}
+        open={isCustomTaadolDialogOpen}
+        onClose={handleCloseCustomTaadol}
+        onUpdate={handleUpdateCustomTaadol}
+      />
+
       {/* دیالوگ انتخاب آرشیو */}
       <Dialog open={archiveDialogOpen} onOpenChange={setArchiveDialogOpen}>
-        <DialogContent className="max-w-xs">
+        <DialogContent className="max-w-md max-h-[80vh] flex flex-col">
           <DialogHeader>
-            <DialogTitle>انتقال پروژه به آرشیو دیگر</DialogTitle>
+            <DialogTitle className="text-center">انتقال پروژه به آرشیو دیگر</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
-            <Select value={selectedArchiveId} onValueChange={setSelectedArchiveId} disabled={archiveLoading}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="انتخاب آرشیو" />
-              </SelectTrigger>
-              <SelectContent>
-                {archiveTargetProject && archiveTargetProject["archiveId"] && (
-                  <SelectItem key="no-archive" value="none" className="text-red-600">خروج از آرشیو</SelectItem>
-                )}
-                {archiveList.map((archive) => (
-                  <SelectItem key={archive._id} value={archive._id}>{archive.name}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Button onClick={handleMoveToArchive} disabled={!selectedArchiveId || archiveLoading} className="w-full bg-green-600 hover:bg-green-700 text-white">انتقال</Button>
-          </div>
+          <ScrollArea className="flex-1 max-h-[400px] px-2">
+            <div className="space-y-2">
+              {archiveTargetProject && archiveTargetProject["archiveId"] && (
+                <Button
+                  variant="outline"
+                  className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
+                  onClick={() => setSelectedArchiveId("none")}
+                >
+                  <Archive className="ml-2 h-4 w-4" />
+                  خروج از آرشیو
+                </Button>
+              )}
+              {archiveLoading ? (
+                <div className="flex justify-center items-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
+                </div>
+              ) : (
+                archiveList.map((archive) => (
+                  <Button
+                    key={archive._id}
+                    variant={selectedArchiveId === archive._id ? "default" : "outline"}
+                    className="w-full justify-start"
+                    onClick={() => setSelectedArchiveId(archive._id)}
+                  >
+                    <Archive className="ml-2 h-4 w-4" />
+                    {archive.name}
+                  </Button>
+                ))
+              )}
+            </div>
+          </ScrollArea>
+          <DialogFooter className="gap-2">
+            <Button variant="outline" onClick={() => setArchiveDialogOpen(false)}>
+              لغو
+            </Button>
+            <Button 
+              onClick={handleMoveToArchive} 
+              disabled={!selectedArchiveId || archiveLoading} 
+              className="bg-green-600 hover:bg-green-700 text-white"
+            >
+              انتقال
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

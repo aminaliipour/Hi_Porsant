@@ -11,7 +11,7 @@ export async function GET(request: Request) {
     const filter: any = {}
     if (archiveId) filter.archiveId = archiveId
     const projects = await Project.find(filter)
-      .select('name archiveId createdAt updatedAt')
+      .select('name archiveId useCustomTaadol customTaadolPercentages customSectionWeights createdAt updatedAt')
       .sort({ createdAt: -1 })
     return NextResponse.json(projects)
   } catch (error) {

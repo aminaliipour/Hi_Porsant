@@ -22,12 +22,41 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     await dbConnect()
     const projectId = params.id
     const body = await request.json()
-    const { archiveId, ...updateFields } = body
+    const { archiveId, useCustomTaadol, customTaadolPercentages, customSectionWeights, ...updateFields } = body
+
+    const updateData: any = { ...updateFields }
+    
+    // به‌روزرسانی archiveId
+    if (archiveId !== undefined) {
+      updateData.archiveId = archiveId
+    }
+    
+    // به‌روزرسانی useCustomTaadol
+    if (typeof useCustomTaadol === 'boolean') {
+      updateData.useCustomTaadol = useCustomTaadol
+    }
+    
+    // به‌روزرسانی customTaadolPercentages
+    if (customTaadolPercentages !== undefined) {
+      updateData.customTaadolPercentages = {
+        خرید: customTaadolPercentages.خرید || 0,
+        همکاری: customTaadolPercentages.همکاری || 0,
+        فروش: customTaadolPercentages.فروش || 0,
+        طراحی: customTaadolPercentages.طراحی || 0,
+        پیمانکاری: customTaadolPercentages.پیمانکاری || 0,
+        مشاوره: customTaadolPercentages.مشاوره || 0,
+      }
+    }
+
+    // به‌روزرسانی customSectionWeights
+    if (customSectionWeights !== undefined) {
+      updateData.customSectionWeights = customSectionWeights
+    }
 
     // به‌روزرسانی پروژه
     const updatedProject = await Project.findByIdAndUpdate(
       projectId,
-      { ...updateFields, ...(archiveId ? { archiveId } : {}) },
+      { $set: updateData },
       { new: true }
     )
     if (!updatedProject) {
@@ -35,7 +64,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     }
 
     // اگر archiveId تغییر کرد، بخش‌های پروژه را هم آپدیت کن
-    if (archiveId) {
+    if (archiveId !== undefined) {
       await ProjectSection.updateMany(
         { projectId },
         { $set: { archiveId } }

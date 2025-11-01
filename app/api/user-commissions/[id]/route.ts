@@ -21,8 +21,8 @@ export async function GET(
       SystemPercentages.findOne().sort({ createdAt: -1 }).lean(),
       SectionWeights.find().lean(),
       archiveId ? 
-        Project.find({ archiveId }, { _id: 1, name: 1, archiveId: 1 }).lean() : 
-        Project.find({}, { _id: 1, name: 1 }).lean(),
+        Project.find({ archiveId }, { _id: 1, name: 1, archiveId: 1, useCustomTaadol: 1, customTaadolPercentages: 1, customSectionWeights: 1 }).lean() : 
+        Project.find({}, { _id: 1, name: 1, useCustomTaadol: 1, customTaadolPercentages: 1, customSectionWeights: 1 }).lean(),
       archiveId ? 
         ProjectSection.find({ archiveId }, { _id: 1, projectId: 1, archiveId: 1 }).lean() : 
         ProjectSection.find({}, { _id: 1, projectId: 1 }).lean(),
@@ -54,9 +54,35 @@ export async function GET(
       weightsMap.set(key, w.weight)
     })
 
+    // تابع کمکی برای گرفتن وزن فیلد (مخصوص پروژه یا عمومی)
+    const getWeightForProject = (project: any, sectionName: string, fieldName: string) => {
+      // اگر پروژه وزن‌های مخصوص داره
+      if (project.useCustomTaadol && project.customSectionWeights && Array.isArray(project.customSectionWeights)) {
+        const customWeight = project.customSectionWeights.find(
+          (w: any) => w.sectionName === sectionName && w.fieldName === fieldName
+        )
+        if (customWeight) {
+          return customWeight.weight || 0
+        }
+      }
+      // در غیر این صورت از وزن‌های عمومی استفاده کن
+      const key = `${sectionName}_${fieldName}`
+      return weightsMap.get(key) || 0
+    }
+
     const commissions = []
 
     console.time('Processing Details')
+
+    // تابع کمکی برای دریافت درصد سیستم تعادل (مخصوص یا اصلی)
+    const getSystemPercentForProject = (project: any, sectionName: string) => {
+      // اگر پروژه از سیستم تعادل مخصوص استفاده می‌کند
+      if (project.useCustomTaadol && project.customTaadolPercentages) {
+        return project.customTaadolPercentages[sectionName] || 0
+      }
+      // در غیر این صورت از سیستم تعادل اصلی استفاده کن
+      return systemPercent[sectionName as keyof typeof systemPercent] || 0
+    }
 
     // بهینه‌سازی: دریافت تنها details مربوط به کاربر
     const withItemsCollections = [
@@ -88,7 +114,7 @@ export async function GET(
     }
 
     // بهینه‌سازی محاسبه وزن‌ها
-    const calculateDistributedWeights = (sectionName: string, allFields: string[], activeFields: string[]) => {
+    const calculateDistributedWeights = (project: any, sectionName: string, allFields: string[], activeFields: string[]) => {
       const redistributedWeights = new Map()
       
       if (activeFields.length === 0) {
@@ -102,8 +128,7 @@ export async function GET(
       const activeWeights = new Map()
       
       for (const field of allFields) {
-        const key = `${sectionName}_${field}`
-        const weight = weightsMap.get(key) || 0
+        const weight = getWeightForProject(project, sectionName, field)
         totalOriginalWeight += weight
         
         if (activeFields.includes(field)) {
@@ -157,8 +182,14 @@ export async function GET(
           !(detailsObj as any)[field] || (detailsObj as any)[field].isActive !== false
         )
 
+        // پیدا کردن پروژه مربوط به این detail برای استفاده از وزن‌های صحیح
+        const section = sectionsMap.get(detail.sectionId?.toString())
+        const project = section ? projectsMap.get(section.projectId.toString()) : null
+
         // محاسبه وزن‌های بازتوزیع شده
-        const redistributedWeights = calculateDistributedWeights(name, allFields, activeFields)
+        const redistributedWeights = project ? 
+          calculateDistributedWeights(project, name, allFields, activeFields) :
+          new Map()
 
         // بررسی تخصیص از طریق assignedMembers
         for (const [field, assignedId] of Object.entries(assignedMembers)) {
@@ -183,7 +214,7 @@ export async function GET(
                   const key = `${name}_${detail.itemName}_${field}`
                   const value = income.details?.[key]?.value || 0
                   const weightValue = redistributedWeights.get(field) || 0
-                  const systemPercentValue = systemPercent[percentField as keyof typeof systemPercent] || 0
+                  const systemPercentValue = getSystemPercentForProject(project, percentField)
                   
                   processCommission(project, section, income, name, detail.itemName, field, weightValue, systemPercentValue, value)
                 }
@@ -209,7 +240,7 @@ export async function GET(
                 const key = `${name}_${detail.itemName}_${field}`
                 const value = income.details?.[key]?.value || 0
                 const weightValue = redistributedWeights.get(field) || 0
-                const systemPercentValue = systemPercent[percentField as keyof typeof systemPercent] || 0
+                const systemPercentValue = getSystemPercentForProject(project, percentField)
                 
                 processCommission(project, section, income, name, detail.itemName, field, weightValue, systemPercentValue, value)
               }
@@ -248,8 +279,14 @@ export async function GET(
           return typeof fieldDetails === 'object' && (fieldDetails as any)?.isActive !== false
         })
 
+        // پیدا کردن پروژه مربوط به این detail
+        const section = sectionsMap.get(detail.sectionId?.toString())
+        const project = section ? projectsMap.get(section.projectId.toString()) : null
+
         // محاسبه وزن‌های بازتوزیع شده
-        const redistributedWeights = calculateDistributedWeights(name, allFields, activeFields)
+        const redistributedWeights = project ?
+          calculateDistributedWeights(project, name, allFields, activeFields) :
+          new Map()
 
         for (const [field, fieldDetails] of Object.entries(detailsObj)) {
           let assignedMemberId = null
@@ -271,7 +308,7 @@ export async function GET(
                 const key = `${name}_${field}`
                 const value = income.details?.[key]?.value || 0
                 const weightValue = redistributedWeights.get(field) || 0
-                const systemPercentValue = systemPercent[percentField as keyof typeof systemPercent] || 0
+                const systemPercentValue = getSystemPercentForProject(project, percentField)
                 
                 processCommission(project, section, income, name, "", field, weightValue, systemPercentValue, value)
               }

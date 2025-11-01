@@ -15,6 +15,15 @@ interface Project {
   _id: string
   name: string
   hasIncome?: boolean
+  useCustomTaadol?: boolean
+  customTaadolPercentages?: {
+    خرید: number
+    همکاری: number
+    فروش: number
+    طراحی: number
+    پیمانکاری: number
+    مشاوره: number
+  }
 }
 
 interface ProjectSection {
@@ -80,8 +89,17 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
     مشاوره: 0
   })
 
+  const [projectData, setProjectData] = useState<Project | null>(null)
+
   const [sectionWeights, setSectionWeights] = useState<Record<string, Record<string, number>>>({})
 
+  // تابع کمکی برای دریافت درصد مناسب (اختصاصی یا سیستم)
+  const getProjectPercentage = (sectionName: string): number => {
+    if (projectData?.useCustomTaadol && projectData?.customTaadolPercentages) {
+      return projectData.customTaadolPercentages[sectionName as keyof typeof projectData.customTaadolPercentages] || 0
+    }
+    return systemPercentages[sectionName as keyof typeof systemPercentages] || 0
+  }
   // Debug useEffect
   useEffect(() => {
     console.log("🔥 DEBUG - State changed:")
@@ -158,6 +176,14 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
   const fetchData = async () => {
     try {
       setLoading(true)
+      
+      // دریافت اطلاعات کامل پروژه
+      const projectResponse = await fetch(`/api/projects/${project._id}`)
+      const projectFullData = await projectResponse.json()
+      if (!projectFullData.error) {
+        setProjectData(projectFullData)
+      }
+      
       // دریافت درصدهای سیستم
       const percentagesResponse = await fetch("/api/system-percentages")
       const latestPercentages = await percentagesResponse.json()
@@ -430,7 +456,7 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
       return value
     }
     
-    const percentage = systemPercentages[sectionName as keyof typeof systemPercentages] || 0
+    const percentage = getProjectPercentage(sectionName)
     return Math.round(value * (1 - percentage / 100))
   }
 
@@ -580,7 +606,7 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
     // پر کردن خودکار همه فیلدهای فعال آیتم با مقدار نهایی
     // برای حالت ثابت، مقدار نهایی (پس از کسر درصد سیستم) در فیلدها قرار می‌گیرد
     if (numericValue > 0) {
-      const systemPercentage = systemPercentages[sectionName as keyof typeof systemPercentages] || 0
+      const systemPercentage = getProjectPercentage(sectionName)
       const finalFixedValue = Math.round(numericValue * (1 - systemPercentage / 100))
       
       console.log(`Auto-filling item fields for ${itemKey} with final value: ${finalFixedValue} (from raw: ${numericValue}, system: ${systemPercentage}%)`)
@@ -665,7 +691,7 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
     
     // پر کردن خودکار همه فیلدهای فعال همان لحظه
     if (numericValue > 0) {
-      const systemPercentage = systemPercentages[sectionName as keyof typeof systemPercentages] || 0
+      const systemPercentage = getProjectPercentage(sectionName)
       const finalFixedValue = Math.round(numericValue * (1 - systemPercentage / 100))
       
       console.log(`Auto-filling fields for ${sectionName} with finalValue: ${finalFixedValue}`)
@@ -832,7 +858,7 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
           // اگر آیتم حالت ثابت دارد
           if (itemCalculationType[itemKey] === 'fixed') {
             const itemFixedAmount = itemFixedValues[itemKey] || 0
-            const systemPercentage = systemPercentages[section.sectionName as keyof typeof systemPercentages] || 0
+            const systemPercentage = getProjectPercentage(section.sectionName)
             const itemFinalFixedValue = itemFixedAmount * (1 - systemPercentage / 100)
             
             console.log(`Fixed calculation for item ${itemKey}:`, {
@@ -920,7 +946,7 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
         if (calculationType[section.sectionName] === 'fixed') {
           // در حالت ثابت: مقدار ثابت به عنوان مقدار خام
           const fixedAmount = fixedValues[section.sectionName] || 0
-          const systemPercentage = systemPercentages[section.sectionName as keyof typeof systemPercentages] || 0
+          const systemPercentage = getProjectPercentage(section.sectionName)
           const finalFixedValue = fixedAmount * (1 - systemPercentage / 100)
           
           // تقسیم مقدار نهایی بین فیلدهای فعال برای محاسبه پورسانت
@@ -1172,7 +1198,10 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
                     <CardHeader className="py-4 bg-muted/5">
                       <div className="flex justify-between items-center">
                         <CardTitle className="text-lg font-medium">
-                          {section.sectionName} (درصد سیستم: {systemPercentages[section.sectionName as keyof typeof systemPercentages]}%)
+                          {section.sectionName} (درصد سیستم: {getProjectPercentage(section.sectionName)}%)
+                          {projectData?.useCustomTaadol && (
+                            <span className="text-xs text-orange-600 mr-2">⚙️ اختصاصی</span>
+                          )}
                         </CardTitle>
                         
                         <div className="text-sm text-orange-600 bg-orange-50 px-3 py-1 rounded-lg border border-orange-200">
@@ -1243,8 +1272,8 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
                                   💡 مقدار ثابت آیتم: {formatNumber(itemFixedValues[`${section.sectionName}_${item.itemName}`] || 0)} ریال
                                 </p>
                                 <p className="text-xs text-gray-600">
-                                  پس از کسر {systemPercentages[section.sectionName as keyof typeof systemPercentages]}% سیستم: <span className="font-bold text-green-600">
-                                    {formatNumber(Math.round((itemFixedValues[`${section.sectionName}_${item.itemName}`] || 0) * (1 - (systemPercentages[section.sectionName as keyof typeof systemPercentages] || 0) / 100)))} ریال
+                                  پس از کسر {getProjectPercentage(section.sectionName)}% سیستم: <span className="font-bold text-green-600">
+                                    {formatNumber(Math.round((itemFixedValues[`${section.sectionName}_${item.itemName}`] || 0) * (1 - getProjectPercentage(section.sectionName) / 100)))} ریال
                                   </span>
                                 </p>
                                 <p className="text-xs text-gray-500 mt-1">
@@ -1298,7 +1327,7 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
                                           )
                                           : (
                                             <div>
-                                              <div>پس از کسر {systemPercentages[section.sectionName as keyof typeof systemPercentages]}% سیستم: {formatNumber(finalValue)} ریال</div>
+                                              <div>پس از کسر {getProjectPercentage(section.sectionName)}% سیستم: {formatNumber(finalValue)} ریال</div>
                                               <div className="text-orange-600 font-medium text-xs mt-1">
                                                 ⚠️ مقدار نهایی ذخیره می‌شود
                                               </div>
@@ -1325,7 +1354,10 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
                     <CardHeader className="py-4 bg-muted/5">
                       <div className="flex justify-between items-center">
                         <CardTitle className="text-lg font-medium">
-                          {section.sectionName} (درصد سیستم: {systemPercentages[section.sectionName as keyof typeof systemPercentages]}%)
+                          {section.sectionName} (درصد سیستم: {getProjectPercentage(section.sectionName)}%)
+                          {projectData?.useCustomTaadol && (
+                            <span className="text-xs text-orange-600 mr-2">⚙️ اختصاصی</span>
+                          )}
                         </CardTitle>
                         
                         <div className="flex items-center gap-4">
@@ -1368,8 +1400,8 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
                               💡 مقدار ثابت: {formatNumber(fixedValues[section.sectionName] || 0)} ریال
                             </p>
                             <p className="text-sm text-gray-600">
-                              پس از کسر {systemPercentages[section.sectionName as keyof typeof systemPercentages]}% سیستم: <span className="font-bold text-green-600">
-                                {formatNumber(Math.round((fixedValues[section.sectionName] || 0) * (1 - (systemPercentages[section.sectionName as keyof typeof systemPercentages] || 0) / 100)))} ریال
+                              پس از کسر {getProjectPercentage(section.sectionName)}% سیستم: <span className="font-bold text-green-600">
+                                {formatNumber(Math.round((fixedValues[section.sectionName] || 0) * (1 - getProjectPercentage(section.sectionName) / 100)))} ریال
                               </span>
                             </p>
                             <p className="text-xs text-gray-500 mt-1">
@@ -1415,7 +1447,7 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
                                     )
                                     : (
                                       <div>
-                                        <div>پس از کسر {systemPercentages[section.sectionName as keyof typeof systemPercentages]}% سیستم: {formatNumber(finalValue)} ریال</div>
+                                        <div>پس از کسر {getProjectPercentage(section.sectionName)}% سیستم: {formatNumber(finalValue)} ریال</div>
                                         <div className="text-orange-600 font-medium text-xs mt-1">
                                           ⚠️ مقدار نهایی ذخیره می‌شود
                                         </div>
