@@ -54,32 +54,75 @@ export function CustomTaadolDialog({ project, open, onClose, onUpdate }: CustomT
   const [sectionWeights, setSectionWeights] = useState<Record<string, Record<string, number>>>({})
   const [sectionTotals, setSectionTotals] = useState<Record<string, number>>({})
   const [saving, setSaving] = useState(false)
+  const [systemPercentages, setSystemPercentages] = useState<CustomTaadolPercentages>({
+    خرید: 0,
+    همکاری: 0,
+    فروش: 0,
+    طراحی: 0,
+    پیمانکاری: 0,
+    مشاوره: 0
+  })
+  const [systemWeights, setSystemWeights] = useState<Record<string, Record<string, number>>>({})
   const { toast } = useToast()
 
+  // بارگذاری درصدهای سیستم و وزن‌های سیستم
   useEffect(() => {
-    if (project) {
-      console.log('Loading project data:', project)
-      
+    const fetchSystemData = async () => {
+      try {
+        // دریافت درصدهای سیستم
+        const percentagesResponse = await fetch("/api/system-percentages")
+        const systemPercentagesData = await percentagesResponse.json()
+        if (!systemPercentagesData.error) {
+          setSystemPercentages(systemPercentagesData)
+        }
+
+        // دریافت وزن‌های سیستم
+        const weightsResponse = await fetch("/api/section-weights")
+        const weightsData = await weightsResponse.json()
+        if (weightsData && !weightsData.error) {
+          const weightsMap: Record<string, Record<string, number>> = {}
+          weightsData.forEach((weight: any) => {
+            if (!weightsMap[weight.sectionName]) {
+              weightsMap[weight.sectionName] = {}
+            }
+            weightsMap[weight.sectionName][weight.fieldName] = weight.weight
+          })
+          setSystemWeights(weightsMap)
+        }
+      } catch (error) {
+        console.error('Error fetching system data:', error)
+      }
+    }
+
+    if (open) {
+      fetchSystemData()
+    }
+  }, [open])
+
+  useEffect(() => {
+    if (project && Object.keys(systemPercentages).length > 0 && systemPercentages.خرید !== undefined) {
       // بارگذاری درصدها
-      if (project.customTaadolPercentages) {
-        console.log('Custom percentages found:', project.customTaadolPercentages)
+      const hasCustomPercentages = project.customTaadolPercentages && 
+        Object.values(project.customTaadolPercentages).some(val => val > 0)
+      
+      if (hasCustomPercentages) {
         setPercentages({
-          خرید: project.customTaadolPercentages.خرید || 0,
-          همکاری: project.customTaadolPercentages.همکاری || 0,
-          فروش: project.customTaadolPercentages.فروش || 0,
-          طراحی: project.customTaadolPercentages.طراحی || 0,
-          پیمانکاری: project.customTaadolPercentages.پیمانکاری || 0,
-          مشاوره: project.customTaadolPercentages.مشاوره || 0
+          خرید: project.customTaadolPercentages!.خرید || 0,
+          همکاری: project.customTaadolPercentages!.همکاری || 0,
+          فروش: project.customTaadolPercentages!.فروش || 0,
+          طراحی: project.customTaadolPercentages!.طراحی || 0,
+          پیمانکاری: project.customTaadolPercentages!.پیمانکاری || 0,
+          مشاوره: project.customTaadolPercentages!.مشاوره || 0
         })
       } else {
-        console.log('No custom percentages, using defaults')
+        // اگر مقادیر اختصاصی وجود ندارد یا همه صفر هستند، از مقادیر سیستم استفاده کن
         setPercentages({
-          خرید: 0,
-          همکاری: 0,
-          فروش: 0,
-          طراحی: 0,
-          پیمانکاری: 0,
-          مشاوره: 0
+          خرید: systemPercentages.خرید || 0,
+          همکاری: systemPercentages.همکاری || 0,
+          فروش: systemPercentages.فروش || 0,
+          طراحی: systemPercentages.طراحی || 0,
+          پیمانکاری: systemPercentages.پیمانکاری || 0,
+          مشاوره: systemPercentages.مشاوره || 0
         })
       }
 
@@ -87,9 +130,12 @@ export function CustomTaadolDialog({ project, open, onClose, onUpdate }: CustomT
       const weightsMap: Record<string, Record<string, number>> = {}
       const totalsMap: Record<string, number> = {}
 
-      if (project.customSectionWeights && project.customSectionWeights.length > 0) {
-        console.log('Custom weights found:', project.customSectionWeights)
-        project.customSectionWeights.forEach((weight) => {
+      const hasCustomWeights = project.customSectionWeights && 
+        project.customSectionWeights.length > 0 &&
+        project.customSectionWeights.some(w => w.weight > 0)
+
+      if (hasCustomWeights) {
+        project.customSectionWeights!.forEach((weight) => {
           if (!weightsMap[weight.sectionName]) {
             weightsMap[weight.sectionName] = {}
             totalsMap[weight.sectionName] = 0
@@ -97,12 +143,18 @@ export function CustomTaadolDialog({ project, open, onClose, onUpdate }: CustomT
           weightsMap[weight.sectionName][weight.fieldName] = weight.weight
           totalsMap[weight.sectionName] += weight.weight
         })
+      } else if (Object.keys(systemWeights).length > 0) {
+        // اگر وزن‌های اختصاصی وجود ندارد یا همه صفر هستند، از وزن‌های سیستم استفاده کن
+        Object.keys(systemWeights).forEach((sectionName) => {
+          weightsMap[sectionName] = { ...systemWeights[sectionName] }
+          totalsMap[sectionName] = Object.values(systemWeights[sectionName]).reduce((sum, weight) => sum + weight, 0)
+        })
       }
 
       setSectionWeights(weightsMap)
       setSectionTotals(totalsMap)
     }
-  }, [project])
+  }, [project, systemPercentages, systemWeights])
 
   const handlePercentageChange = (key: keyof CustomTaadolPercentages, value: number) => {
     setPercentages(prev => ({
@@ -210,8 +262,6 @@ export function CustomTaadolDialog({ project, open, onClose, onUpdate }: CustomT
         customSectionWeights: weights
       }
 
-      console.log('Saving custom taadol:', payload)
-
       const response = await fetch(`/api/projects/${project._id}`, {
         method: "PUT",
         headers: {
@@ -222,12 +272,10 @@ export function CustomTaadolDialog({ project, open, onClose, onUpdate }: CustomT
 
       if (!response.ok) {
         const errorData = await response.json()
-        console.error('Save error:', errorData)
         throw new Error(errorData.error || "خطا در ذخیره تنظیمات")
       }
 
-      const result = await response.json()
-      console.log('Save result:', result)
+      await response.json()
 
       toast({
         title: "موفق",
