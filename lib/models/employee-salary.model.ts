@@ -7,6 +7,9 @@ export interface IEmployeeSalary extends Document {
   deductions: Array<{title: string, amount: number}>
   taxDeduction?: number // کسر 7% مالیات اضافه شد
   description?: string // فیلد توضیحات اضافه شد
+  isPorsanti?: boolean // حالت پورسانتی
+  salary1?: number // حقوق اول (133911989 منهای 7%)
+  salary2?: number // حقوق دوم (مابه‌التفاوت درآمد)
   date: string
   archiveId?: mongoose.Types.ObjectId // اضافه شد
   createdAt: Date
@@ -33,6 +36,9 @@ const EmployeeSalarySchema: Schema = new Schema(
     },
     taxDeduction: { type: Number, default: 0 }, // کسر 7% مالیات اضافه شد
     description: { type: String, default: "" }, // فیلد توضیحات - حذف required: false
+    isPorsanti: { type: Boolean, default: false }, // حالت پورسانتی
+    salary1: { type: Number, default: 0 }, // حقوق اول
+    salary2: { type: Number, default: 0 }, // حقوق دوم
     date: { type: String, required: true },
     archiveId: { type: Schema.Types.ObjectId, ref: "Archive" }, // اضافه شد
   },

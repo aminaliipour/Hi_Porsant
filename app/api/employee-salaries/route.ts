@@ -72,6 +72,9 @@ export async function POST(request: Request) {
       deductions: body.deductions,
       taxDeduction: body.taxDeduction || 0, // کسر 7% اضافه شد
       description: body.description || "",
+      isPorsanti: body.isPorsanti || false, // حالت پورسانتی
+      salary1: body.salary1 || 0, // حقوق اول
+      salary2: body.salary2 || 0, // حقوق دوم
     }
 
     console.log("Update data:", updateData)

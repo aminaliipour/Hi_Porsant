@@ -12,6 +12,10 @@ const sizeClasses = {
     // جابجایی thumb به سمت چپ (rtl)
     thumb: "h-3 w-3 data-[state=checked]:-translate-x-4 data-[state=unchecked]:-translate-x-1",
   },
+  default: {
+    root: "h-6 w-12",
+    thumb: "h-4 w-4 data-[state=checked]:-translate-x-7 data-[state=unchecked]:-translate-x-1",
+  },
   medium: {
     root: "h-6 w-12",
     thumb: "h-4 w-4 data-[state=checked]:-translate-x-7 data-[state=unchecked]:-translate-x-1",
@@ -20,9 +24,9 @@ const sizeClasses = {
     root: "h-8 w-16",
     thumb: "h-6 w-6 data-[state=checked]:-translate-x-9 data-[state=unchecked]:-translate-x-1",
   },
-}
+} as const
 
-type SwitchSize = "small" | "medium" | "large"
+type SwitchSize = keyof typeof sizeClasses
 
 interface SwitchProps extends React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root> {
   size?: SwitchSize
@@ -52,7 +56,7 @@ const Switch = React.forwardRef<
       <SwitchPrimitives.Root
         className={cn(
           "peer inline-flex shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input",
-          sizeClasses[size].root,
+          sizeClasses[size || "default"]?.root || sizeClasses.default.root,
           className
         )}
         {...props}
@@ -61,7 +65,7 @@ const Switch = React.forwardRef<
         <SwitchPrimitives.Thumb
           className={cn(
             "pointer-events-none block rounded-full bg-background shadow transition-transform duration-200 border border-gray-300 flex items-center justify-center",
-            sizeClasses[size].thumb
+            sizeClasses[size || "default"]?.thumb || sizeClasses.default.thumb
           )}
         >
           {/* آیکون‌ها */}
