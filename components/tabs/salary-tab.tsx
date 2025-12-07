@@ -34,6 +34,7 @@ export default function SalaryTab() {
   const [selectedEmployee, setSelectedEmployee] = useState<TeamMember | null>(null)
   const [isEmployeeDialogOpen, setIsEmployeeDialogOpen] = useState(false)
   const [isAddGuestDialogOpen, setIsAddGuestDialogOpen] = useState(false)
+  const [isAddEmployeeDialogOpen, setIsAddEmployeeDialogOpen] = useState(false)
   const [guestFormData, setGuestFormData] = useState({
     fullName: "",
     referralFee: 0,
@@ -97,15 +98,54 @@ export default function SalaryTab() {
     return baseSalary > 0 || commission > 0 || totalAdditions > 0 || totalDeductions > 0;
   }
 
-  // فیلتر کردن کارمندان با مقادیر غیرصفر
+  // فیلتر کردن کارمندان با مقادیر غیرصفر یا کسانی که در آرشیو فعلی هستند
   const filterEmployeesWithNonZeroValues = async (employeesData: TeamMember[], archiveId?: string) => {
     try {
+      // اگر archiveId وجود دارد، فقط کارمندانی را نشان بده که در این آرشیو رکورد دارند
+      if (archiveId) {
+        const salaryUrl = `/api/all-salaries?archiveId=${archiveId}`
+        const salaryResponse = await fetch(salaryUrl)
+        
+        if (salaryResponse.ok) {
+          const allSalaries = await salaryResponse.json()
+          
+          // فقط کارمندانی که در این آرشیو رکورد حقوق دارند
+          const employeesInArchive = await Promise.all(
+            allSalaries.map(async (salary: any) => {
+              const employee = employeesData.find(emp => emp._id?.toString() === salary.employeeId?.toString())
+              if (!employee) return null
+
+              // دریافت پورسانت کارمند
+              const commissionUrl = `/api/user-commissions/${employee._id}?archiveId=${archiveId}`
+              const commissionResponse = await fetch(commissionUrl)
+              let totalCommission = 0
+              if (commissionResponse.ok) {
+                const commissions = await commissionResponse.json()
+                totalCommission = commissions
+                  .filter((c: any) => c.isActive !== false)
+                  .reduce((sum: number, c: any) => sum + (c.commission || 0), 0)
+              }
+
+              return {
+                ...employee,
+                baseSalary: salary.baseSalary || 0,
+                commission: totalCommission,
+                additions: salary.additions || [],
+                deductions: salary.deductions || []
+              }
+            })
+          )
+
+          setFilteredEmployees(employeesInArchive.filter(emp => emp !== null) as TeamMember[])
+          return
+        }
+      }
+
+      // اگر archiveId نیست، فقط کارمندان با مقادیر غیرصفر
       const employeesWithData = await Promise.all(
         employeesData.map(async (employee) => {
           // دریافت حقوق کارمند
-          const salaryUrl = archiveId 
-            ? `/api/all-salaries?archiveId=${archiveId}`
-            : '/api/all-salaries'
+          const salaryUrl = '/api/all-salaries'
           
           const salaryResponse = await fetch(salaryUrl)
           let employeeSalary = null
@@ -117,9 +157,7 @@ export default function SalaryTab() {
           }
 
           // دریافت پورسانت کارمند
-          const commissionUrl = archiveId 
-            ? `/api/user-commissions/${employee._id}?archiveId=${archiveId}`
-            : `/api/user-commissions/${employee._id}`
+          const commissionUrl = `/api/user-commissions/${employee._id}`
           
           const commissionResponse = await fetch(commissionUrl)
           let totalCommission = 0
@@ -238,6 +276,112 @@ export default function SalaryTab() {
       toast({
         title: "خطا",
         description: "خطا در حذف فرد مهمان",
+        variant: "destructive",
+      })
+    }
+  }
+
+  const handleAddEmployeeToArchive = async (employee: TeamMember) => {
+    // دریافت archiveId فعال
+    let archiveId = ""
+    const stored = localStorage.getItem("activeArchive")
+    if (stored) {
+      try { archiveId = JSON.parse(stored)._id } catch {}
+    }
+
+    if (!archiveId) {
+      toast({
+        title: "خطا",
+        description: "آرشیو فعال انتخاب نشده است!",
+        variant: "destructive",
+      })
+      return
+    }
+
+    try {
+      // ایجاد یک رکورد حقوق خالی برای این کارمند در این آرشیو
+      const response = await fetch("/api/employee-salaries", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          employeeId: employee._id,
+          baseSalary: 0,
+          additions: [],
+          deductions: [],
+          taxDeduction: 0,
+          description: "",
+          isPorsanti: false,
+          salary1: 0,
+          salary2: 0,
+          archiveId,
+          date: new Date().toISOString().split("T")[0],
+        }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || "خطا در افزودن کارمند")
+      }
+
+      toast({
+        title: "موفق",
+        description: `${employee.fullName} با موفقیت به آرشیو اضافه شد`,
+      })
+
+      // بروزرسانی لیست
+      await fetchData(archiveId)
+      setIsAddEmployeeDialogOpen(false)
+    } catch (error) {
+      console.error("Error adding employee:", error)
+      toast({
+        title: "خطا",
+        description: error instanceof Error ? error.message : "خطا در افزودن کارمند به آرشیو",
+        variant: "destructive",
+      })
+    }
+  }
+
+  const handleRemoveEmployeeFromArchive = async (employee: TeamMember) => {
+    // دریافت archiveId فعال
+    let archiveId = ""
+    const stored = localStorage.getItem("activeArchive")
+    if (stored) {
+      try { archiveId = JSON.parse(stored)._id } catch {}
+    }
+
+    if (!archiveId) {
+      toast({
+        title: "خطا",
+        description: "آرشیو فعال انتخاب نشده است!",
+        variant: "destructive",
+      })
+      return
+    }
+
+    try {
+      const response = await fetch(`/api/employee-salaries?employeeId=${employee._id}&archiveId=${archiveId}`, {
+        method: "DELETE",
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || "خطا در حذف کارمند")
+      }
+
+      toast({
+        title: "موفق",
+        description: `${employee.fullName} از آرشیو حذف شد`,
+      })
+
+      // بروزرسانی لیست
+      await fetchData(archiveId)
+    } catch (error) {
+      console.error("Error removing employee:", error)
+      toast({
+        title: "خطا",
+        description: error instanceof Error ? error.message : "خطا در حذف کارمند از آرشیو",
         variant: "destructive",
       })
     }
@@ -506,26 +650,76 @@ export default function SalaryTab() {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>کارمندان</CardTitle>
-          <Button 
-            onClick={handleBulkUploadPayslips}
-            disabled={isBulkUploading || filteredEmployees.length === 0}
-            className="bg-blue-600 hover:bg-blue-700 text-white"
-            size="sm"
-          >
-            {isBulkUploading ? (
-              <>
-                <div className="w-4 h-4 ml-2 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
-                آپلود گروهی ({bulkUploadProgress.current}/{bulkUploadProgress.total})
-              </>
-            ) : (
-              <>
-                <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                </svg>
-                آپلود همه فیش‌ها
-              </>
-            )}
-          </Button>
+          <div className="flex gap-2">
+            <Dialog open={isAddEmployeeDialogOpen} onOpenChange={setIsAddEmployeeDialogOpen}>
+              <DialogTrigger asChild>
+                <Button size="sm" variant="outline">
+                  <Plus className="ml-2 h-4 w-4" />
+                  افزودن کارمند
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>افزودن کارمند به آرشیو</DialogTitle>
+                </DialogHeader>
+                <div className="py-4">
+                  <ScrollArea className="h-[400px]">
+                    <div className="space-y-2">
+                      {employees
+                        .filter(emp => !filteredEmployees.some(filtered => filtered._id === emp._id))
+                        .map((employee) => (
+                          <div
+                            key={employee._id}
+                            className="flex justify-between items-center p-3 border rounded-md hover:bg-accent"
+                          >
+                            <div>
+                              <div className="font-medium">{employee.fullName}</div>
+                              <div className="text-sm text-muted-foreground">{employee.position}</div>
+                            </div>
+                            <Button
+                              size="sm"
+                              onClick={() => handleAddEmployeeToArchive(employee)}
+                            >
+                              افزودن
+                            </Button>
+                          </div>
+                        ))}
+                      {employees.filter(emp => !filteredEmployees.some(filtered => filtered._id === emp._id)).length === 0 && (
+                        <div className="text-center py-8 text-gray-500">
+                          همه کارمندان در این آرشیو هستند
+                        </div>
+                      )}
+                    </div>
+                  </ScrollArea>
+                </div>
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setIsAddEmployeeDialogOpen(false)}>
+                    بستن
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+            <Button 
+              onClick={handleBulkUploadPayslips}
+              disabled={isBulkUploading || filteredEmployees.length === 0}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+              size="sm"
+            >
+              {isBulkUploading ? (
+                <>
+                  <div className="w-4 h-4 ml-2 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                  آپلود گروهی ({bulkUploadProgress.current}/{bulkUploadProgress.total})
+                </>
+              ) : (
+                <>
+                  <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                  </svg>
+                  آپلود همه فیش‌ها
+                </>
+              )}
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
           <ScrollArea className="h-[500px]">
@@ -533,11 +727,25 @@ export default function SalaryTab() {
               {filteredEmployees.map((employee) => (
                 <div
                   key={employee._id}
-                  className="flex justify-between items-center p-3 border rounded-md cursor-pointer hover:bg-accent"
-                  onClick={() => handleEmployeeClick(employee)}
+                  className="flex justify-between items-center p-3 border rounded-md hover:bg-accent"
                 >
-                  <span>{employee.fullName}</span>
-                  <span className="text-sm text-muted-foreground">{employee.position}</span>
+                  <div
+                    className="flex-1 cursor-pointer"
+                    onClick={() => handleEmployeeClick(employee)}
+                  >
+                    <div className="font-medium">{employee.fullName}</div>
+                    <div className="text-sm text-muted-foreground">{employee.position}</div>
+                  </div>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleRemoveEmployeeFromArchive(employee)
+                    }}
+                  >
+                    حذف
+                  </Button>
                 </div>
               ))}
               {filteredEmployees.length === 0 && !loading && (

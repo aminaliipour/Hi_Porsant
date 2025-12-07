@@ -166,8 +166,8 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
     const salary1 = salary1Base - salary1Insurance
     
     let salary2 = 0
-    if (totalIncome > FIXED_SALARY_BASE) {
-      salary2 = totalIncome - FIXED_SALARY_BASE
+    if (totalIncome > salary1) {
+      salary2 = totalIncome - salary1
     }
     
     return { salary1, salary2, salary1Base }
@@ -186,12 +186,18 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
         newSalary.taxDeduction = Math.round(value * 0.07)
       }
       
-      // اگر حالت پورسانتی فعال شد، حقوق اول و دوم را محاسبه کن
-      if (field === 'isPorsanti' && value === true) {
-        const totalIncome = getTotalCommission()
-        const { salary1, salary2 } = calculatePorsantiSalaries(totalIncome)
-        newSalary.salary1 = salary1
-        newSalary.salary2 = salary2
+      // اگر حالت پورسانتی فعال شد یا غیرفعال شد، حقوق اول و دوم را محاسبه کن
+      if (field === 'isPorsanti') {
+        if (value === true) {
+          const totalIncome = getTotalCommission()
+          const { salary1, salary2 } = calculatePorsantiSalaries(totalIncome)
+          newSalary.salary1 = salary1
+          newSalary.salary2 = salary2
+        } else {
+          // اگر غیرفعال شد، صفر کن
+          newSalary.salary1 = 0
+          newSalary.salary2 = 0
+        }
       }
       
       console.log("New salary state:", newSalary)
@@ -358,8 +364,6 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
                     <Switch
                       checked={salary.isPorsanti}
                       onCheckedChange={(checked) => {
-                        handleSalaryChange("isPorsanti", checked)
-                        // هنگام فعال شدن، حقوق را مجدداً محاسبه کن
                         if (checked) {
                           const totalIncome = getTotalCommission()
                           const { salary1, salary2 } = calculatePorsantiSalaries(totalIncome)
@@ -368,6 +372,13 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
                             isPorsanti: true,
                             salary1,
                             salary2
+                          }))
+                        } else {
+                          setSalary(prev => ({
+                            ...prev,
+                            isPorsanti: false,
+                            salary1: 0,
+                            salary2: 0
                           }))
                         }
                       }}
@@ -403,11 +414,11 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
 
                       <div className="p-4 border rounded-lg bg-yellow-50">
                         <label className="font-medium text-lg block mb-2">حقوق دوم</label>
-                        {getTotalCommission() < FIXED_SALARY_BASE ? (
+                        {getTotalCommission() < salary.salary1 ? (
                           <div className="text-center py-2 text-orange-600">
-                            <p className="font-medium">مجموع درآمد کمتر از حد ثابت است</p>
+                            <p className="font-medium">مجموع درآمد کمتر از حقوق اول خالص است</p>
                             <p className="text-sm mt-1">
-                              کمبود: {new Intl.NumberFormat('fa-IR').format(FIXED_SALARY_BASE - getTotalCommission())} ریال
+                              کمبود: {new Intl.NumberFormat('fa-IR').format(salary.salary1 - getTotalCommission())} ریال
                             </p>
                           </div>
                         ) : (
@@ -419,9 +430,9 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
                               </span>
                             </div>
                             <div className="flex justify-between">
-                              <span className="text-sm">منهای حقوق ثابت:</span>
+                              <span className="text-sm">منهای حقوق اول خالص:</span>
                               <span className="font-medium">
-                                {new Intl.NumberFormat('fa-IR').format(FIXED_SALARY_BASE)} ریال
+                                {new Intl.NumberFormat('fa-IR').format(salary.salary1)} ریال
                               </span>
                             </div>
                             <div className="flex justify-between pt-2 border-t border-yellow-300">

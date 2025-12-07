@@ -366,9 +366,9 @@ export default function ReportTab() {
                         <TableCell>
                           <div className="text-sm">
                             <div>حقوق دوم: {salary2.toLocaleString()} ریال</div>
-                            {commission < FIXED_SALARY_BASE && (
+                            {commission < salary1 && (
                               <div className="text-xs text-orange-500 mt-1">
-                                کمبود: {(FIXED_SALARY_BASE - commission).toLocaleString()}
+                                کمبود: {(salary1 - commission).toLocaleString()}
                               </div>
                             )}
                           </div>

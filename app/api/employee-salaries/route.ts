@@ -75,6 +75,8 @@ export async function POST(request: Request) {
       isPorsanti: body.isPorsanti || false, // حالت پورسانتی
       salary1: body.salary1 || 0, // حقوق اول
       salary2: body.salary2 || 0, // حقوق دوم
+      date: body.date || new Date().toISOString().split("T")[0],
+      ...(findArchiveId && { archiveId: findArchiveId }),
     }
 
     console.log("Update data:", updateData)
@@ -85,21 +87,48 @@ export async function POST(request: Request) {
       { new: true, upsert: true, setDefaultsOnInsert: true }
     )
 
-    // اگر document جدید است، date و archiveId را تنظیم کن
-    if (!salary.date) {
-      salary.date = body.date || new Date().toISOString().split("T")[0]
-      if (findArchiveId) {
-        salary.archiveId = findArchiveId
-      }
-      await salary.save()
-    }
-
     console.log("Final saved salary:", salary)
     return NextResponse.json(salary, { status: 201 })
   } catch (error) {
     console.error("Error saving salary data:", error)
     return NextResponse.json(
       { error: "خطا در ذخیره اطلاعات حقوق" },
+      { status: 500 }
+    )
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    await dbConnect()
+    const { searchParams } = new URL(request.url)
+    const employeeId = searchParams.get("employeeId")
+    const archiveId = searchParams.get("archiveId")
+
+    if (!employeeId) {
+      return NextResponse.json({ error: "شناسه کارمند الزامی است" }, { status: 400 })
+    }
+
+    let query: any = { employeeId }
+    if (archiveId) {
+      try {
+        query.archiveId = new mongoose.Types.ObjectId(archiveId)
+      } catch (e) {
+        return NextResponse.json({ error: "شناسه آرشیو نامعتبر است" }, { status: 400 })
+      }
+    }
+
+    const result = await EmployeeSalary.deleteOne(query)
+
+    if (result.deletedCount === 0) {
+      return NextResponse.json({ error: "رکورد حقوق یافت نشد" }, { status: 404 })
+    }
+
+    return NextResponse.json({ success: true, message: "رکورد حقوق با موفقیت حذف شد" })
+  } catch (error) {
+    console.error("Error deleting salary data:", error)
+    return NextResponse.json(
+      { error: "خطا در حذف اطلاعات حقوق" },
       { status: 500 }
     )
   }
