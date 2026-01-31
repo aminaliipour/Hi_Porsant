@@ -1,0 +1,1153 @@
+[
+  {
+    "_id": "680602dc56184467eeee1fc9",
+    "name": "کافه نات",
+    "createdAt": "2025-04-21T08:33:32.113Z",
+    "updatedAt": "2025-06-12T08:57:39.839Z",
+    "__v": 0,
+    "archiveId": "684926f65916d108420de4f0"
+  },
+  {
+    "_id": "680602e056184467eeee1fd7",
+    "name": "مطب سروش 1",
+    "createdAt": "2025-04-21T08:33:36.955Z",
+    "updatedAt": "2025-07-08T10:46:19.605Z",
+    "__v": 0,
+    "archiveId": "684926f65916d108420de4f0"
+  },
+  {
+    "_id": "680602ec56184467eeee1fe5",
+    "name": "کارگر ۱۴",
+    "createdAt": "2025-04-21T08:33:48.828Z",
+    "updatedAt": "2025-06-12T08:57:39.597Z",
+    "__v": 0,
+    "archiveId": "684926f65916d108420de4f0"
+  },
+  {
+    "_id": "6806033d56184467eeee2023",
+    "name": "ویلا پرتقال",
+    "createdAt": "2025-04-21T08:35:09.595Z",
+    "updatedAt": "2025-06-12T08:57:39.597Z",
+    "__v": 0,
+    "archiveId": "684926f65916d108420de4f0"
+  },
+  {
+    "_id": "6806034956184467eeee2031",
+    "name": "خانه بازی کفشدوزک",
+    "createdAt": "2025-04-21T08:35:21.735Z",
+    "updatedAt": "2025-06-12T08:57:39.597Z",
+    "__v": 0,
+    "archiveId": "684926f65916d108420de4f0"
+  },
+  {
+    "_id": "6806037556184467eeee204d",
+    "name": "محوطه ویلا‌ساحل",
+    "createdAt": "2025-04-21T08:36:05.908Z",
+    "updatedAt": "2025-06-12T08:57:39.513Z",
+    "__v": 0,
+    "archiveId": "684926f65916d108420de4f0"
+  },
+  {
+    "_id": "6806038d56184467eeee205b",
+    "name": "رستوران کاژه",
+    "createdAt": "2025-04-21T08:36:29.488Z",
+    "updatedAt": "2025-06-12T08:57:39.215Z",
+    "__v": 0,
+    "archiveId": "684926f65916d108420de4f0"
+  },
+  {
+    "_id": "680737767366daf7bfb16777",
+    "name": "طراحی ویلا پورغلامی چاف",
+    "createdAt": "2025-04-22T06:30:14.570Z",
+    "updatedAt": "2025-06-12T08:57:39.215Z",
+    "__v": 0,
+    "archiveId": "684926f65916d108420de4f0"
+  },
+  {
+    "_id": "680737837366daf7bfb16781",
+    "name": "طراحی تالار لوزان",
+    "createdAt": "2025-04-22T06:30:27.401Z",
+    "updatedAt": "2025-06-12T08:57:39.215Z",
+    "__v": 0,
+    "archiveId": "684926f65916d108420de4f0"
+  },
+  {
+    "_id": "680737bc7366daf7bfb16793",
+    "name": "طراحی بوتیک امیرشهید",
+    "createdAt": "2025-04-22T06:31:24.765Z",
+    "updatedAt": "2025-06-12T08:57:39.202Z",
+    "__v": 0,
+    "archiveId": "684926f65916d108420de4f0"
+  },
+  {
+    "_id": "680737cc7366daf7bfb167a1",
+    "name": "طراحی لنداسکیپ پناهی",
+    "createdAt": "2025-04-22T06:31:40.275Z",
+    "updatedAt": "2025-06-12T08:57:39.202Z",
+    "__v": 0,
+    "archiveId": "684926f65916d108420de4f0"
+  },
+  {
+    "_id": "680737dd7366daf7bfb167af",
+    "name": "طراحی ویلا زمیدان",
+    "createdAt": "2025-04-22T06:31:57.944Z",
+    "updatedAt": "2025-06-12T08:57:38.831Z",
+    "__v": 0,
+    "archiveId": "684926f65916d108420de4f0"
+  },
+  {
+    "_id": "680737fd7366daf7bfb167bd",
+    "name": "طراحی سردر و محوطه غلام پور",
+    "createdAt": "2025-04-22T06:32:29.175Z",
+    "updatedAt": "2025-06-12T08:57:38.831Z",
+    "__v": 0,
+    "archiveId": "684926f65916d108420de4f0"
+  },
+  {
+    "_id": "680738167366daf7bfb167cb",
+    "name": "طراحی نما حاجی آباد",
+    "createdAt": "2025-04-22T06:32:54.775Z",
+    "updatedAt": "2025-06-12T08:57:38.831Z",
+    "__v": 0,
+    "archiveId": "684926f65916d108420de4f0"
+  },
+  {
+    "_id": "6807382a7366daf7bfb167d9",
+    "name": "طراحی اقامتگاه لوزان",
+    "createdAt": "2025-04-22T06:33:14.590Z",
+    "updatedAt": "2025-06-12T08:57:38.817Z",
+    "__v": 0,
+    "archiveId": "684926f65916d108420de4f0"
+  },
+  {
+    "_id": "684560a298fa39e35ce59ff2",
+    "name": "بوتیک لیوسا",
+    "createdAt": "2025-06-08T10:06:26.095Z",
+    "updatedAt": "2025-06-12T08:57:38.817Z",
+    "__v": 0,
+    "archiveId": "684926f65916d108420de4f0"
+  },
+  {
+    "_id": "6847e48a3a686a4e6bfdaa8b",
+    "name": "ویلا ونوس",
+    "createdAt": "2025-06-10T07:53:46.865Z",
+    "updatedAt": "2025-06-12T08:57:38.817Z",
+    "__v": 0,
+    "archiveId": "684926f65916d108420de4f0"
+  },
+  {
+    "_id": "68666de67fac33c3398b5d40",
+    "name": "طراحی ویلا اقدامی",
+    "archiveId": "68666cea7fac33c3398b5d3b",
+    "createdAt": "2025-07-03T11:47:50.081Z",
+    "updatedAt": "2025-07-03T11:47:50.081Z",
+    "__v": 0
+  },
+  {
+    "_id": "68666df17fac33c3398b5d55",
+    "name": "طراحی مسکونی جلالی",
+    "archiveId": "68666cea7fac33c3398b5d3b",
+    "createdAt": "2025-07-03T11:48:01.054Z",
+    "updatedAt": "2025-07-03T11:48:01.054Z",
+    "__v": 0
+  },
+  {
+    "_id": "68666e0410f1f5449d33e4fa",
+    "name": "طراحی ویلا پورغلامی",
+    "archiveId": "68666cea7fac33c3398b5d3b",
+    "createdAt": "2025-07-03T11:48:20.308Z",
+    "updatedAt": "2025-07-03T11:48:20.308Z",
+    "__v": 0
+  },
+  {
+    "_id": "68666e2c7fac33c3398b5db9",
+    "name": "بوتیک لیماک",
+    "archiveId": "68666cea7fac33c3398b5d3b",
+    "createdAt": "2025-07-03T11:49:00.445Z",
+    "updatedAt": "2025-07-03T11:49:00.445Z",
+    "__v": 0
+  },
+  {
+    "_id": "68666e4410f1f5449d33e525",
+    "name": "بوتیک سیران",
+    "archiveId": "68666cea7fac33c3398b5d3b",
+    "createdAt": "2025-07-03T11:49:24.826Z",
+    "updatedAt": "2025-07-03T11:49:24.826Z",
+    "__v": 0
+  },
+  {
+    "_id": "68666e717fac33c3398b5dec",
+    "name": "طراحی آوین گلد",
+    "archiveId": "68666cea7fac33c3398b5d3b",
+    "createdAt": "2025-07-03T11:50:09.272Z",
+    "updatedAt": "2025-07-03T11:50:09.272Z",
+    "__v": 0
+  },
+  {
+    "_id": "68666e847fac33c3398b5e03",
+    "name": "صائب",
+    "archiveId": "68666cea7fac33c3398b5d3b",
+    "createdAt": "2025-07-03T11:50:28.009Z",
+    "updatedAt": "2025-07-03T11:50:28.009Z",
+    "__v": 0
+  },
+  {
+    "_id": "68666e9610f1f5449d33e53a",
+    "name": "اقامتگاه لوزان",
+    "archiveId": "68666cea7fac33c3398b5d3b",
+    "createdAt": "2025-07-03T11:50:46.021Z",
+    "updatedAt": "2025-07-03T11:50:46.021Z",
+    "__v": 0
+  },
+  {
+    "_id": "68666ea910f1f5449d33e54e",
+    "name": "ویلا نارنج زمیدان",
+    "archiveId": "68666cea7fac33c3398b5d3b",
+    "createdAt": "2025-07-03T11:51:05.025Z",
+    "updatedAt": "2025-07-03T11:51:05.025Z",
+    "__v": 0
+  },
+  {
+    "_id": "686ce43a72a569f207b2716e",
+    "name": "پروژه بوتیک لیوسا",
+    "archiveId": "68666cea7fac33c3398b5d3b",
+    "createdAt": "2025-07-08T09:26:18.041Z",
+    "updatedAt": "2025-07-08T09:26:18.041Z",
+    "__v": 0
+  },
+  {
+    "_id": "686cea1b094fb709e8f1af88",
+    "name": "پروژه لیماک",
+    "archiveId": "68666cea7fac33c3398b5d3b",
+    "createdAt": "2025-07-08T09:51:23.880Z",
+    "updatedAt": "2025-07-08T09:51:23.880Z",
+    "__v": 0
+  },
+  {
+    "_id": "686ceb92094fb709e8f1b06b",
+    "name": "پروژه آزادپیما",
+    "archiveId": "68666cea7fac33c3398b5d3b",
+    "createdAt": "2025-07-08T09:57:38.068Z",
+    "updatedAt": "2025-07-08T09:57:38.068Z",
+    "__v": 0
+  },
+  {
+    "_id": "686cef61094fb709e8f1b288",
+    "name": "مطب سروش 2",
+    "archiveId": "68666cea7fac33c3398b5d3b",
+    "createdAt": "2025-07-08T10:13:53.174Z",
+    "updatedAt": "2025-07-08T10:46:56.577Z",
+    "__v": 0
+  },
+  {
+    "_id": "686cf6f36ac39838985fb4ae",
+    "name": "پروژه چمخاله",
+    "archiveId": "68666cea7fac33c3398b5d3b",
+    "createdAt": "2025-07-08T10:46:11.544Z",
+    "updatedAt": "2025-07-08T10:46:11.544Z",
+    "__v": 0
+  },
+  {
+    "_id": "686cfe44ebed25d058e4c71e",
+    "name": "پروژه ویلا ونوس",
+    "archiveId": "68666cea7fac33c3398b5d3b",
+    "createdAt": "2025-07-08T11:17:24.957Z",
+    "updatedAt": "2025-07-08T11:17:24.957Z",
+    "__v": 0
+  },
+  {
+    "_id": "6872017617839a118036d447",
+    "name": "پروژه صفیه رودسر",
+    "archiveId": "68666cea7fac33c3398b5d3b",
+    "createdAt": "2025-07-12T06:32:22.726Z",
+    "updatedAt": "2025-07-12T10:17:44.860Z",
+    "__v": 0
+  },
+  {
+    "_id": "68946d9e9f69e966e83be567",
+    "name": "زمیدان ویلا نارنج",
+    "archiveId": "68946d789f69e966e83be563",
+    "createdAt": "2025-08-07T09:10:54.794Z",
+    "updatedAt": "2025-08-07T09:10:54.794Z",
+    "__v": 0
+  },
+  {
+    "_id": "68946db09f69e966e83be59d",
+    "name": "مسکونی جلالی",
+    "archiveId": "68946d789f69e966e83be563",
+    "createdAt": "2025-08-07T09:11:12.857Z",
+    "updatedAt": "2025-08-07T09:11:12.857Z",
+    "__v": 0
+  },
+  {
+    "_id": "68946db89f69e966e83be5d3",
+    "name": "سیران",
+    "archiveId": "68946d789f69e966e83be563",
+    "createdAt": "2025-08-07T09:11:20.553Z",
+    "updatedAt": "2025-08-07T09:11:20.553Z",
+    "__v": 0
+  },
+  {
+    "_id": "68946dc79f69e966e83be609",
+    "name": "آوین گلد",
+    "archiveId": "68946d789f69e966e83be563",
+    "createdAt": "2025-08-07T09:11:35.464Z",
+    "updatedAt": "2025-08-07T09:11:35.464Z",
+    "__v": 0
+  },
+  {
+    "_id": "68946dd69f69e966e83be63f",
+    "name": "صائب",
+    "archiveId": "68946d789f69e966e83be563",
+    "createdAt": "2025-08-07T09:11:50.366Z",
+    "updatedAt": "2025-08-07T09:11:50.366Z",
+    "__v": 0
+  },
+  {
+    "_id": "68946de19f69e966e83be675",
+    "name": "سوستان آزاد",
+    "archiveId": "68946d789f69e966e83be563",
+    "createdAt": "2025-08-07T09:12:01.200Z",
+    "updatedAt": "2025-08-07T09:12:01.200Z",
+    "__v": 0
+  },
+  {
+    "_id": "68946de69f69e966e83be6ab",
+    "name": "رانون",
+    "archiveId": "68946d789f69e966e83be563",
+    "createdAt": "2025-08-07T09:12:06.804Z",
+    "updatedAt": "2025-08-07T09:12:06.804Z",
+    "__v": 0
+  },
+  {
+    "_id": "68946e719f69e966e83be6e1",
+    "name": "ویلا آذربو",
+    "archiveId": "68946d789f69e966e83be563",
+    "createdAt": "2025-08-07T09:14:25.287Z",
+    "updatedAt": "2025-08-07T09:14:25.287Z",
+    "__v": 0
+  },
+  {
+    "_id": "68946e819f69e966e83be717",
+    "name": "زمیدان ویلا فیروزان",
+    "archiveId": "68946d789f69e966e83be563",
+    "createdAt": "2025-08-07T09:14:41.137Z",
+    "updatedAt": "2025-08-07T09:14:41.137Z",
+    "__v": 0
+  },
+  {
+    "_id": "689857b86469b04d2ea114d3",
+    "name": "پروژه گیلاکو",
+    "archiveId": "68946d789f69e966e83be563",
+    "createdAt": "2025-08-10T08:26:32.109Z",
+    "updatedAt": "2025-08-10T08:26:32.109Z",
+    "__v": 0
+  },
+  {
+    "_id": "68985972bb8905d8d62015e3",
+    "name": "پروژه چمخاله ",
+    "archiveId": "68946d789f69e966e83be563",
+    "createdAt": "2025-08-10T08:33:54.293Z",
+    "updatedAt": "2025-08-10T08:33:54.293Z",
+    "__v": 0
+  },
+  {
+    "_id": "68985b9149e9cdae7a265649",
+    "name": "پروژه لیماک",
+    "archiveId": "68946d789f69e966e83be563",
+    "createdAt": "2025-08-10T08:42:57.742Z",
+    "updatedAt": "2025-08-10T08:42:57.742Z",
+    "__v": 0
+  },
+  {
+    "_id": "6898626173e73d9e83d9103d",
+    "name": "پروژه ونوس",
+    "archiveId": "68946d789f69e966e83be563",
+    "createdAt": "2025-08-10T09:12:01.695Z",
+    "updatedAt": "2025-08-10T09:12:01.695Z",
+    "__v": 0
+  },
+  {
+    "_id": "6898626973e73d9e83d91073",
+    "name": "پروژه ویلا نارنج",
+    "archiveId": "68946d789f69e966e83be563",
+    "createdAt": "2025-08-10T09:12:09.725Z",
+    "updatedAt": "2025-08-10T09:12:09.725Z",
+    "__v": 0
+  },
+  {
+    "_id": "6898740ad0e0e59b5544a91c",
+    "name": "پروژه سروش",
+    "archiveId": "68946d789f69e966e83be563",
+    "createdAt": "2025-08-10T10:27:22.984Z",
+    "updatedAt": "2025-08-10T10:27:22.984Z",
+    "__v": 0
+  },
+  {
+    "_id": "68c2df36a6b0b1171fd0654c",
+    "name": "زمیدان نارنج",
+    "archiveId": "68c2de78ad0ee63265ec536b",
+    "createdAt": "2025-09-11T14:39:50.991Z",
+    "updatedAt": "2025-09-11T14:39:50.991Z",
+    "__v": 0
+  },
+  {
+    "_id": "68c2df3da6b0b1171fd06582",
+    "name": "جلالی",
+    "archiveId": "68c2de78ad0ee63265ec536b",
+    "createdAt": "2025-09-11T14:39:57.906Z",
+    "updatedAt": "2025-09-11T14:39:57.906Z",
+    "__v": 0
+  },
+  {
+    "_id": "68c2df47a6b0b1171fd065b8",
+    "name": "سیران",
+    "archiveId": "68c2de78ad0ee63265ec536b",
+    "createdAt": "2025-09-11T14:40:07.731Z",
+    "updatedAt": "2025-09-11T14:40:07.731Z",
+    "__v": 0
+  },
+  {
+    "_id": "68c2df52a6b0b1171fd065ee",
+    "name": "صائب",
+    "archiveId": "68c2de78ad0ee63265ec536b",
+    "createdAt": "2025-09-11T14:40:18.576Z",
+    "updatedAt": "2025-09-11T14:40:18.576Z",
+    "__v": 0
+  },
+  {
+    "_id": "68c2df5ea6b0b1171fd06624",
+    "name": "سوستان",
+    "archiveId": "68c2de78ad0ee63265ec536b",
+    "createdAt": "2025-09-11T14:40:30.612Z",
+    "updatedAt": "2025-09-11T14:40:30.612Z",
+    "__v": 0
+  },
+  {
+    "_id": "68c2df73a6b0b1171fd0665a",
+    "name": "رانون",
+    "archiveId": "68c2de78ad0ee63265ec536b",
+    "createdAt": "2025-09-11T14:40:51.388Z",
+    "updatedAt": "2025-09-11T14:40:51.388Z",
+    "__v": 0
+  },
+  {
+    "_id": "68c2df7ba6b0b1171fd06690",
+    "name": "آذربو",
+    "archiveId": "68c2de78ad0ee63265ec536b",
+    "createdAt": "2025-09-11T14:40:59.132Z",
+    "updatedAt": "2025-09-11T14:40:59.132Z",
+    "__v": 0
+  },
+  {
+    "_id": "68c2df89a6b0b1171fd066c6",
+    "name": "فیروزان",
+    "archiveId": "68c2de78ad0ee63265ec536b",
+    "createdAt": "2025-09-11T14:41:13.212Z",
+    "updatedAt": "2025-09-11T14:41:13.212Z",
+    "__v": 0
+  },
+  {
+    "_id": "68c2df95a6b0b1171fd066fc",
+    "name": "صادقی فر",
+    "archiveId": "68c2de78ad0ee63265ec536b",
+    "createdAt": "2025-09-11T14:41:25.277Z",
+    "updatedAt": "2025-09-11T14:41:25.277Z",
+    "__v": 0
+  },
+  {
+    "_id": "68c2df9da6b0b1171fd06732",
+    "name": "حضوری",
+    "archiveId": "68c2de78ad0ee63265ec536b",
+    "createdAt": "2025-09-11T14:41:33.062Z",
+    "updatedAt": "2025-09-11T14:41:33.062Z",
+    "__v": 0
+  },
+  {
+    "_id": "68c68751515de844500f4431",
+    "name": "پروژه محوطه چمخاله",
+    "archiveId": "68c2de78ad0ee63265ec536b",
+    "createdAt": "2025-09-14T09:13:53.874Z",
+    "updatedAt": "2025-09-14T09:13:53.874Z",
+    "__v": 0
+  },
+  {
+    "_id": "68c688a9515de844500f4a15",
+    "name": "پروژه  تجاری لیوسا",
+    "archiveId": "68c2de78ad0ee63265ec536b",
+    "createdAt": "2025-09-14T09:19:37.852Z",
+    "updatedAt": "2025-09-14T09:19:37.852Z",
+    "__v": 0
+  },
+  {
+    "_id": "68c69b28f585853691e9f8e1",
+    "name": "پروژه ویلا ونوس",
+    "archiveId": "68c2de78ad0ee63265ec536b",
+    "createdAt": "2025-09-14T10:38:32.917Z",
+    "updatedAt": "2025-11-01T07:51:27.796Z",
+    "__v": 0
+  },
+  {
+    "_id": "68c6ada01ae59e374935eae1",
+    "name": "لیماک",
+    "archiveId": "68c2de78ad0ee63265ec536b",
+    "createdAt": "2025-09-14T11:57:20.063Z",
+    "updatedAt": "2025-09-14T11:57:20.063Z",
+    "__v": 0
+  },
+  {
+    "_id": "68e513d81729547c4b61d8c9",
+    "name": "پروژه ونوس",
+    "archiveId": "68e511f41729547c4b61d7ba",
+    "createdAt": "2025-10-07T13:21:28.648Z",
+    "updatedAt": "2025-11-01T08:22:38.359Z",
+    "__v": 0,
+    "useCustomTaadol": false
+  },
+  {
+    "_id": "68e515341729547c4b61d937",
+    "name": "پروژه ویلا نارنج",
+    "archiveId": "68e511f41729547c4b61d7ba",
+    "createdAt": "2025-10-07T13:27:16.176Z",
+    "updatedAt": "2025-11-01T08:22:40.380Z",
+    "__v": 0,
+    "useCustomTaadol": false
+  },
+  {
+    "_id": "68e523741729547c4b61e409",
+    "name": "ویلا ونوس",
+    "archiveId": "68d798f481c5291a1ffefa80",
+    "createdAt": "2025-10-07T14:28:04.223Z",
+    "updatedAt": "2025-11-01T07:51:09.640Z",
+    "__v": 0
+  },
+  {
+    "_id": "68e524431729547c4b61e452",
+    "name": "ویلا نارنج",
+    "archiveId": "68d798f481c5291a1ffefa80",
+    "createdAt": "2025-10-07T14:31:31.021Z",
+    "updatedAt": "2025-10-07T14:31:31.021Z",
+    "__v": 0
+  },
+  {
+    "_id": "68e5347c1729547c4b61eb09",
+    "name": "ماه بانو",
+    "archiveId": "68d798f481c5291a1ffefa80",
+    "createdAt": "2025-10-07T15:40:44.635Z",
+    "updatedAt": "2025-10-07T15:40:44.635Z",
+    "__v": 0
+  },
+  {
+    "_id": "68e534941729547c4b61eb3f",
+    "name": "سقف حاجی آباد",
+    "archiveId": "68d798f481c5291a1ffefa80",
+    "createdAt": "2025-10-07T15:41:08.176Z",
+    "updatedAt": "2025-10-07T15:41:08.176Z",
+    "__v": 0
+  },
+  {
+    "_id": "68e534a11729547c4b61eb75",
+    "name": "تیوی وال حسین پور",
+    "archiveId": "68d798f481c5291a1ffefa80",
+    "createdAt": "2025-10-07T15:41:21.262Z",
+    "updatedAt": "2025-10-07T15:41:21.262Z",
+    "__v": 0
+  },
+  {
+    "_id": "68e534b01729547c4b61ebab",
+    "name": "داخلی آذربو",
+    "archiveId": "68d798f481c5291a1ffefa80",
+    "createdAt": "2025-10-07T15:41:36.136Z",
+    "updatedAt": "2025-10-07T15:41:36.136Z",
+    "__v": 0
+  },
+  {
+    "_id": "68e534b81729547c4b61ebe1",
+    "name": "ویلا حجام",
+    "archiveId": "68d798f481c5291a1ffefa80",
+    "createdAt": "2025-10-07T15:41:44.321Z",
+    "updatedAt": "2025-11-01T07:51:08.455Z",
+    "__v": 0
+  },
+  {
+    "_id": "68e534c31729547c4b61ec17",
+    "name": "نما حضوری",
+    "archiveId": "68d798f481c5291a1ffefa80",
+    "createdAt": "2025-10-07T15:41:55.617Z",
+    "updatedAt": "2025-10-07T15:41:55.617Z",
+    "__v": 0
+  },
+  {
+    "_id": "68e534cc1729547c4b61ec4d",
+    "name": "ویلا صادقی فر",
+    "archiveId": "68d798f481c5291a1ffefa80",
+    "createdAt": "2025-10-07T15:42:04.258Z",
+    "updatedAt": "2025-10-07T15:42:04.258Z",
+    "__v": 0
+  },
+  {
+    "_id": "68e534d61729547c4b61ec83",
+    "name": "ویلا فیروزان",
+    "archiveId": "68d798f481c5291a1ffefa80",
+    "createdAt": "2025-10-07T15:42:14.753Z",
+    "updatedAt": "2025-11-01T07:51:03.985Z",
+    "__v": 0
+  },
+  {
+    "_id": "68f4c7a4d74537c9799e813e",
+    "name": "پروژه صائب",
+    "archiveId": "68d798f481c5291a1ffefa80",
+    "createdAt": "2025-10-19T11:12:36.807Z",
+    "updatedAt": "2025-11-01T08:12:37.871Z",
+    "__v": 0,
+    "useCustomTaadol": false,
+    "customTaadolPercentages": {
+      "خرید": 26,
+      "همکاری": 54,
+      "فروش": 40,
+      "طراحی": 66,
+      "پیمانکاری": 42,
+      "مشاوره": 71,
+      "_id": "6905c0edf6085193ce120518"
+    }
+  },
+  {
+    "_id": "68f4ca6fd74537c9799e8470",
+    "name": "سیران",
+    "archiveId": "68d798f481c5291a1ffefa80",
+    "createdAt": "2025-10-19T11:24:31.722Z",
+    "updatedAt": "2025-11-01T07:50:47.553Z",
+    "__v": 0
+  },
+  {
+    "_id": "6905cb72f6085193ce1228ac",
+    "name": "345",
+    "archiveId": "6905c110f6085193ce12052a",
+    "useCustomTaadol": false,
+    "customTaadolPercentages": {
+      "خرید": 19,
+      "همکاری": 39,
+      "فروش": 29,
+      "طراحی": 24,
+      "پیمانکاری": 12,
+      "مشاوره": 44,
+      "_id": "6905cb7af6085193ce1228e3"
+    },
+    "createdAt": "2025-11-01T08:57:22.687Z",
+    "updatedAt": "2025-11-03T08:31:17.543Z",
+    "__v": 0
+  },
+  {
+    "_id": "6908685a91b82bff7ffd1a02",
+    "name": "asd",
+    "archiveId": "6905c110f6085193ce12052a",
+    "useCustomTaadol": false,
+    "customTaadolPercentages": {
+      "خرید": 0,
+      "همکاری": 0,
+      "فروش": 0,
+      "طراحی": 0,
+      "پیمانکاری": 0,
+      "مشاوره": 0,
+      "_id": "6908685a91b82bff7ffd1a01"
+    },
+    "customSectionWeights": [],
+    "createdAt": "2025-11-03T08:31:22.463Z",
+    "updatedAt": "2025-11-03T08:34:15.743Z",
+    "__v": 0
+  },
+  {
+    "_id": "6908691391b82bff7ffd1a4b",
+    "name": "ضصث",
+    "archiveId": "6905c110f6085193ce12052a",
+    "useCustomTaadol": false,
+    "customTaadolPercentages": {
+      "خرید": 0,
+      "همکاری": 0,
+      "فروش": 0,
+      "طراحی": 0,
+      "پیمانکاری": 0,
+      "مشاوره": 0,
+      "_id": "6908691391b82bff7ffd1a4a"
+    },
+    "customSectionWeights": [],
+    "createdAt": "2025-11-03T08:34:27.457Z",
+    "updatedAt": "2025-11-03T08:39:56.661Z",
+    "__v": 0
+  },
+  {
+    "_id": "690c57ef5f9b53a155d2735c",
+    "name": "ویلا حجام",
+    "archiveId": "690c57bb5f9b53a155d27356",
+    "useCustomTaadol": false,
+    "customTaadolPercentages": {
+      "خرید": 0,
+      "همکاری": 0,
+      "فروش": 0,
+      "طراحی": 0,
+      "پیمانکاری": 0,
+      "مشاوره": 0,
+      "_id": "690c57ef5f9b53a155d2735b"
+    },
+    "customSectionWeights": [],
+    "createdAt": "2025-11-06T08:10:23.175Z",
+    "updatedAt": "2025-11-06T08:10:23.175Z",
+    "__v": 0
+  },
+  {
+    "_id": "690c58065f9b53a155d27393",
+    "name": "آشپزخانه آذربو",
+    "archiveId": "690c57bb5f9b53a155d27356",
+    "useCustomTaadol": false,
+    "customTaadolPercentages": {
+      "خرید": 0,
+      "همکاری": 0,
+      "فروش": 0,
+      "طراحی": 0,
+      "پیمانکاری": 0,
+      "مشاوره": 0,
+      "_id": "690c58065f9b53a155d27392"
+    },
+    "customSectionWeights": [],
+    "createdAt": "2025-11-06T08:10:46.190Z",
+    "updatedAt": "2025-11-06T08:10:46.190Z",
+    "__v": 0
+  },
+  {
+    "_id": "690c58115f9b53a155d273ca",
+    "name": "حسینی گلستانک",
+    "archiveId": "690c57bb5f9b53a155d27356",
+    "useCustomTaadol": false,
+    "customTaadolPercentages": {
+      "خرید": 0,
+      "همکاری": 0,
+      "فروش": 0,
+      "طراحی": 0,
+      "پیمانکاری": 0,
+      "مشاوره": 0,
+      "_id": "690c58115f9b53a155d273c9"
+    },
+    "customSectionWeights": [],
+    "createdAt": "2025-11-06T08:10:57.745Z",
+    "updatedAt": "2025-11-06T08:10:57.745Z",
+    "__v": 0
+  },
+  {
+    "_id": "690c581c5f9b53a155d27401",
+    "name": "نژاد عبدالله غذاخوری",
+    "archiveId": "690c57bb5f9b53a155d27356",
+    "useCustomTaadol": false,
+    "customTaadolPercentages": {
+      "خرید": 0,
+      "همکاری": 0,
+      "فروش": 0,
+      "طراحی": 0,
+      "پیمانکاری": 0,
+      "مشاوره": 0,
+      "_id": "690c581c5f9b53a155d27400"
+    },
+    "customSectionWeights": [],
+    "createdAt": "2025-11-06T08:11:08.642Z",
+    "updatedAt": "2025-11-06T08:11:08.642Z",
+    "__v": 0
+  },
+  {
+    "_id": "690c58265f9b53a155d27438",
+    "name": "رستمی ابزار یراق",
+    "archiveId": "690c57bb5f9b53a155d27356",
+    "useCustomTaadol": false,
+    "customTaadolPercentages": {
+      "خرید": 0,
+      "همکاری": 0,
+      "فروش": 0,
+      "طراحی": 0,
+      "پیمانکاری": 0,
+      "مشاوره": 0,
+      "_id": "690c58265f9b53a155d27437"
+    },
+    "customSectionWeights": [],
+    "createdAt": "2025-11-06T08:11:18.140Z",
+    "updatedAt": "2025-11-06T08:11:18.140Z",
+    "__v": 0
+  },
+  {
+    "_id": "690c582e5f9b53a155d2746f",
+    "name": "مطب پاکدامن",
+    "archiveId": "690c57bb5f9b53a155d27356",
+    "useCustomTaadol": false,
+    "customTaadolPercentages": {
+      "خرید": 0,
+      "همکاری": 0,
+      "فروش": 0,
+      "طراحی": 0,
+      "پیمانکاری": 0,
+      "مشاوره": 0,
+      "_id": "690c582e5f9b53a155d2746e"
+    },
+    "customSectionWeights": [],
+    "createdAt": "2025-11-06T08:11:26.720Z",
+    "updatedAt": "2025-11-06T08:11:26.720Z",
+    "__v": 0
+  },
+  {
+    "_id": "691313b85f9b53a155d28e29",
+    "name": "پروژه ونوس",
+    "archiveId": "690c57bb5f9b53a155d27356",
+    "useCustomTaadol": false,
+    "customTaadolPercentages": {
+      "خرید": 0,
+      "همکاری": 0,
+      "فروش": 0,
+      "طراحی": 0,
+      "پیمانکاری": 0,
+      "مشاوره": 0,
+      "_id": "691313b85f9b53a155d28e28"
+    },
+    "customSectionWeights": [],
+    "createdAt": "2025-11-11T10:45:12.082Z",
+    "updatedAt": "2025-11-11T10:45:12.082Z",
+    "__v": 0
+  },
+  {
+    "_id": "69132f865f9b53a155d29a28",
+    "name": "پروژه صائب",
+    "archiveId": "690c57bb5f9b53a155d27356",
+    "useCustomTaadol": false,
+    "customTaadolPercentages": {
+      "خرید": 0,
+      "همکاری": 0,
+      "فروش": 0,
+      "طراحی": 0,
+      "پیمانکاری": 0,
+      "مشاوره": 0,
+      "_id": "69132f865f9b53a155d29a27"
+    },
+    "customSectionWeights": [],
+    "createdAt": "2025-11-11T12:43:50.305Z",
+    "updatedAt": "2025-11-11T12:43:50.305Z",
+    "__v": 0
+  },
+  {
+    "_id": "69133b325f9b53a155d2a729",
+    "name": "پروژه سیران",
+    "archiveId": "690c57bb5f9b53a155d27356",
+    "useCustomTaadol": false,
+    "customTaadolPercentages": {
+      "خرید": 0,
+      "همکاری": 0,
+      "فروش": 0,
+      "طراحی": 0,
+      "پیمانکاری": 0,
+      "مشاوره": 0,
+      "_id": "69133b325f9b53a155d2a728"
+    },
+    "customSectionWeights": [],
+    "createdAt": "2025-11-11T13:33:38.736Z",
+    "updatedAt": "2025-11-11T13:33:38.736Z",
+    "__v": 0
+  },
+  {
+    "_id": "693521d6dd84ac16f0cb997f",
+    "name": "ابزار رستمی",
+    "archiveId": "693521bddd84ac16f0cb9979",
+    "useCustomTaadol": false,
+    "customTaadolPercentages": {
+      "خرید": 0,
+      "همکاری": 0,
+      "فروش": 0,
+      "طراحی": 0,
+      "پیمانکاری": 0,
+      "مشاوره": 0,
+      "_id": "693521d6dd84ac16f0cb997e"
+    },
+    "customSectionWeights": [],
+    "createdAt": "2025-12-07T06:42:30.369Z",
+    "updatedAt": "2025-12-07T07:02:13.000Z",
+    "__v": 0
+  },
+  {
+    "_id": "693521e0dd84ac16f0cb99b6",
+    "name": "دکتر پاکدامن",
+    "archiveId": "693521bddd84ac16f0cb9979",
+    "useCustomTaadol": false,
+    "customTaadolPercentages": {
+      "خرید": 0,
+      "همکاری": 0,
+      "فروش": 0,
+      "طراحی": 0,
+      "پیمانکاری": 0,
+      "مشاوره": 0,
+      "_id": "693521e0dd84ac16f0cb99b5"
+    },
+    "customSectionWeights": [],
+    "createdAt": "2025-12-07T06:42:40.861Z",
+    "updatedAt": "2025-12-07T06:42:40.861Z",
+    "__v": 0
+  },
+  {
+    "_id": "693521eadd84ac16f0cb99ed",
+    "name": "محوطه صائب",
+    "archiveId": "693521bddd84ac16f0cb9979",
+    "useCustomTaadol": false,
+    "customTaadolPercentages": {
+      "خرید": 0,
+      "همکاری": 0,
+      "فروش": 0,
+      "طراحی": 0,
+      "پیمانکاری": 0,
+      "مشاوره": 0,
+      "_id": "693521eadd84ac16f0cb99ec"
+    },
+    "customSectionWeights": [],
+    "createdAt": "2025-12-07T06:42:50.173Z",
+    "updatedAt": "2025-12-07T06:42:50.173Z",
+    "__v": 0
+  },
+  {
+    "_id": "693521f5dd84ac16f0cb9a24",
+    "name": "پلان علوی گلستان",
+    "archiveId": "693521bddd84ac16f0cb9979",
+    "useCustomTaadol": false,
+    "customTaadolPercentages": {
+      "خرید": 0,
+      "همکاری": 0,
+      "فروش": 0,
+      "طراحی": 0,
+      "پیمانکاری": 0,
+      "مشاوره": 0,
+      "_id": "693521f5dd84ac16f0cb9a23"
+    },
+    "customSectionWeights": [],
+    "createdAt": "2025-12-07T06:43:01.658Z",
+    "updatedAt": "2025-12-07T06:43:01.658Z",
+    "__v": 0
+  },
+  {
+    "_id": "69352213dd84ac16f0cb9a5b",
+    "name": "مسکونی بابای حسینی",
+    "archiveId": "693521bddd84ac16f0cb9979",
+    "useCustomTaadol": false,
+    "customTaadolPercentages": {
+      "خرید": 0,
+      "همکاری": 0,
+      "فروش": 0,
+      "طراحی": 0,
+      "پیمانکاری": 0,
+      "مشاوره": 0,
+      "_id": "69352213dd84ac16f0cb9a5a"
+    },
+    "customSectionWeights": [],
+    "createdAt": "2025-12-07T06:43:31.126Z",
+    "updatedAt": "2025-12-07T06:43:31.126Z",
+    "__v": 0
+  },
+  {
+    "_id": "69352221dd84ac16f0cb9a92",
+    "name": "تیوی وال زارع پور",
+    "archiveId": "693521bddd84ac16f0cb9979",
+    "useCustomTaadol": false,
+    "customTaadolPercentages": {
+      "خرید": 0,
+      "همکاری": 0,
+      "فروش": 0,
+      "طراحی": 0,
+      "پیمانکاری": 0,
+      "مشاوره": 0,
+      "_id": "69352221dd84ac16f0cb9a91"
+    },
+    "customSectionWeights": [],
+    "createdAt": "2025-12-07T06:43:45.974Z",
+    "updatedAt": "2025-12-07T06:43:45.974Z",
+    "__v": 0
+  },
+  {
+    "_id": "6935223ddd84ac16f0cb9ac9",
+    "name": "سالن دنیا",
+    "archiveId": "693521bddd84ac16f0cb9979",
+    "useCustomTaadol": false,
+    "customTaadolPercentages": {
+      "خرید": 0,
+      "همکاری": 0,
+      "فروش": 0,
+      "طراحی": 0,
+      "پیمانکاری": 0,
+      "مشاوره": 0,
+      "_id": "6935223ddd84ac16f0cb9ac8"
+    },
+    "customSectionWeights": [],
+    "createdAt": "2025-12-07T06:44:13.509Z",
+    "updatedAt": "2025-12-07T06:44:13.509Z",
+    "__v": 0
+  },
+  {
+    "_id": "6935224bdd84ac16f0cb9b00",
+    "name": "جمشید بیگی",
+    "archiveId": "693521bddd84ac16f0cb9979",
+    "useCustomTaadol": false,
+    "customTaadolPercentages": {
+      "خرید": 0,
+      "همکاری": 0,
+      "فروش": 0,
+      "طراحی": 0,
+      "پیمانکاری": 0,
+      "مشاوره": 0,
+      "_id": "6935224bdd84ac16f0cb9aff"
+    },
+    "customSectionWeights": [],
+    "createdAt": "2025-12-07T06:44:27.214Z",
+    "updatedAt": "2025-12-07T06:44:27.214Z",
+    "__v": 0
+  },
+  {
+    "_id": "693bcfacec53e45bf2a95ea8",
+    "name": "ویلا ونوس",
+    "archiveId": "693521bddd84ac16f0cb9979",
+    "useCustomTaadol": false,
+    "customTaadolPercentages": {
+      "خرید": 0,
+      "همکاری": 0,
+      "فروش": 0,
+      "طراحی": 0,
+      "پیمانکاری": 0,
+      "مشاوره": 0,
+      "_id": "693bcfacec53e45bf2a95ea7"
+    },
+    "customSectionWeights": [],
+    "createdAt": "2025-12-12T08:17:48.295Z",
+    "updatedAt": "2025-12-12T08:17:48.295Z",
+    "__v": 0
+  },
+  {
+    "_id": "693bd154ec53e45bf2a96279",
+    "name": "سیران طبقه پایین",
+    "archiveId": "693521bddd84ac16f0cb9979",
+    "useCustomTaadol": false,
+    "customTaadolPercentages": {
+      "خرید": 0,
+      "همکاری": 0,
+      "فروش": 0,
+      "طراحی": 0,
+      "پیمانکاری": 0,
+      "مشاوره": 0,
+      "_id": "693bd154ec53e45bf2a96278"
+    },
+    "customSectionWeights": [],
+    "createdAt": "2025-12-12T08:24:52.127Z",
+    "updatedAt": "2025-12-12T08:24:52.127Z",
+    "__v": 0
+  },
+  {
+    "_id": "695ce7376a3f0bcc98c1bdc5",
+    "name": "آزاده اقبالی",
+    "archiveId": "695ce72a6a3f0bcc98c1bdbf",
+    "useCustomTaadol": false,
+    "customTaadolPercentages": {
+      "خرید": 0,
+      "همکاری": 0,
+      "فروش": 0,
+      "طراحی": 0,
+      "پیمانکاری": 0,
+      "مشاوره": 0,
+      "_id": "695ce7376a3f0bcc98c1bdc4"
+    },
+    "customSectionWeights": [],
+    "createdAt": "2026-01-06T10:43:03.574Z",
+    "updatedAt": "2026-01-06T10:43:03.574Z",
+    "__v": 0
+  },
+  {
+    "_id": "695ce7436a3f0bcc98c1bdfc",
+    "name": "ویلا زارع پور",
+    "archiveId": "695ce72a6a3f0bcc98c1bdbf",
+    "useCustomTaadol": false,
+    "customTaadolPercentages": {
+      "خرید": 0,
+      "همکاری": 0,
+      "فروش": 0,
+      "طراحی": 0,
+      "پیمانکاری": 0,
+      "مشاوره": 0,
+      "_id": "695ce7436a3f0bcc98c1bdfb"
+    },
+    "customSectionWeights": [],
+    "createdAt": "2026-01-06T10:43:15.469Z",
+    "updatedAt": "2026-01-06T10:43:15.469Z",
+    "__v": 0
+  },
+  {
+    "_id": "695ce74a6a3f0bcc98c1be33",
+    "name": "مطب پاکدامن",
+    "archiveId": "695ce72a6a3f0bcc98c1bdbf",
+    "useCustomTaadol": false,
+    "customTaadolPercentages": {
+      "خرید": 0,
+      "همکاری": 0,
+      "فروش": 0,
+      "طراحی": 0,
+      "پیمانکاری": 0,
+      "مشاوره": 0,
+      "_id": "695ce74a6a3f0bcc98c1be32"
+    },
+    "customSectionWeights": [],
+    "createdAt": "2026-01-06T10:43:22.496Z",
+    "updatedAt": "2026-01-06T10:43:22.496Z",
+    "__v": 0
+  },
+  {
+    "_id": "695ce9536a3f0bcc98c1c791",
+    "name": "سیران دو",
+    "archiveId": "695ce72a6a3f0bcc98c1bdbf",
+    "useCustomTaadol": false,
+    "customTaadolPercentages": {
+      "خرید": 0,
+      "همکاری": 0,
+      "فروش": 0,
+      "طراحی": 0,
+      "پیمانکاری": 0,
+      "مشاوره": 0,
+      "_id": "695ce9536a3f0bcc98c1c790"
+    },
+    "customSectionWeights": [],
+    "createdAt": "2026-01-06T10:52:03.032Z",
+    "updatedAt": "2026-01-06T10:52:03.032Z",
+    "__v": 0
+  },
+  {
+    "_id": "695ce95b6a3f0bcc98c1c820",
+    "name": "بوتیک پوتوس",
+    "archiveId": "695ce72a6a3f0bcc98c1bdbf",
+    "useCustomTaadol": false,
+    "customTaadolPercentages": {
+      "خرید": 0,
+      "همکاری": 0,
+      "فروش": 0,
+      "طراحی": 0,
+      "پیمانکاری": 0,
+      "مشاوره": 0,
+      "_id": "695ce95b6a3f0bcc98c1c81f"
+    },
+    "customSectionWeights": [],
+    "createdAt": "2026-01-06T10:52:11.088Z",
+    "updatedAt": "2026-01-06T10:52:11.088Z",
+    "__v": 0
+  },
+  {
+    "_id": "695cea1a6a3f0bcc98c1ccc6",
+    "name": "ویلا ونوس",
+    "archiveId": "695ce72a6a3f0bcc98c1bdbf",
+    "useCustomTaadol": false,
+    "customTaadolPercentages": {
+      "خرید": 0,
+      "همکاری": 0,
+      "فروش": 0,
+      "طراحی": 0,
+      "پیمانکاری": 0,
+      "مشاوره": 0,
+      "_id": "695cea1a6a3f0bcc98c1ccc5"
+    },
+    "customSectionWeights": [],
+    "createdAt": "2026-01-06T10:55:22.732Z",
+    "updatedAt": "2026-01-06T10:55:22.732Z",
+    "__v": 0
+  }
+]

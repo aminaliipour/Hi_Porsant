@@ -1,0 +1,2788 @@
+[
+  {
+    "_id": "680c7cf86f4bce137a339a08",
+    "sectionId": "680c7ca96f4bce137a33972f",
+    "items": [],
+    "createdAt": "2025-04-26T06:28:08.010Z",
+    "updatedAt": "2025-04-29T15:20:08.492Z",
+    "__v": 0,
+    "assignedMembers": {},
+    "details": {
+      "بازدید": {
+        "isActive": false,
+        "assignedMemberId": null,
+        "_id": "6810ee2845a4efe2f09f15a3"
+      },
+      "پر کردن چک لیست": {
+        "isActive": false,
+        "assignedMemberId": null,
+        "_id": "6810ee2845a4efe2f09f15a4"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": "680c7c9e6f4bce137a3394e7",
+        "_id": "6810ee2845a4efe2f09f15a5"
+      }
+    }
+  },
+  {
+    "_id": "684560a798fa39e35ce5a023",
+    "sectionId": "684560a798fa39e35ce5a020",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "684560a798fa39e35ce5a024"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "684560a798fa39e35ce5a025"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "684560a798fa39e35ce5a026"
+      }
+    },
+    "createdAt": "2025-06-08T10:06:31.848Z",
+    "updatedAt": "2025-06-08T10:06:31.848Z",
+    "__v": 0
+  },
+  {
+    "_id": "6847e35f60b1dc17bae56f1f",
+    "sectionId": "6806036956184467eeee204b",
+    "details": {
+      "بازدید": {
+        "isActive": false,
+        "assignedMemberId": null,
+        "_id": "6847e360965b966e381e30ab"
+      },
+      "پر کردن چک لیست": {
+        "isActive": false,
+        "assignedMemberId": null,
+        "_id": "6847e360965b966e381e30ac"
+      },
+      "مشاوره": {
+        "isActive": false,
+        "assignedMemberId": null,
+        "_id": "6847e360965b966e381e30ad"
+      }
+    },
+    "createdAt": "2025-06-10T07:48:47.456Z",
+    "updatedAt": "2025-06-10T07:48:48.955Z",
+    "__v": 0
+  },
+  {
+    "_id": "6847e4903a686a4e6bfdaabc",
+    "sectionId": "6847e48f3a686a4e6bfdaab9",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6847e4903a686a4e6bfdaabd"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6847e4903a686a4e6bfdaabe"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6847e4903a686a4e6bfdaabf"
+      }
+    },
+    "createdAt": "2025-06-10T07:53:52.202Z",
+    "updatedAt": "2025-06-10T07:53:52.202Z",
+    "__v": 0
+  },
+  {
+    "_id": "68493d9fd2a0961a4c1900b4",
+    "sectionId": "68493d9ed2a0961a4c1900b1",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68493d9fd2a0961a4c1900b5"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68493d9fd2a0961a4c1900b6"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68493d9fd2a0961a4c1900b7"
+      }
+    },
+    "createdAt": "2025-06-11T08:26:07.525Z",
+    "updatedAt": "2025-06-11T08:26:07.525Z",
+    "__v": 0
+  },
+  {
+    "_id": "6849433a1b179fbcee47e4d4",
+    "sectionId": "684943391b179fbcee47e4d1",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6849433a1b179fbcee47e4d5"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6849433a1b179fbcee47e4d6"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6849433a1b179fbcee47e4d7"
+      }
+    },
+    "createdAt": "2025-06-11T08:50:02.291Z",
+    "updatedAt": "2025-06-11T08:50:02.291Z",
+    "__v": 0
+  },
+  {
+    "_id": "684943471b179fbcee47e50b",
+    "sectionId": "684943471b179fbcee47e508",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "684943471b179fbcee47e50c"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "684943471b179fbcee47e50d"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "684943471b179fbcee47e50e"
+      }
+    },
+    "createdAt": "2025-06-11T08:50:15.489Z",
+    "updatedAt": "2025-06-11T08:50:15.489Z",
+    "__v": 0
+  },
+  {
+    "_id": "684944aa1b179fbcee47e593",
+    "sectionId": "684944a91b179fbcee47e589",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "684944aa1b179fbcee47e594"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "684944aa1b179fbcee47e595"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "684944aa1b179fbcee47e596"
+      }
+    },
+    "createdAt": "2025-06-11T08:56:10.763Z",
+    "updatedAt": "2025-06-11T08:56:10.763Z",
+    "__v": 0
+  },
+  {
+    "_id": "684944ab1b179fbcee47e5a2",
+    "sectionId": "684944ab1b179fbcee47e59f",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "684944ab1b179fbcee47e5a3"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "684944ab1b179fbcee47e5a4"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "684944ab1b179fbcee47e5a5"
+      }
+    },
+    "createdAt": "2025-06-11T08:56:11.447Z",
+    "updatedAt": "2025-06-11T08:56:11.447Z",
+    "__v": 0
+  },
+  {
+    "_id": "684944c81b179fbcee47e5ed",
+    "sectionId": "684944c81b179fbcee47e5ea",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "684944c81b179fbcee47e5ee"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "684944c81b179fbcee47e5ef"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "684944c81b179fbcee47e5f0"
+      }
+    },
+    "createdAt": "2025-06-11T08:56:40.881Z",
+    "updatedAt": "2025-06-11T08:56:40.881Z",
+    "__v": 0
+  },
+  {
+    "_id": "684944d51b179fbcee47e62e",
+    "sectionId": "684944d41b179fbcee47e62b",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "684944d51b179fbcee47e62f"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "684944d51b179fbcee47e630"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "684944d51b179fbcee47e631"
+      }
+    },
+    "createdAt": "2025-06-11T08:56:53.161Z",
+    "updatedAt": "2025-06-11T08:56:53.161Z",
+    "__v": 0
+  },
+  {
+    "_id": "684947bf1b179fbcee47e767",
+    "sectionId": "684947be1b179fbcee47e75f",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "684947bf1b179fbcee47e768"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "684947bf1b179fbcee47e769"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "684947bf1b179fbcee47e76a"
+      }
+    },
+    "createdAt": "2025-06-11T09:09:19.410Z",
+    "updatedAt": "2025-06-11T09:09:19.410Z",
+    "__v": 0
+  },
+  {
+    "_id": "684947c11b179fbcee47e798",
+    "sectionId": "684947c11b179fbcee47e795",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "684947c11b179fbcee47e799"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "684947c11b179fbcee47e79a"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "684947c11b179fbcee47e79b"
+      }
+    },
+    "createdAt": "2025-06-11T09:09:21.337Z",
+    "updatedAt": "2025-06-11T09:09:21.337Z",
+    "__v": 0
+  },
+  {
+    "_id": "684947ca1b179fbcee47e7ce",
+    "sectionId": "684947ca1b179fbcee47e7cb",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "684947ca1b179fbcee47e7cf"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "684947ca1b179fbcee47e7d0"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "684947ca1b179fbcee47e7d1"
+      }
+    },
+    "createdAt": "2025-06-11T09:09:30.629Z",
+    "updatedAt": "2025-06-11T09:09:30.629Z",
+    "__v": 0
+  },
+  {
+    "_id": "6849481e1b179fbcee47e84f",
+    "sectionId": "6849481e1b179fbcee47e847",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6849481e1b179fbcee47e850"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6849481e1b179fbcee47e851"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6849481e1b179fbcee47e852"
+      }
+    },
+    "createdAt": "2025-06-11T09:10:54.494Z",
+    "updatedAt": "2025-06-11T09:10:54.494Z",
+    "__v": 0
+  },
+  {
+    "_id": "68494ec41b179fbcee47ecaa",
+    "sectionId": "68494ec21b179fbcee47eca5",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68494ec41b179fbcee47ecab"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68494ec41b179fbcee47ecac"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68494ec41b179fbcee47ecad"
+      }
+    },
+    "createdAt": "2025-06-11T09:39:16.711Z",
+    "updatedAt": "2025-06-11T09:39:16.711Z",
+    "__v": 0
+  },
+  {
+    "_id": "684a8fa07833cbfdd97325da",
+    "sectionId": "684a8fa07833cbfdd97325d7",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "684a8fa07833cbfdd97325db"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "684a8fa07833cbfdd97325dc"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "684a8fa07833cbfdd97325dd"
+      }
+    },
+    "createdAt": "2025-06-12T08:28:16.921Z",
+    "updatedAt": "2025-06-12T08:28:16.921Z",
+    "__v": 0
+  },
+  {
+    "_id": "684a969d726fa2d990a22e4a",
+    "sectionId": "684a969d726fa2d990a22e46",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "684a969d726fa2d990a22e4b"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "684a969d726fa2d990a22e4c"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "684a969d726fa2d990a22e4d"
+      }
+    },
+    "createdAt": "2025-06-12T08:58:05.632Z",
+    "updatedAt": "2025-06-12T08:58:05.632Z",
+    "__v": 0
+  },
+  {
+    "_id": "68666e0210f1f5449d33e4f4",
+    "sectionId": "68666e017fac33c3398b5d76",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68666e0210f1f5449d33e4f5"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68666e0210f1f5449d33e4f6"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68666e0210f1f5449d33e4f7"
+      }
+    },
+    "createdAt": "2025-07-03T11:48:18.904Z",
+    "updatedAt": "2025-07-03T11:48:18.904Z",
+    "__v": 0
+  },
+  {
+    "_id": "68666e087fac33c3398b5d8a",
+    "sectionId": "68666e067fac33c3398b5d7f",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68666e087fac33c3398b5d8b"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68666e087fac33c3398b5d8c"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68666e087fac33c3398b5d8d"
+      }
+    },
+    "createdAt": "2025-07-03T11:48:24.228Z",
+    "updatedAt": "2025-07-03T11:48:24.228Z",
+    "__v": 0
+  },
+  {
+    "_id": "68666e1e7fac33c3398b5db3",
+    "sectionId": "68666e1c7fac33c3398b5db0",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68666e1e7fac33c3398b5db4"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68666e1e7fac33c3398b5db5"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68666e1e7fac33c3398b5db6"
+      }
+    },
+    "createdAt": "2025-07-03T11:48:46.582Z",
+    "updatedAt": "2025-07-03T11:48:46.582Z",
+    "__v": 0
+  },
+  {
+    "_id": "68666e4a7fac33c3398b5dc5",
+    "sectionId": "68666e487fac33c3398b5dc2",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68666e4a7fac33c3398b5dc6"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68666e4a7fac33c3398b5dc7"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68666e4a7fac33c3398b5dc8"
+      }
+    },
+    "createdAt": "2025-07-03T11:49:30.759Z",
+    "updatedAt": "2025-07-03T11:49:30.759Z",
+    "__v": 0
+  },
+  {
+    "_id": "68666e787fac33c3398b5df3",
+    "sectionId": "68666e757fac33c3398b5dee",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68666e787fac33c3398b5df4"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68666e787fac33c3398b5df5"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68666e787fac33c3398b5df6"
+      }
+    },
+    "createdAt": "2025-07-03T11:50:16.364Z",
+    "updatedAt": "2025-07-03T11:50:16.364Z",
+    "__v": 0
+  },
+  {
+    "_id": "68666e937fac33c3398b5e3b",
+    "sectionId": "68666e8f7fac33c3398b5e36",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68666e937fac33c3398b5e3c"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68666e937fac33c3398b5e3d"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68666e937fac33c3398b5e3e"
+      }
+    },
+    "createdAt": "2025-07-03T11:50:43.963Z",
+    "updatedAt": "2025-07-03T11:50:43.963Z",
+    "__v": 0
+  },
+  {
+    "_id": "68666eaec19c0e66c726c93a",
+    "sectionId": "68666ea87fac33c3398b5e50",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68666eaec19c0e66c726c93b"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68666eaec19c0e66c726c93c"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68666eaec19c0e66c726c93d"
+      }
+    },
+    "createdAt": "2025-07-03T11:51:10.777Z",
+    "updatedAt": "2025-07-03T11:51:10.777Z",
+    "__v": 0
+  },
+  {
+    "_id": "68666eb7c19c0e66c726c969",
+    "sectionId": "68666eb6c19c0e66c726c960",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68666eb7c19c0e66c726c96a"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68666eb7c19c0e66c726c96b"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68666eb7c19c0e66c726c96c"
+      }
+    },
+    "createdAt": "2025-07-03T11:51:19.790Z",
+    "updatedAt": "2025-07-03T11:51:19.790Z",
+    "__v": 0
+  },
+  {
+    "_id": "68666ec4c19c0e66c726c982",
+    "sectionId": "68666ec3c19c0e66c726c97f",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68666ec4c19c0e66c726c983"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68666ec4c19c0e66c726c984"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68666ec4c19c0e66c726c985"
+      }
+    },
+    "createdAt": "2025-07-03T11:51:32.462Z",
+    "updatedAt": "2025-07-03T11:51:32.462Z",
+    "__v": 0
+  },
+  {
+    "_id": "686ce44072a569f207b2719f",
+    "sectionId": "686ce43f72a569f207b2719c",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "686ce44072a569f207b271a0"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "686ce44072a569f207b271a1"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "686ce44072a569f207b271a2"
+      }
+    },
+    "createdAt": "2025-07-08T09:26:24.363Z",
+    "updatedAt": "2025-07-08T09:26:24.363Z",
+    "__v": 0
+  },
+  {
+    "_id": "686cea20094fb709e8f1afb8",
+    "sectionId": "686cea1f094fb709e8f1afb5",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "686cea20094fb709e8f1afb9"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "686cea20094fb709e8f1afba"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "686cea20094fb709e8f1afbb"
+      }
+    },
+    "createdAt": "2025-07-08T09:51:28.073Z",
+    "updatedAt": "2025-07-08T09:51:28.073Z",
+    "__v": 0
+  },
+  {
+    "_id": "686ceb95094fb709e8f1b09b",
+    "sectionId": "686ceb94094fb709e8f1b098",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "686ceb95094fb709e8f1b09c"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "686ceb95094fb709e8f1b09d"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "686ceb95094fb709e8f1b09e"
+      }
+    },
+    "createdAt": "2025-07-08T09:57:41.212Z",
+    "updatedAt": "2025-07-08T09:57:41.212Z",
+    "__v": 0
+  },
+  {
+    "_id": "686cef64094fb709e8f1b2b9",
+    "sectionId": "686cef64094fb709e8f1b2b6",
+    "details": {
+      "بازدید": {
+        "isActive": false,
+        "assignedMemberId": null,
+        "_id": "686cf7786ac39838985fb581"
+      },
+      "پر کردن چک لیست": {
+        "isActive": false,
+        "assignedMemberId": null,
+        "_id": "686cf7786ac39838985fb582"
+      },
+      "مشاوره": {
+        "isActive": false,
+        "assignedMemberId": null,
+        "_id": "686cf7786ac39838985fb583"
+      }
+    },
+    "createdAt": "2025-07-08T10:13:56.491Z",
+    "updatedAt": "2025-07-08T10:48:24.542Z",
+    "__v": 0
+  },
+  {
+    "_id": "686cf6f66ac39838985fb4df",
+    "sectionId": "686cf6f66ac39838985fb4db",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "686cf6f66ac39838985fb4e0"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "686cf6f66ac39838985fb4e1"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "686cf6f66ac39838985fb4e2"
+      }
+    },
+    "createdAt": "2025-07-08T10:46:14.840Z",
+    "updatedAt": "2025-07-08T10:46:14.840Z",
+    "__v": 0
+  },
+  {
+    "_id": "686cfe48ebed25d058e4c74e",
+    "sectionId": "686cfe48ebed25d058e4c74b",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "686cfe48ebed25d058e4c74f"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "686cfe48ebed25d058e4c750"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "686cfe48ebed25d058e4c751"
+      }
+    },
+    "createdAt": "2025-07-08T11:17:28.823Z",
+    "updatedAt": "2025-07-08T11:17:28.823Z",
+    "__v": 0
+  },
+  {
+    "_id": "686e29bc4e12e1c67e1cdb5a",
+    "sectionId": "686e29bb4e12e1c67e1cdb56",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "686e29bc4e12e1c67e1cdb5b"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "686e29bc4e12e1c67e1cdb5c"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "686e29bc4e12e1c67e1cdb5d"
+      }
+    },
+    "createdAt": "2025-07-09T08:35:08.422Z",
+    "updatedAt": "2025-07-09T08:35:08.422Z",
+    "__v": 0
+  },
+  {
+    "_id": "686f8bb401d2423342d28547",
+    "sectionId": "686f8bb301d2423342d2853f",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "686f8bb401d2423342d28548"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "686f8bb401d2423342d28549"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "686f8bb401d2423342d2854a"
+      }
+    },
+    "createdAt": "2025-07-10T09:45:24.456Z",
+    "updatedAt": "2025-07-10T09:45:24.456Z",
+    "__v": 0
+  },
+  {
+    "_id": "6872018617839a118036d479",
+    "sectionId": "6872018317839a118036d476",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6872018617839a118036d47a"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6872018617839a118036d47b"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6872018617839a118036d47c"
+      }
+    },
+    "createdAt": "2025-07-12T06:32:38.285Z",
+    "updatedAt": "2025-07-12T06:32:38.285Z",
+    "__v": 0
+  },
+  {
+    "_id": "68946da29f69e966e83be597",
+    "sectionId": "68946da19f69e966e83be594",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68946da29f69e966e83be598"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68946da29f69e966e83be599"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68946da29f69e966e83be59a"
+      }
+    },
+    "createdAt": "2025-08-07T09:10:58.064Z",
+    "updatedAt": "2025-08-07T09:10:58.064Z",
+    "__v": 0
+  },
+  {
+    "_id": "68946db59f69e966e83be5cd",
+    "sectionId": "68946db59f69e966e83be5ca",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68946db59f69e966e83be5ce"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68946db59f69e966e83be5cf"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68946db59f69e966e83be5d0"
+      }
+    },
+    "createdAt": "2025-08-07T09:11:17.440Z",
+    "updatedAt": "2025-08-07T09:11:17.440Z",
+    "__v": 0
+  },
+  {
+    "_id": "68946dba9f69e966e83be603",
+    "sectionId": "68946dba9f69e966e83be600",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68946dba9f69e966e83be604"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68946dba9f69e966e83be605"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68946dba9f69e966e83be606"
+      }
+    },
+    "createdAt": "2025-08-07T09:11:22.534Z",
+    "updatedAt": "2025-08-07T09:11:22.534Z",
+    "__v": 0
+  },
+  {
+    "_id": "68946dc99f69e966e83be639",
+    "sectionId": "68946dc99f69e966e83be636",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68946dc99f69e966e83be63a"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68946dc99f69e966e83be63b"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68946dc99f69e966e83be63c"
+      }
+    },
+    "createdAt": "2025-08-07T09:11:37.281Z",
+    "updatedAt": "2025-08-07T09:11:37.281Z",
+    "__v": 0
+  },
+  {
+    "_id": "68946dd89f69e966e83be66f",
+    "sectionId": "68946dd89f69e966e83be66c",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68946dd89f69e966e83be670"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68946dd89f69e966e83be671"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68946dd89f69e966e83be672"
+      }
+    },
+    "createdAt": "2025-08-07T09:11:52.811Z",
+    "updatedAt": "2025-08-07T09:11:52.811Z",
+    "__v": 0
+  },
+  {
+    "_id": "68946de39f69e966e83be6a5",
+    "sectionId": "68946de29f69e966e83be6a2",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68946de39f69e966e83be6a6"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68946de39f69e966e83be6a7"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68946de39f69e966e83be6a8"
+      }
+    },
+    "createdAt": "2025-08-07T09:12:03.047Z",
+    "updatedAt": "2025-08-07T09:12:03.047Z",
+    "__v": 0
+  },
+  {
+    "_id": "68946de99f69e966e83be6db",
+    "sectionId": "68946de89f69e966e83be6d8",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68946de99f69e966e83be6dc"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68946de99f69e966e83be6dd"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68946de99f69e966e83be6de"
+      }
+    },
+    "createdAt": "2025-08-07T09:12:09.096Z",
+    "updatedAt": "2025-08-07T09:12:09.096Z",
+    "__v": 0
+  },
+  {
+    "_id": "68946e739f69e966e83be711",
+    "sectionId": "68946e739f69e966e83be70e",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68946e739f69e966e83be712"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68946e739f69e966e83be713"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68946e739f69e966e83be714"
+      }
+    },
+    "createdAt": "2025-08-07T09:14:27.368Z",
+    "updatedAt": "2025-08-07T09:14:27.368Z",
+    "__v": 0
+  },
+  {
+    "_id": "68946e839f69e966e83be747",
+    "sectionId": "68946e829f69e966e83be744",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68946e839f69e966e83be748"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68946e839f69e966e83be749"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68946e839f69e966e83be74a"
+      }
+    },
+    "createdAt": "2025-08-07T09:14:43.082Z",
+    "updatedAt": "2025-08-07T09:14:43.082Z",
+    "__v": 0
+  },
+  {
+    "_id": "689857bb448837915192ba15",
+    "sectionId": "689857bb448837915192ba12",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "689857bb448837915192ba16"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "689857bb448837915192ba17"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "689857bb448837915192ba18"
+      }
+    },
+    "createdAt": "2025-08-10T08:26:35.328Z",
+    "updatedAt": "2025-08-10T08:26:35.328Z",
+    "__v": 0
+  },
+  {
+    "_id": "68985975bb8905d8d6201613",
+    "sectionId": "68985975bb8905d8d6201610",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68985975bb8905d8d6201614"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68985975bb8905d8d6201615"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68985975bb8905d8d6201616"
+      }
+    },
+    "createdAt": "2025-08-10T08:33:57.417Z",
+    "updatedAt": "2025-08-10T08:33:57.417Z",
+    "__v": 0
+  },
+  {
+    "_id": "68985b9849e9cdae7a26567a",
+    "sectionId": "68985b9749e9cdae7a265677",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68985b9849e9cdae7a26567b"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68985b9849e9cdae7a26567c"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68985b9849e9cdae7a26567d"
+      }
+    },
+    "createdAt": "2025-08-10T08:43:04.436Z",
+    "updatedAt": "2025-08-10T08:43:04.436Z",
+    "__v": 0
+  },
+  {
+    "_id": "6898626473e73d9e83d9106d",
+    "sectionId": "6898626473e73d9e83d9106a",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6898626473e73d9e83d9106e"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6898626473e73d9e83d9106f"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6898626473e73d9e83d91070"
+      }
+    },
+    "createdAt": "2025-08-10T09:12:04.890Z",
+    "updatedAt": "2025-08-10T09:12:04.890Z",
+    "__v": 0
+  },
+  {
+    "_id": "6898626c73e73d9e83d910a4",
+    "sectionId": "6898626c73e73d9e83d910a1",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6898626c73e73d9e83d910a5"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6898626c73e73d9e83d910a6"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6898626c73e73d9e83d910a7"
+      }
+    },
+    "createdAt": "2025-08-10T09:12:12.808Z",
+    "updatedAt": "2025-08-10T09:12:12.808Z",
+    "__v": 0
+  },
+  {
+    "_id": "689873105bbba65efe9a2c2d",
+    "sectionId": "689873105bbba65efe9a2c2a",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "689873105bbba65efe9a2c2e"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "689873105bbba65efe9a2c2f"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "689873105bbba65efe9a2c30"
+      }
+    },
+    "createdAt": "2025-08-10T10:23:12.455Z",
+    "updatedAt": "2025-08-10T10:23:12.455Z",
+    "__v": 0
+  },
+  {
+    "_id": "6898740eb1c84a17fe99dc0c",
+    "sectionId": "6898740db1c84a17fe99dc09",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6898740eb1c84a17fe99dc0d"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6898740eb1c84a17fe99dc0e"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6898740eb1c84a17fe99dc0f"
+      }
+    },
+    "createdAt": "2025-08-10T10:27:26.008Z",
+    "updatedAt": "2025-08-10T10:27:26.008Z",
+    "__v": 0
+  },
+  {
+    "_id": "68a5822de2d4b0e317a7376e",
+    "sectionId": "68a5822ce2d4b0e317a73767",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68a5822de2d4b0e317a7376f"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68a5822de2d4b0e317a73770"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68a5822de2d4b0e317a73771"
+      }
+    },
+    "createdAt": "2025-08-20T08:07:09.256Z",
+    "updatedAt": "2025-08-20T08:07:09.256Z",
+    "__v": 0
+  },
+  {
+    "_id": "68c2df3ca6b0b1171fd0657c",
+    "sectionId": "68c2df3ba6b0b1171fd06579",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c2df3ca6b0b1171fd0657d"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c2df3ca6b0b1171fd0657e"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c2df3ca6b0b1171fd0657f"
+      }
+    },
+    "createdAt": "2025-09-11T14:39:56.168Z",
+    "updatedAt": "2025-09-11T14:39:56.168Z",
+    "__v": 0
+  },
+  {
+    "_id": "68c2df40a6b0b1171fd065b2",
+    "sectionId": "68c2df40a6b0b1171fd065af",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c2df40a6b0b1171fd065b3"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c2df40a6b0b1171fd065b4"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c2df40a6b0b1171fd065b5"
+      }
+    },
+    "createdAt": "2025-09-11T14:40:00.745Z",
+    "updatedAt": "2025-09-11T14:40:00.745Z",
+    "__v": 0
+  },
+  {
+    "_id": "68c2df4aa6b0b1171fd065e8",
+    "sectionId": "68c2df4aa6b0b1171fd065e5",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c2df4aa6b0b1171fd065e9"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c2df4aa6b0b1171fd065ea"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c2df4aa6b0b1171fd065eb"
+      }
+    },
+    "createdAt": "2025-09-11T14:40:10.611Z",
+    "updatedAt": "2025-09-11T14:40:10.611Z",
+    "__v": 0
+  },
+  {
+    "_id": "68c2df55a6b0b1171fd0661e",
+    "sectionId": "68c2df55a6b0b1171fd0661b",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c2df55a6b0b1171fd0661f"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c2df55a6b0b1171fd06620"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c2df55a6b0b1171fd06621"
+      }
+    },
+    "createdAt": "2025-09-11T14:40:21.953Z",
+    "updatedAt": "2025-09-11T14:40:21.953Z",
+    "__v": 0
+  },
+  {
+    "_id": "68c2df61a6b0b1171fd06654",
+    "sectionId": "68c2df61a6b0b1171fd06651",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c2df61a6b0b1171fd06655"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c2df61a6b0b1171fd06656"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c2df61a6b0b1171fd06657"
+      }
+    },
+    "createdAt": "2025-09-11T14:40:33.493Z",
+    "updatedAt": "2025-09-11T14:40:33.493Z",
+    "__v": 0
+  },
+  {
+    "_id": "68c2df76a6b0b1171fd0668a",
+    "sectionId": "68c2df76a6b0b1171fd06687",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c2df76a6b0b1171fd0668b"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c2df76a6b0b1171fd0668c"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c2df76a6b0b1171fd0668d"
+      }
+    },
+    "createdAt": "2025-09-11T14:40:54.304Z",
+    "updatedAt": "2025-09-11T14:40:54.304Z",
+    "__v": 0
+  },
+  {
+    "_id": "68c2df7ea6b0b1171fd066c0",
+    "sectionId": "68c2df7da6b0b1171fd066bd",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c2df7ea6b0b1171fd066c1"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c2df7ea6b0b1171fd066c2"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c2df7ea6b0b1171fd066c3"
+      }
+    },
+    "createdAt": "2025-09-11T14:41:02.110Z",
+    "updatedAt": "2025-09-11T14:41:02.110Z",
+    "__v": 0
+  },
+  {
+    "_id": "68c2df8ca6b0b1171fd066f6",
+    "sectionId": "68c2df8ba6b0b1171fd066f3",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c2df8ca6b0b1171fd066f7"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c2df8ca6b0b1171fd066f8"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c2df8ca6b0b1171fd066f9"
+      }
+    },
+    "createdAt": "2025-09-11T14:41:16.112Z",
+    "updatedAt": "2025-09-11T14:41:16.112Z",
+    "__v": 0
+  },
+  {
+    "_id": "68c2df98a6b0b1171fd0672c",
+    "sectionId": "68c2df97a6b0b1171fd06729",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c2df98a6b0b1171fd0672d"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c2df98a6b0b1171fd0672e"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c2df98a6b0b1171fd0672f"
+      }
+    },
+    "createdAt": "2025-09-11T14:41:28.218Z",
+    "updatedAt": "2025-09-11T14:41:28.218Z",
+    "__v": 0
+  },
+  {
+    "_id": "68c2dfa0a6b0b1171fd06762",
+    "sectionId": "68c2dfa0a6b0b1171fd0675f",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c2dfa0a6b0b1171fd06763"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c2dfa0a6b0b1171fd06764"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c2dfa0a6b0b1171fd06765"
+      }
+    },
+    "createdAt": "2025-09-11T14:41:36.366Z",
+    "updatedAt": "2025-09-11T14:41:36.366Z",
+    "__v": 0
+  },
+  {
+    "_id": "68c68755515de844500f4461",
+    "sectionId": "68c68754515de844500f445e",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c68755515de844500f4462"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c68755515de844500f4463"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c68755515de844500f4464"
+      }
+    },
+    "createdAt": "2025-09-14T09:13:57.098Z",
+    "updatedAt": "2025-09-14T09:13:57.098Z",
+    "__v": 0
+  },
+  {
+    "_id": "68c688ad515de844500f4a45",
+    "sectionId": "68c688ac515de844500f4a42",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c688ad515de844500f4a46"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c688ad515de844500f4a47"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c688ad515de844500f4a48"
+      }
+    },
+    "createdAt": "2025-09-14T09:19:41.049Z",
+    "updatedAt": "2025-09-14T09:19:41.049Z",
+    "__v": 0
+  },
+  {
+    "_id": "68c688da515de844500f4a7b",
+    "sectionId": "68c688da515de844500f4a78",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c688da515de844500f4a7c"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c688da515de844500f4a7d"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c688da515de844500f4a7e"
+      }
+    },
+    "createdAt": "2025-09-14T09:20:26.932Z",
+    "updatedAt": "2025-09-14T09:20:26.932Z",
+    "__v": 0
+  },
+  {
+    "_id": "68c69b2cf585853691e9f911",
+    "sectionId": "68c69b2bf585853691e9f90e",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c69b2cf585853691e9f912"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c69b2cf585853691e9f913"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c69b2cf585853691e9f914"
+      }
+    },
+    "createdAt": "2025-09-14T10:38:36.004Z",
+    "updatedAt": "2025-09-14T10:38:36.004Z",
+    "__v": 0
+  },
+  {
+    "_id": "68c6ada31ae59e374935eb12",
+    "sectionId": "68c6ada31ae59e374935eb0f",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c6ada31ae59e374935eb13"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c6ada31ae59e374935eb14"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68c6ada31ae59e374935eb15"
+      }
+    },
+    "createdAt": "2025-09-14T11:57:23.934Z",
+    "updatedAt": "2025-09-14T11:57:23.934Z",
+    "__v": 0
+  },
+  {
+    "_id": "68e513db1729547c4b61d8f9",
+    "sectionId": "68e513da1729547c4b61d8f6",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e513db1729547c4b61d8fa"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e513db1729547c4b61d8fb"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e513db1729547c4b61d8fc"
+      }
+    },
+    "createdAt": "2025-10-07T13:21:31.200Z",
+    "updatedAt": "2025-10-07T13:21:31.200Z",
+    "__v": 0
+  },
+  {
+    "_id": "68e515361729547c4b61d967",
+    "sectionId": "68e515361729547c4b61d964",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e515361729547c4b61d968"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e515361729547c4b61d969"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e515361729547c4b61d96a"
+      }
+    },
+    "createdAt": "2025-10-07T13:27:18.366Z",
+    "updatedAt": "2025-10-07T13:27:18.366Z",
+    "__v": 0
+  },
+  {
+    "_id": "68e522ee1729547c4b61e3f6",
+    "sectionId": "68e522ee1729547c4b61e3f3",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e522ee1729547c4b61e3f7"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e522ee1729547c4b61e3f8"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e522ee1729547c4b61e3f9"
+      }
+    },
+    "createdAt": "2025-10-07T14:25:50.760Z",
+    "updatedAt": "2025-10-07T14:25:50.760Z",
+    "__v": 0
+  },
+  {
+    "_id": "68e523761729547c4b61e439",
+    "sectionId": "68e523761729547c4b61e436",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e523761729547c4b61e43a"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e523761729547c4b61e43b"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e523761729547c4b61e43c"
+      }
+    },
+    "createdAt": "2025-10-07T14:28:06.805Z",
+    "updatedAt": "2025-10-07T14:28:06.805Z",
+    "__v": 0
+  },
+  {
+    "_id": "68e524451729547c4b61e483",
+    "sectionId": "68e524451729547c4b61e480",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e524451729547c4b61e484"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e524451729547c4b61e485"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e524451729547c4b61e486"
+      }
+    },
+    "createdAt": "2025-10-07T14:31:33.557Z",
+    "updatedAt": "2025-10-07T14:31:33.557Z",
+    "__v": 0
+  },
+  {
+    "_id": "68e5347e1729547c4b61eb39",
+    "sectionId": "68e5347e1729547c4b61eb36",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e5347e1729547c4b61eb3a"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e5347e1729547c4b61eb3b"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e5347e1729547c4b61eb3c"
+      }
+    },
+    "createdAt": "2025-10-07T15:40:46.756Z",
+    "updatedAt": "2025-10-07T15:40:46.756Z",
+    "__v": 0
+  },
+  {
+    "_id": "68e534961729547c4b61eb6f",
+    "sectionId": "68e534961729547c4b61eb6c",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e534961729547c4b61eb70"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e534961729547c4b61eb71"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e534961729547c4b61eb72"
+      }
+    },
+    "createdAt": "2025-10-07T15:41:10.576Z",
+    "updatedAt": "2025-10-07T15:41:10.576Z",
+    "__v": 0
+  },
+  {
+    "_id": "68e534a41729547c4b61eba5",
+    "sectionId": "68e534a41729547c4b61eba2",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e534a41729547c4b61eba6"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e534a41729547c4b61eba7"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e534a41729547c4b61eba8"
+      }
+    },
+    "createdAt": "2025-10-07T15:41:24.886Z",
+    "updatedAt": "2025-10-07T15:41:24.886Z",
+    "__v": 0
+  },
+  {
+    "_id": "68e534b21729547c4b61ebdb",
+    "sectionId": "68e534b21729547c4b61ebd8",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e534b21729547c4b61ebdc"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e534b21729547c4b61ebdd"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e534b21729547c4b61ebde"
+      }
+    },
+    "createdAt": "2025-10-07T15:41:38.832Z",
+    "updatedAt": "2025-10-07T15:41:38.832Z",
+    "__v": 0
+  },
+  {
+    "_id": "68e534ba1729547c4b61ec11",
+    "sectionId": "68e534ba1729547c4b61ec0e",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e534ba1729547c4b61ec12"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e534ba1729547c4b61ec13"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e534ba1729547c4b61ec14"
+      }
+    },
+    "createdAt": "2025-10-07T15:41:46.483Z",
+    "updatedAt": "2025-10-07T15:41:46.483Z",
+    "__v": 0
+  },
+  {
+    "_id": "68e534c51729547c4b61ec47",
+    "sectionId": "68e534c51729547c4b61ec44",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e534c51729547c4b61ec48"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e534c51729547c4b61ec49"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e534c51729547c4b61ec4a"
+      }
+    },
+    "createdAt": "2025-10-07T15:41:57.731Z",
+    "updatedAt": "2025-10-07T15:41:57.731Z",
+    "__v": 0
+  },
+  {
+    "_id": "68e534ce1729547c4b61ec7d",
+    "sectionId": "68e534ce1729547c4b61ec7a",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e534ce1729547c4b61ec7e"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e534ce1729547c4b61ec7f"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e534ce1729547c4b61ec80"
+      }
+    },
+    "createdAt": "2025-10-07T15:42:06.628Z",
+    "updatedAt": "2025-10-07T15:42:06.628Z",
+    "__v": 0
+  },
+  {
+    "_id": "68e534d91729547c4b61ecb3",
+    "sectionId": "68e534d81729547c4b61ecb0",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e534d91729547c4b61ecb4"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e534d91729547c4b61ecb5"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68e534d91729547c4b61ecb6"
+      }
+    },
+    "createdAt": "2025-10-07T15:42:17.180Z",
+    "updatedAt": "2025-10-07T15:42:17.180Z",
+    "__v": 0
+  },
+  {
+    "_id": "68f4c7a7d74537c9799e816e",
+    "sectionId": "68f4c7a7d74537c9799e816b",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68f4c7a7d74537c9799e816f"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68f4c7a7d74537c9799e8170"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68f4c7a7d74537c9799e8171"
+      }
+    },
+    "createdAt": "2025-10-19T11:12:39.454Z",
+    "updatedAt": "2025-10-19T11:12:39.454Z",
+    "__v": 0
+  },
+  {
+    "_id": "68f4ca72d74537c9799e84a0",
+    "sectionId": "68f4ca72d74537c9799e849d",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68f4ca72d74537c9799e84a1"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68f4ca72d74537c9799e84a2"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "68f4ca72d74537c9799e84a3"
+      }
+    },
+    "createdAt": "2025-10-19T11:24:34.707Z",
+    "updatedAt": "2025-10-19T11:24:34.707Z",
+    "__v": 0
+  },
+  {
+    "_id": "6905c118f6085193ce120562",
+    "sectionId": "6905c118f6085193ce12055f",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6905c118f6085193ce120563"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6905c118f6085193ce120564"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6905c118f6085193ce120565"
+      }
+    },
+    "createdAt": "2025-11-01T08:13:12.607Z",
+    "updatedAt": "2025-11-01T08:13:12.607Z",
+    "__v": 0
+  },
+  {
+    "_id": "6905cb74f6085193ce1228de",
+    "sectionId": "6905cb74f6085193ce1228db",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6905cb74f6085193ce1228df"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6905cb74f6085193ce1228e0"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6905cb74f6085193ce1228e1"
+      }
+    },
+    "createdAt": "2025-11-01T08:57:24.773Z",
+    "updatedAt": "2025-11-01T08:57:24.773Z",
+    "__v": 0
+  },
+  {
+    "_id": "6908685d91b82bff7ffd1a34",
+    "sectionId": "6908685c91b82bff7ffd1a31",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6908685d91b82bff7ffd1a35"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6908685d91b82bff7ffd1a36"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6908685d91b82bff7ffd1a37"
+      }
+    },
+    "createdAt": "2025-11-03T08:31:25.360Z",
+    "updatedAt": "2025-11-03T08:31:25.360Z",
+    "__v": 0
+  },
+  {
+    "_id": "6908691691b82bff7ffd1a7d",
+    "sectionId": "6908691691b82bff7ffd1a7a",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6908691691b82bff7ffd1a7e"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6908691691b82bff7ffd1a7f"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6908691691b82bff7ffd1a80"
+      }
+    },
+    "createdAt": "2025-11-03T08:34:30.437Z",
+    "updatedAt": "2025-11-03T08:34:30.437Z",
+    "__v": 0
+  },
+  {
+    "_id": "690c57f15f9b53a155d2738c",
+    "sectionId": "690c57f15f9b53a155d27389",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "690c57f15f9b53a155d2738d"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "690c57f15f9b53a155d2738e"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "690c57f15f9b53a155d2738f"
+      }
+    },
+    "createdAt": "2025-11-06T08:10:25.281Z",
+    "updatedAt": "2025-11-06T08:10:25.281Z",
+    "__v": 0
+  },
+  {
+    "_id": "690c58095f9b53a155d273c3",
+    "sectionId": "690c58085f9b53a155d273c0",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "690c58095f9b53a155d273c4"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "690c58095f9b53a155d273c5"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "690c58095f9b53a155d273c6"
+      }
+    },
+    "createdAt": "2025-11-06T08:10:49.089Z",
+    "updatedAt": "2025-11-06T08:10:49.089Z",
+    "__v": 0
+  },
+  {
+    "_id": "690c58145f9b53a155d273fa",
+    "sectionId": "690c58135f9b53a155d273f7",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "690c58145f9b53a155d273fb"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "690c58145f9b53a155d273fc"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "690c58145f9b53a155d273fd"
+      }
+    },
+    "createdAt": "2025-11-06T08:11:00.106Z",
+    "updatedAt": "2025-11-06T08:11:00.106Z",
+    "__v": 0
+  },
+  {
+    "_id": "690c581e5f9b53a155d27431",
+    "sectionId": "690c581e5f9b53a155d2742e",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "690c581e5f9b53a155d27432"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "690c581e5f9b53a155d27433"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "690c581e5f9b53a155d27434"
+      }
+    },
+    "createdAt": "2025-11-06T08:11:10.740Z",
+    "updatedAt": "2025-11-06T08:11:10.740Z",
+    "__v": 0
+  },
+  {
+    "_id": "690c58285f9b53a155d27468",
+    "sectionId": "690c58285f9b53a155d27465",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "690c58285f9b53a155d27469"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "690c58285f9b53a155d2746a"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "690c58285f9b53a155d2746b"
+      }
+    },
+    "createdAt": "2025-11-06T08:11:20.363Z",
+    "updatedAt": "2025-11-06T08:11:20.363Z",
+    "__v": 0
+  },
+  {
+    "_id": "690c58315f9b53a155d2749f",
+    "sectionId": "690c58305f9b53a155d2749c",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "690c58315f9b53a155d274a0"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "690c58315f9b53a155d274a1"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "690c58315f9b53a155d274a2"
+      }
+    },
+    "createdAt": "2025-11-06T08:11:29.056Z",
+    "updatedAt": "2025-11-06T08:11:29.056Z",
+    "__v": 0
+  },
+  {
+    "_id": "691313ba5f9b53a155d28e59",
+    "sectionId": "691313ba5f9b53a155d28e56",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "691313ba5f9b53a155d28e5a"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "691313ba5f9b53a155d28e5b"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "691313ba5f9b53a155d28e5c"
+      }
+    },
+    "createdAt": "2025-11-11T10:45:14.549Z",
+    "updatedAt": "2025-11-11T10:45:14.549Z",
+    "__v": 0
+  },
+  {
+    "_id": "69132f895f9b53a155d29a58",
+    "sectionId": "69132f885f9b53a155d29a55",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "69132f895f9b53a155d29a59"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "69132f895f9b53a155d29a5a"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "69132f895f9b53a155d29a5b"
+      }
+    },
+    "createdAt": "2025-11-11T12:43:53.014Z",
+    "updatedAt": "2025-11-11T12:43:53.014Z",
+    "__v": 0
+  },
+  {
+    "_id": "69133b355f9b53a155d2a759",
+    "sectionId": "69133b345f9b53a155d2a756",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "69133b355f9b53a155d2a75a"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "69133b355f9b53a155d2a75b"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "69133b355f9b53a155d2a75c"
+      }
+    },
+    "createdAt": "2025-11-11T13:33:41.223Z",
+    "updatedAt": "2025-11-11T13:33:41.223Z",
+    "__v": 0
+  },
+  {
+    "_id": "693521d9dd84ac16f0cb99af",
+    "sectionId": "693521d9dd84ac16f0cb99ac",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "693521d9dd84ac16f0cb99b0"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "693521d9dd84ac16f0cb99b1"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "693521d9dd84ac16f0cb99b2"
+      }
+    },
+    "createdAt": "2025-12-07T06:42:33.547Z",
+    "updatedAt": "2025-12-07T06:42:33.547Z",
+    "__v": 0
+  },
+  {
+    "_id": "693521e3dd84ac16f0cb99e6",
+    "sectionId": "693521e3dd84ac16f0cb99e3",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "693521e3dd84ac16f0cb99e7"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "693521e3dd84ac16f0cb99e8"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "693521e3dd84ac16f0cb99e9"
+      }
+    },
+    "createdAt": "2025-12-07T06:42:43.397Z",
+    "updatedAt": "2025-12-07T06:42:43.397Z",
+    "__v": 0
+  },
+  {
+    "_id": "693521eddd84ac16f0cb9a1d",
+    "sectionId": "693521eddd84ac16f0cb9a1a",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "693521eddd84ac16f0cb9a1e"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "693521eddd84ac16f0cb9a1f"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "693521eddd84ac16f0cb9a20"
+      }
+    },
+    "createdAt": "2025-12-07T06:42:53.360Z",
+    "updatedAt": "2025-12-07T06:42:53.360Z",
+    "__v": 0
+  },
+  {
+    "_id": "693521f8dd84ac16f0cb9a54",
+    "sectionId": "693521f8dd84ac16f0cb9a51",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "693521f8dd84ac16f0cb9a55"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "693521f8dd84ac16f0cb9a56"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "693521f8dd84ac16f0cb9a57"
+      }
+    },
+    "createdAt": "2025-12-07T06:43:04.335Z",
+    "updatedAt": "2025-12-07T06:43:04.335Z",
+    "__v": 0
+  },
+  {
+    "_id": "69352216dd84ac16f0cb9a8b",
+    "sectionId": "69352215dd84ac16f0cb9a88",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "69352216dd84ac16f0cb9a8c"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "69352216dd84ac16f0cb9a8d"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "69352216dd84ac16f0cb9a8e"
+      }
+    },
+    "createdAt": "2025-12-07T06:43:34.183Z",
+    "updatedAt": "2025-12-07T06:43:34.183Z",
+    "__v": 0
+  },
+  {
+    "_id": "69352224dd84ac16f0cb9ac2",
+    "sectionId": "69352224dd84ac16f0cb9abf",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "69352224dd84ac16f0cb9ac3"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "69352224dd84ac16f0cb9ac4"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "69352224dd84ac16f0cb9ac5"
+      }
+    },
+    "createdAt": "2025-12-07T06:43:48.594Z",
+    "updatedAt": "2025-12-07T06:43:48.594Z",
+    "__v": 0
+  },
+  {
+    "_id": "6935223fdd84ac16f0cb9af9",
+    "sectionId": "6935223fdd84ac16f0cb9af6",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6935223fdd84ac16f0cb9afa"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6935223fdd84ac16f0cb9afb"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6935223fdd84ac16f0cb9afc"
+      }
+    },
+    "createdAt": "2025-12-07T06:44:15.894Z",
+    "updatedAt": "2025-12-07T06:44:15.894Z",
+    "__v": 0
+  },
+  {
+    "_id": "6935224ddd84ac16f0cb9b30",
+    "sectionId": "6935224ddd84ac16f0cb9b2d",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6935224ddd84ac16f0cb9b31"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6935224ddd84ac16f0cb9b32"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "6935224ddd84ac16f0cb9b33"
+      }
+    },
+    "createdAt": "2025-12-07T06:44:29.820Z",
+    "updatedAt": "2025-12-07T06:44:29.820Z",
+    "__v": 0
+  },
+  {
+    "_id": "69352ecfdd84ac16f0cbae2c",
+    "sectionId": "69352ecedd84ac16f0cbae26",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "69352ecfdd84ac16f0cbae2d"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "69352ecfdd84ac16f0cbae2e"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "69352ecfdd84ac16f0cbae2f"
+      }
+    },
+    "createdAt": "2025-12-07T07:37:51.095Z",
+    "updatedAt": "2025-12-07T07:37:51.095Z",
+    "__v": 0
+  },
+  {
+    "_id": "69352ecfdd84ac16f0cbae31",
+    "sectionId": "69352ecedd84ac16f0cbae28",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "69352ecfdd84ac16f0cbae32"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "69352ecfdd84ac16f0cbae33"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "69352ecfdd84ac16f0cbae34"
+      }
+    },
+    "createdAt": "2025-12-07T07:37:51.157Z",
+    "updatedAt": "2025-12-07T07:37:51.157Z",
+    "__v": 0
+  },
+  {
+    "_id": "693bc568ec53e45bf2a945b8",
+    "sectionId": "693bc567ec53e45bf2a945b5",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "693bc568ec53e45bf2a945b9"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "693bc568ec53e45bf2a945ba"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "693bc568ec53e45bf2a945bb"
+      }
+    },
+    "createdAt": "2025-12-12T07:34:00.442Z",
+    "updatedAt": "2025-12-12T07:34:00.442Z",
+    "__v": 0
+  },
+  {
+    "_id": "693bca85ec53e45bf2a95354",
+    "sectionId": "693bca84ec53e45bf2a95351",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "693bca85ec53e45bf2a95355"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "693bca85ec53e45bf2a95356"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "693bca85ec53e45bf2a95357"
+      }
+    },
+    "createdAt": "2025-12-12T07:55:49.184Z",
+    "updatedAt": "2025-12-12T07:55:49.184Z",
+    "__v": 0
+  },
+  {
+    "_id": "693bcfb9ec53e45bf2a95eda",
+    "sectionId": "693bcfb8ec53e45bf2a95ed7",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "693bcfb9ec53e45bf2a95edb"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "693bcfb9ec53e45bf2a95edc"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "693bcfb9ec53e45bf2a95edd"
+      }
+    },
+    "createdAt": "2025-12-12T08:18:01.665Z",
+    "updatedAt": "2025-12-12T08:18:01.665Z",
+    "__v": 0
+  },
+  {
+    "_id": "693bd159ec53e45bf2a962aa",
+    "sectionId": "693bd159ec53e45bf2a962a7",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "693bd159ec53e45bf2a962ab"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "693bd159ec53e45bf2a962ac"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "693bd159ec53e45bf2a962ad"
+      }
+    },
+    "createdAt": "2025-12-12T08:24:57.664Z",
+    "updatedAt": "2025-12-12T08:24:57.664Z",
+    "__v": 0
+  },
+  {
+    "_id": "695ce73b6a3f0bcc98c1bdf5",
+    "sectionId": "695ce73b6a3f0bcc98c1bdf2",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "695ce73b6a3f0bcc98c1bdf6"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "695ce73b6a3f0bcc98c1bdf7"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "695ce73b6a3f0bcc98c1bdf8"
+      }
+    },
+    "createdAt": "2026-01-06T10:43:07.359Z",
+    "updatedAt": "2026-01-06T10:43:07.359Z",
+    "__v": 0
+  },
+  {
+    "_id": "695ce7466a3f0bcc98c1be2c",
+    "sectionId": "695ce7456a3f0bcc98c1be29",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "695ce7466a3f0bcc98c1be2d"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "695ce7466a3f0bcc98c1be2e"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "695ce7466a3f0bcc98c1be2f"
+      }
+    },
+    "createdAt": "2026-01-06T10:43:18.172Z",
+    "updatedAt": "2026-01-06T10:43:18.172Z",
+    "__v": 0
+  },
+  {
+    "_id": "695ce74d6a3f0bcc98c1be63",
+    "sectionId": "695ce74c6a3f0bcc98c1be60",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "695ce74d6a3f0bcc98c1be64"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "695ce74d6a3f0bcc98c1be65"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "695ce74d6a3f0bcc98c1be66"
+      }
+    },
+    "createdAt": "2026-01-06T10:43:25.247Z",
+    "updatedAt": "2026-01-06T10:43:25.247Z",
+    "__v": 0
+  },
+  {
+    "_id": "695ce9556a3f0bcc98c1c7e2",
+    "sectionId": "695ce9546a3f0bcc98c1c7d4",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "695ce9556a3f0bcc98c1c7e3"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "695ce9556a3f0bcc98c1c7e4"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "695ce9556a3f0bcc98c1c7e5"
+      }
+    },
+    "createdAt": "2026-01-06T10:52:05.252Z",
+    "updatedAt": "2026-01-06T10:52:05.252Z",
+    "__v": 0
+  },
+  {
+    "_id": "695ce95d6a3f0bcc98c1c867",
+    "sectionId": "695ce95d6a3f0bcc98c1c863",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "695ce95d6a3f0bcc98c1c868"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "695ce95d6a3f0bcc98c1c869"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "695ce95d6a3f0bcc98c1c86a"
+      }
+    },
+    "createdAt": "2026-01-06T10:52:13.449Z",
+    "updatedAt": "2026-01-06T10:52:13.449Z",
+    "__v": 0
+  },
+  {
+    "_id": "695cea1d6a3f0bcc98c1ccf7",
+    "sectionId": "695cea1d6a3f0bcc98c1ccf4",
+    "details": {
+      "بازدید": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "695cea1d6a3f0bcc98c1ccf8"
+      },
+      "پر کردن چک لیست": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "695cea1d6a3f0bcc98c1ccf9"
+      },
+      "مشاوره": {
+        "isActive": true,
+        "assignedMemberId": null,
+        "_id": "695cea1d6a3f0bcc98c1ccfa"
+      }
+    },
+    "createdAt": "2026-01-06T10:55:25.311Z",
+    "updatedAt": "2026-01-06T10:55:25.311Z",
+    "__v": 0
+  }
+]

@@ -1,0 +1,912 @@
+[
+  {
+    "_id": "681731593109046e3ff060f3",
+    "projectId": "680c7ca56f4bce137a339653",
+    "__v": 0,
+    "createdAt": "2025-05-04T09:20:25.941Z",
+    "lastCalculatedAt": "2025-06-08T10:05:38.742Z",
+    "taxPercentage": 100,
+    "totalIncome": 11900006,
+    "updatedAt": "2025-06-08T10:05:38.743Z"
+  },
+  {
+    "_id": "684569e4c8ae704730b97913",
+    "projectId": "684560a298fa39e35ce59ff2",
+    "__v": 0,
+    "createdAt": "2025-06-08T10:45:55.979Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 1,
+    "totalIncome": 101986040,
+    "updatedAt": "2026-01-06T10:57:53.674Z"
+  },
+  {
+    "_id": "68458686c8ae704730b99145",
+    "projectId": "680602e056184467eeee1fd7",
+    "__v": 0,
+    "createdAt": "2025-06-08T12:48:06.194Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 2,
+    "totalIncome": 143205120,
+    "updatedAt": "2026-01-06T10:57:53.463Z"
+  },
+  {
+    "_id": "6845976bc8ae704730b99f91",
+    "projectId": "6806037556184467eeee204d",
+    "__v": 0,
+    "createdAt": "2025-06-08T14:00:11.647Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 0,
+    "totalIncome": 16000000,
+    "updatedAt": "2026-01-06T10:57:53.563Z"
+  },
+  {
+    "_id": "6847e5e6c8ae704730bb9adc",
+    "projectId": "6847e48a3a686a4e6bfdaa8b",
+    "__v": 0,
+    "createdAt": "2025-06-10T07:59:33.994Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 2,
+    "totalIncome": 136017404,
+    "updatedAt": "2026-01-06T10:57:53.776Z"
+  },
+  {
+    "_id": "68493df3c8ae704730bcbcc4",
+    "projectId": "68493d99d2a0961a4c190082",
+    "__v": 0,
+    "createdAt": "2025-06-11T08:27:31.546Z",
+    "lastCalculatedAt": "2025-06-11T08:28:18.190Z",
+    "taxPercentage": 0,
+    "totalIncome": 178529,
+    "updatedAt": "2025-06-11T08:28:18.772Z"
+  },
+  {
+    "_id": "68494edac8ae704730bccb34",
+    "projectId": "68494eb31b179fbcee47ec5a",
+    "__v": 0,
+    "createdAt": "2025-06-11T09:39:38.994Z",
+    "lastCalculatedAt": "2025-06-14T07:56:10.895Z",
+    "taxPercentage": 0,
+    "totalIncome": 36936,
+    "updatedAt": "2025-06-14T07:56:11.393Z"
+  },
+  {
+    "_id": "684a97d2c8ae704730bd639a",
+    "projectId": "684a8f9b7833cbfdd97325a7",
+    "__v": 0,
+    "createdAt": "2025-06-12T09:03:15.286Z",
+    "lastCalculatedAt": "2025-06-14T07:56:10.895Z",
+    "taxPercentage": 0,
+    "totalIncome": 184685,
+    "updatedAt": "2025-06-14T07:56:11.511Z"
+  },
+  {
+    "_id": "6866712175951028d0c05774",
+    "projectId": "68666ea910f1f5449d33e54e",
+    "__v": 0,
+    "createdAt": "2025-07-03T12:01:37.508Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 2,
+    "totalIncome": 135000000.00000003,
+    "updatedAt": "2026-01-06T10:57:54.497Z"
+  },
+  {
+    "_id": "686ce5e32e73c68c6e058d99",
+    "projectId": "686ce43a72a569f207b2716e",
+    "__v": 0,
+    "createdAt": "2025-07-08T09:33:23.859Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 0,
+    "totalIncome": 25680000,
+    "updatedAt": "2026-01-06T10:57:54.589Z"
+  },
+  {
+    "_id": "686ceac92e73c68c6e0591d1",
+    "projectId": "686cea1b094fb709e8f1af88",
+    "__v": 0,
+    "createdAt": "2025-07-08T09:54:17.106Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 0,
+    "totalIncome": 22584800,
+    "updatedAt": "2026-01-06T10:57:54.681Z"
+  },
+  {
+    "_id": "686cebef2e73c68c6e0592d4",
+    "projectId": "686ceb92094fb709e8f1b06b",
+    "__v": 0,
+    "createdAt": "2025-07-08T09:59:11.073Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 0,
+    "totalIncome": 16400000,
+    "updatedAt": "2026-01-06T10:57:54.776Z"
+  },
+  {
+    "_id": "686cfc672e73c68c6e05a126",
+    "projectId": "686cf6f36ac39838985fb4ae",
+    "__v": 0,
+    "createdAt": "2025-07-08T11:09:27.946Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 1,
+    "totalIncome": 111480000,
+    "updatedAt": "2026-01-06T10:57:54.964Z"
+  },
+  {
+    "_id": "686cfd492e73c68c6e05a1e3",
+    "projectId": "686cef61094fb709e8f1b288",
+    "__v": 0,
+    "createdAt": "2025-07-08T11:13:13.452Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 2,
+    "totalIncome": 153494800,
+    "updatedAt": "2026-01-06T10:57:54.868Z"
+  },
+  {
+    "_id": "686e34802e73c68c6e06ae34",
+    "projectId": "686e29b64e12e1c67e1cdb27",
+    "__v": 0,
+    "createdAt": "2025-07-09T09:21:03.944Z",
+    "lastCalculatedAt": "2025-07-11T07:52:45.654Z",
+    "taxPercentage": 0,
+    "totalIncome": 114333.20000000001,
+    "updatedAt": "2025-07-11T07:52:45.897Z"
+  },
+  {
+    "_id": "686f8bec2e73c68c6e07d87c",
+    "projectId": "686f8bb101d2423342d28512",
+    "__v": 0,
+    "createdAt": "2025-07-10T09:46:20.292Z",
+    "lastCalculatedAt": "2025-07-11T07:52:45.654Z",
+    "taxPercentage": 0,
+    "totalIncome": 18499.950000000004,
+    "updatedAt": "2025-07-11T07:52:45.923Z"
+  },
+  {
+    "_id": "68721387f36c116a95456ca0",
+    "projectId": "686cfe44ebed25d058e4c71e",
+    "__v": 0,
+    "createdAt": "2025-07-12T07:49:27.632Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 3,
+    "totalIncome": 232620000,
+    "updatedAt": "2026-01-06T10:57:55.057Z"
+  },
+  {
+    "_id": "68723324f36c116a954587d4",
+    "projectId": "68666df17fac33c3398b5d55",
+    "__v": 0,
+    "createdAt": "2025-07-12T10:04:20.034Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 0,
+    "totalIncome": 26550000.000000004,
+    "updatedAt": "2026-01-06T10:57:53.989Z"
+  },
+  {
+    "_id": "68723341f36c116a954587f0",
+    "projectId": "68666de67fac33c3398b5d40",
+    "__v": 0,
+    "createdAt": "2025-07-12T10:04:49.453Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 0,
+    "totalIncome": 22500000.000000004,
+    "updatedAt": "2026-01-06T10:57:53.889Z"
+  },
+  {
+    "_id": "68723370f36c116a95458816",
+    "projectId": "68666e2c7fac33c3398b5db9",
+    "__v": 0,
+    "createdAt": "2025-07-12T10:05:36.918Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 0,
+    "totalIncome": 27462000.000000004,
+    "updatedAt": "2026-01-06T10:57:54.082Z"
+  },
+  {
+    "_id": "68723389f36c116a9545882b",
+    "projectId": "68666e4410f1f5449d33e525",
+    "__v": 0,
+    "createdAt": "2025-07-12T10:06:01.492Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 1,
+    "totalIncome": 57585000.00000001,
+    "updatedAt": "2026-01-06T10:57:54.177Z"
+  },
+  {
+    "_id": "687233c8f36c116a95458864",
+    "projectId": "68666e717fac33c3398b5dec",
+    "__v": 0,
+    "createdAt": "2025-07-12T10:07:04.638Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 0,
+    "totalIncome": 24718500.000000004,
+    "updatedAt": "2026-01-06T10:57:54.293Z"
+  },
+  {
+    "_id": "6872348bf36c116a95458911",
+    "projectId": "68666e847fac33c3398b5e03",
+    "__v": 0,
+    "createdAt": "2025-07-12T10:10:19.928Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 1,
+    "totalIncome": 94218000.00000001,
+    "updatedAt": "2026-01-06T10:57:54.405Z"
+  },
+  {
+    "_id": "68947434c22af045999ca9e2",
+    "projectId": "68946d9e9f69e966e83be567",
+    "__v": 0,
+    "createdAt": "2025-08-07T09:38:59.847Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 2,
+    "totalIncome": 135000000.00000003,
+    "updatedAt": "2026-01-06T10:57:55.149Z"
+  },
+  {
+    "_id": "68947578c22af045999caaf2",
+    "projectId": "68946db09f69e966e83be59d",
+    "__v": 0,
+    "createdAt": "2025-08-07T09:44:24.319Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 0,
+    "totalIncome": 26550000.000000004,
+    "updatedAt": "2026-01-06T10:57:55.243Z"
+  },
+  {
+    "_id": "689475a1c22af045999cab13",
+    "projectId": "68946db89f69e966e83be5d3",
+    "__v": 0,
+    "createdAt": "2025-08-07T09:45:05.867Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 1,
+    "totalIncome": 64405000.00000001,
+    "updatedAt": "2026-01-06T10:57:55.337Z"
+  },
+  {
+    "_id": "689475bcc22af045999cab33",
+    "projectId": "68946dc79f69e966e83be609",
+    "__v": 0,
+    "createdAt": "2025-08-07T09:45:32.862Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 0,
+    "totalIncome": 24718500.000000004,
+    "updatedAt": "2026-01-06T10:57:55.430Z"
+  },
+  {
+    "_id": "689475dec22af045999cab51",
+    "projectId": "68946dd69f69e966e83be63f",
+    "__v": 0,
+    "createdAt": "2025-08-07T09:46:06.520Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 1,
+    "totalIncome": 94218000.00000001,
+    "updatedAt": "2026-01-06T10:57:55.524Z"
+  },
+  {
+    "_id": "689475fac22af045999cab6c",
+    "projectId": "68946de19f69e966e83be675",
+    "__v": 0,
+    "createdAt": "2025-08-07T09:46:34.017Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 1,
+    "totalIncome": 47310000.00000001,
+    "updatedAt": "2026-01-06T10:57:55.616Z"
+  },
+  {
+    "_id": "68947616c22af045999cab85",
+    "projectId": "68946de69f69e966e83be6ab",
+    "__v": 0,
+    "createdAt": "2025-08-07T09:47:02.591Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 0,
+    "totalIncome": 27126000.000000004,
+    "updatedAt": "2026-01-06T10:57:55.710Z"
+  },
+  {
+    "_id": "68947629c22af045999cab93",
+    "projectId": "68946e719f69e966e83be6e1",
+    "__v": 0,
+    "createdAt": "2025-08-07T09:47:21.439Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 0,
+    "totalIncome": 25500000.000000004,
+    "updatedAt": "2026-01-06T10:57:55.801Z"
+  },
+  {
+    "_id": "68947658c22af045999cabb8",
+    "projectId": "68946e819f69e966e83be717",
+    "__v": 0,
+    "createdAt": "2025-08-07T09:48:08.113Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 1,
+    "totalIncome": 75000000.00000001,
+    "updatedAt": "2026-01-06T10:57:55.894Z"
+  },
+  {
+    "_id": "68985816c22af045999fe070",
+    "projectId": "689857b86469b04d2ea114d3",
+    "__v": 0,
+    "createdAt": "2025-08-10T08:28:06.535Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 0,
+    "totalIncome": 19256000,
+    "updatedAt": "2026-01-06T10:57:55.988Z"
+  },
+  {
+    "_id": "68985b2ec22af045999fe311",
+    "projectId": "68985972bb8905d8d62015e3",
+    "__v": 0,
+    "createdAt": "2025-08-10T08:41:18.168Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 0,
+    "totalIncome": 23000000,
+    "updatedAt": "2026-01-06T10:57:56.088Z"
+  },
+  {
+    "_id": "68985d01c22af045999fe498",
+    "projectId": "68985b9149e9cdae7a265649",
+    "__v": 0,
+    "createdAt": "2025-08-10T08:49:05.319Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 2,
+    "totalIncome": 136800000,
+    "updatedAt": "2026-01-06T10:57:56.196Z"
+  },
+  {
+    "_id": "6898640fc22af045999fea9f",
+    "projectId": "6898626973e73d9e83d91073",
+    "__v": 0,
+    "createdAt": "2025-08-10T09:19:11.637Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 2,
+    "totalIncome": 124772000,
+    "updatedAt": "2026-01-06T10:57:56.379Z"
+  },
+  {
+    "_id": "68987459c22af045999ff855",
+    "projectId": "6898740ad0e0e59b5544a91c",
+    "__v": 0,
+    "createdAt": "2025-08-10T10:28:41.942Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 0,
+    "totalIncome": 7600000,
+    "updatedAt": "2026-01-06T10:57:56.471Z"
+  },
+  {
+    "_id": "689877d4c22af045999ffb3d",
+    "projectId": "6898626173e73d9e83d9103d",
+    "__v": 0,
+    "createdAt": "2025-08-10T10:43:32.231Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 0,
+    "totalIncome": 10226000,
+    "updatedAt": "2026-01-06T10:57:56.289Z"
+  },
+  {
+    "_id": "68a582a3811540190575e073",
+    "projectId": "68a5822ae2d4b0e317a73728",
+    "__v": 0,
+    "createdAt": "2025-08-20T08:09:06.113Z",
+    "lastCalculatedAt": "2025-09-07T14:08:56.781Z",
+    "taxPercentage": 6,
+    "totalIncome": 135333332.95,
+    "updatedAt": "2025-09-07T14:09:01.634Z"
+  },
+  {
+    "_id": "68c2e09584d0962e1b8247c3",
+    "projectId": "68c2df36a6b0b1171fd0654c",
+    "__v": 0,
+    "createdAt": "2025-09-11T14:45:41.218Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 5,
+    "totalIncome": 377430000,
+    "updatedAt": "2026-01-06T10:57:56.564Z"
+  },
+  {
+    "_id": "68c2e0b184d0962e1b8247dd",
+    "projectId": "68c2df3da6b0b1171fd06582",
+    "__v": 0,
+    "createdAt": "2025-09-11T14:46:09.720Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 0,
+    "totalIncome": 26550000.000000004,
+    "updatedAt": "2026-01-06T10:57:56.656Z"
+  },
+  {
+    "_id": "68c2e0c884d0962e1b8247f4",
+    "projectId": "68c2df47a6b0b1171fd065b8",
+    "__v": 0,
+    "createdAt": "2025-09-11T14:46:32.775Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 2,
+    "totalIncome": 146165000,
+    "updatedAt": "2026-01-06T10:57:56.750Z"
+  },
+  {
+    "_id": "68c2e0db84d0962e1b824803",
+    "projectId": "68c2df52a6b0b1171fd065ee",
+    "__v": 0,
+    "createdAt": "2025-09-11T14:46:51.448Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 3,
+    "totalIncome": 259870000,
+    "updatedAt": "2026-01-06T10:57:56.842Z"
+  },
+  {
+    "_id": "68c2e0ed84d0962e1b824811",
+    "projectId": "68c2df5ea6b0b1171fd06624",
+    "__v": 0,
+    "createdAt": "2025-09-11T14:47:09.688Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 1,
+    "totalIncome": 47310000.00000001,
+    "updatedAt": "2026-01-06T10:57:56.934Z"
+  },
+  {
+    "_id": "68c2e10484d0962e1b82481e",
+    "projectId": "68c2df73a6b0b1171fd0665a",
+    "__v": 0,
+    "createdAt": "2025-09-11T14:47:32.578Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 1,
+    "totalIncome": 80604000,
+    "updatedAt": "2026-01-06T10:57:57.030Z"
+  },
+  {
+    "_id": "68c2e11684d0962e1b824836",
+    "projectId": "68c2df7ba6b0b1171fd06690",
+    "__v": 0,
+    "createdAt": "2025-09-11T14:47:50.491Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 0,
+    "totalIncome": 25500000.000000004,
+    "updatedAt": "2026-01-06T10:57:57.124Z"
+  },
+  {
+    "_id": "68c2e13584d0962e1b824854",
+    "projectId": "68c2df89a6b0b1171fd066c6",
+    "__v": 0,
+    "createdAt": "2025-09-11T14:48:21.092Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 1,
+    "totalIncome": 97500000.00000001,
+    "updatedAt": "2026-01-06T10:57:57.216Z"
+  },
+  {
+    "_id": "68c2e14884d0962e1b824862",
+    "projectId": "68c2df95a6b0b1171fd066fc",
+    "__v": 0,
+    "createdAt": "2025-09-11T14:48:40.746Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 1,
+    "totalIncome": 95029500.00000001,
+    "updatedAt": "2026-01-06T10:57:57.307Z"
+  },
+  {
+    "_id": "68c2e16084d0962e1b824875",
+    "projectId": "68c2df9da6b0b1171fd06732",
+    "__v": 0,
+    "createdAt": "2025-09-11T14:49:04.318Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 1,
+    "totalIncome": 52500000.00000001,
+    "updatedAt": "2026-01-06T10:57:57.401Z"
+  },
+  {
+    "_id": "68c6877bc296f40e85e3db92",
+    "projectId": "68c68751515de844500f4431",
+    "__v": 0,
+    "createdAt": "2025-09-14T09:14:35.150Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 0,
+    "totalIncome": 30800000,
+    "updatedAt": "2026-01-06T10:57:57.495Z"
+  },
+  {
+    "_id": "68c697e5c296f40e85e3e944",
+    "projectId": "68c688a9515de844500f4a15",
+    "__v": 0,
+    "createdAt": "2025-09-14T10:24:37.277Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 0,
+    "totalIncome": 20800000,
+    "updatedAt": "2026-01-06T10:57:57.589Z"
+  },
+  {
+    "_id": "68c69cabc296f40e85e3ed47",
+    "projectId": "68c69b28f585853691e9f8e1",
+    "__v": 0,
+    "createdAt": "2025-09-14T10:44:59.602Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 2,
+    "totalIncome": 183850000,
+    "updatedAt": "2026-01-06T10:57:57.682Z"
+  },
+  {
+    "_id": "68c6addfc296f40e85e3fbc5",
+    "projectId": "68c6ada01ae59e374935eae1",
+    "__v": 0,
+    "createdAt": "2025-09-14T11:58:23.692Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 0,
+    "totalIncome": 4000000,
+    "updatedAt": "2026-01-06T10:57:57.779Z"
+  },
+  {
+    "_id": "68e52568f2b510b23b92eb2b",
+    "projectId": "68e524431729547c4b61e452",
+    "__v": 0,
+    "createdAt": "2025-10-07T14:36:24.815Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 0,
+    "totalIncome": 13624000,
+    "updatedAt": "2026-01-06T10:57:57.962Z"
+  },
+  {
+    "_id": "68e5257af2b510b23b92eb38",
+    "projectId": "68e523741729547c4b61e409",
+    "__v": 0,
+    "createdAt": "2025-10-07T14:36:42.842Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 1,
+    "totalIncome": 44332000,
+    "updatedAt": "2026-01-06T10:57:57.870Z"
+  },
+  {
+    "_id": "68e53513f2b510b23b92f839",
+    "projectId": "68e534d61729547c4b61ec83",
+    "__v": 0,
+    "createdAt": "2025-10-07T15:43:15.304Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 1,
+    "totalIncome": 97500000.00000001,
+    "updatedAt": "2026-01-06T10:57:58.708Z"
+  },
+  {
+    "_id": "68e5352bf2b510b23b92f851",
+    "projectId": "68e534cc1729547c4b61ec4d",
+    "__v": 0,
+    "createdAt": "2025-10-07T15:43:39.590Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 1,
+    "totalIncome": 95029500.00000001,
+    "updatedAt": "2026-01-06T10:57:58.616Z"
+  },
+  {
+    "_id": "68e5353df2b510b23b92f85e",
+    "projectId": "68e534c31729547c4b61ec17",
+    "__v": 0,
+    "createdAt": "2025-10-07T15:43:57.551Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 1,
+    "totalIncome": 52500000.00000001,
+    "updatedAt": "2026-01-06T10:57:58.521Z"
+  },
+  {
+    "_id": "68e5355cf2b510b23b92f87c",
+    "projectId": "68e534b81729547c4b61ebe1",
+    "__v": 0,
+    "createdAt": "2025-10-07T15:44:27.994Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 0,
+    "totalIncome": 20265000.000000004,
+    "updatedAt": "2026-01-06T10:57:58.430Z"
+  },
+  {
+    "_id": "68e5356cf2b510b23b92f889",
+    "projectId": "68e534b01729547c4b61ebab",
+    "__v": 0,
+    "createdAt": "2025-10-07T15:44:44.522Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 0,
+    "totalIncome": 7500000.000000001,
+    "updatedAt": "2026-01-06T10:57:58.334Z"
+  },
+  {
+    "_id": "68e5357bf2b510b23b92f896",
+    "projectId": "68e534a11729547c4b61eb75",
+    "__v": 0,
+    "createdAt": "2025-10-07T15:44:59.208Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 0,
+    "totalIncome": 12000000.000000002,
+    "updatedAt": "2026-01-06T10:57:58.242Z"
+  },
+  {
+    "_id": "68e5358df2b510b23b92f8a9",
+    "projectId": "68e534941729547c4b61eb3f",
+    "__v": 0,
+    "createdAt": "2025-10-07T15:45:17.453Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 0,
+    "totalIncome": 11400000.000000002,
+    "updatedAt": "2026-01-06T10:57:58.150Z"
+  },
+  {
+    "_id": "68e535acf2b510b23b92f8c7",
+    "projectId": "68e5347c1729547c4b61eb09",
+    "__v": 0,
+    "createdAt": "2025-10-07T15:45:48.342Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 1,
+    "totalIncome": 45337500.00000001,
+    "updatedAt": "2026-01-06T10:57:58.058Z"
+  },
+  {
+    "_id": "68f4c86ffac57cc55000b277",
+    "projectId": "68f4c7a4d74537c9799e813e",
+    "__v": 0,
+    "createdAt": "2025-10-19T11:15:59.879Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 3,
+    "totalIncome": 246024176.8,
+    "updatedAt": "2026-01-06T10:57:58.800Z"
+  },
+  {
+    "_id": "68f4cb22fac57cc55000b4a7",
+    "projectId": "68f4ca6fd74537c9799e8470",
+    "__v": 0,
+    "createdAt": "2025-10-19T11:27:30.057Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 2,
+    "totalIncome": 144329600,
+    "updatedAt": "2026-01-06T10:57:58.897Z"
+  },
+  {
+    "_id": "690c597cc2818fd6321f3e3a",
+    "projectId": "690c582e5f9b53a155d2746f",
+    "__v": 0,
+    "createdAt": "2025-11-06T08:17:00.220Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 1,
+    "totalIncome": 92250000.00000001,
+    "updatedAt": "2026-01-06T10:57:59.460Z"
+  },
+  {
+    "_id": "690c598ec2818fd6321f3e4e",
+    "projectId": "690c58265f9b53a155d27438",
+    "__v": 0,
+    "createdAt": "2025-11-06T08:17:18.804Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 1,
+    "totalIncome": 54450000.00000001,
+    "updatedAt": "2026-01-06T10:57:59.367Z"
+  },
+  {
+    "_id": "690c59a1c2818fd6321f3e5d",
+    "projectId": "690c581c5f9b53a155d27401",
+    "__v": 0,
+    "createdAt": "2025-11-06T08:17:37.562Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 0,
+    "totalIncome": 18075000.000000004,
+    "updatedAt": "2026-01-06T10:57:59.271Z"
+  },
+  {
+    "_id": "690c59b4c2818fd6321f3e71",
+    "projectId": "690c58115f9b53a155d273ca",
+    "__v": 0,
+    "createdAt": "2025-11-06T08:17:56.793Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 0,
+    "totalIncome": 9045000.000000002,
+    "updatedAt": "2026-01-06T10:57:59.179Z"
+  },
+  {
+    "_id": "690c5aa8c2818fd6321f3f37",
+    "projectId": "690c58065f9b53a155d27393",
+    "__v": 0,
+    "createdAt": "2025-11-06T08:22:00.418Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 0,
+    "totalIncome": 7500000.000000001,
+    "updatedAt": "2026-01-06T10:57:59.084Z"
+  },
+  {
+    "_id": "690c5ac4c2818fd6321f3f4e",
+    "projectId": "690c57ef5f9b53a155d2735c",
+    "__v": 0,
+    "createdAt": "2025-11-06T08:22:28.052Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 0,
+    "totalIncome": 20265000.000000004,
+    "updatedAt": "2026-01-06T10:57:58.991Z"
+  },
+  {
+    "_id": "69131682c2818fd63224e0f8",
+    "projectId": "691313b85f9b53a155d28e29",
+    "__v": 0,
+    "createdAt": "2025-11-11T10:57:06.257Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 6,
+    "totalIncome": 464096000,
+    "updatedAt": "2026-01-06T10:57:59.554Z"
+  },
+  {
+    "_id": "6913316ec2818fd63224f796",
+    "projectId": "69132f865f9b53a155d29a28",
+    "__v": 0,
+    "createdAt": "2025-11-11T12:51:58.946Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 1,
+    "totalIncome": 40000000,
+    "updatedAt": "2026-01-06T10:57:59.648Z"
+  },
+  {
+    "_id": "69133c8dc2818fd6322500e1",
+    "projectId": "69133b325f9b53a155d2a729",
+    "__v": 0,
+    "createdAt": "2025-11-11T13:39:25.503Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 8,
+    "totalIncome": 623880000,
+    "updatedAt": "2026-01-06T10:57:59.741Z"
+  },
+  {
+    "_id": "69352ab5d079d67c3bc9b084",
+    "projectId": "6935224bdd84ac16f0cb9b00",
+    "__v": 0,
+    "createdAt": "2025-12-07T07:20:21.288Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 1,
+    "totalIncome": 94500000,
+    "updatedAt": "2026-01-06T10:58:00.494Z"
+  },
+  {
+    "_id": "69352ae0d079d67c3bc9b0a6",
+    "projectId": "6935223ddd84ac16f0cb9ac9",
+    "__v": 0,
+    "createdAt": "2025-12-07T07:21:04.028Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 3,
+    "totalIncome": 229600000,
+    "updatedAt": "2026-01-06T10:58:00.396Z"
+  },
+  {
+    "_id": "69352af6d079d67c3bc9b0b9",
+    "projectId": "69352221dd84ac16f0cb9a92",
+    "__v": 0,
+    "createdAt": "2025-12-07T07:21:26.179Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 0,
+    "totalIncome": 19845000,
+    "updatedAt": "2026-01-06T10:58:00.302Z"
+  },
+  {
+    "_id": "69352b0cd079d67c3bc9b0cc",
+    "projectId": "69352213dd84ac16f0cb9a5b",
+    "__v": 0,
+    "createdAt": "2025-12-07T07:21:47.996Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 0,
+    "totalIncome": 15025499.999999998,
+    "updatedAt": "2026-01-06T10:58:00.209Z"
+  },
+  {
+    "_id": "69352b24d079d67c3bc9b0e0",
+    "projectId": "693521f5dd84ac16f0cb9a24",
+    "__v": 0,
+    "createdAt": "2025-12-07T07:22:12.470Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 1,
+    "totalIncome": 65274999.99999999,
+    "updatedAt": "2026-01-06T10:58:00.118Z"
+  },
+  {
+    "_id": "69352b3ad079d67c3bc9b0f3",
+    "projectId": "693521eadd84ac16f0cb99ed",
+    "__v": 0,
+    "createdAt": "2025-12-07T07:22:34.336Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 0,
+    "totalIncome": 17500000,
+    "updatedAt": "2026-01-06T10:58:00.025Z"
+  },
+  {
+    "_id": "69352b51d079d67c3bc9b106",
+    "projectId": "693521e0dd84ac16f0cb99b6",
+    "__v": 0,
+    "createdAt": "2025-12-07T07:22:57.276Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 6,
+    "totalIncome": 462050000,
+    "updatedAt": "2026-01-06T10:57:59.926Z"
+  },
+  {
+    "_id": "69352b6fd079d67c3bc9b120",
+    "projectId": "693521d6dd84ac16f0cb997f",
+    "__v": 0,
+    "createdAt": "2025-12-07T07:23:27.885Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 2,
+    "totalIncome": 127049999.99999999,
+    "updatedAt": "2026-01-06T10:57:59.833Z"
+  },
+  {
+    "_id": "693bc6d2d079d67c3bcf4f5e",
+    "projectId": "693bc564ec53e45bf2a94588",
+    "__v": 0,
+    "createdAt": "2025-12-12T07:40:02.363Z",
+    "lastCalculatedAt": "2025-12-12T08:14:53.252Z",
+    "taxPercentage": 2,
+    "totalIncome": 107092650,
+    "updatedAt": "2025-12-12T08:15:02.065Z"
+  },
+  {
+    "_id": "693bd10dd079d67c3bcf57f4",
+    "projectId": "693bcfacec53e45bf2a95ea8",
+    "__v": 0,
+    "createdAt": "2025-12-12T08:23:41.952Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 1,
+    "totalIncome": 115000000,
+    "updatedAt": "2026-01-06T10:58:00.588Z"
+  },
+  {
+    "_id": "693bd2c8d079d67c3bcf5970",
+    "projectId": "693bd154ec53e45bf2a96279",
+    "__v": 0,
+    "createdAt": "2025-12-12T08:31:04.331Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 2,
+    "totalIncome": 133865812.5,
+    "updatedAt": "2026-01-06T10:58:00.680Z"
+  },
+  {
+    "_id": "695ce8df4ebdae5c01decbec",
+    "projectId": "695ce74a6a3f0bcc98c1be33",
+    "__v": 0,
+    "createdAt": "2026-01-06T10:50:07.092Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 1,
+    "totalIncome": 104954100,
+    "updatedAt": "2026-01-06T10:58:00.954Z"
+  },
+  {
+    "_id": "695ce8f14ebdae5c01decbfa",
+    "projectId": "695ce7436a3f0bcc98c1bdfc",
+    "__v": 0,
+    "createdAt": "2026-01-06T10:50:25.510Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 0,
+    "totalIncome": 15000000,
+    "updatedAt": "2026-01-06T10:58:00.863Z"
+  },
+  {
+    "_id": "695ce9044ebdae5c01decc10",
+    "projectId": "695ce7376a3f0bcc98c1bdc5",
+    "__v": 0,
+    "createdAt": "2026-01-06T10:50:44.552Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 1,
+    "totalIncome": 55000000,
+    "updatedAt": "2026-01-06T10:58:00.770Z"
+  },
+  {
+    "_id": "695ce9e14ebdae5c01decccd",
+    "projectId": "695ce95b6a3f0bcc98c1c820",
+    "__v": 0,
+    "createdAt": "2026-01-06T10:54:25.391Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 1,
+    "totalIncome": 50000000,
+    "updatedAt": "2026-01-06T10:58:01.143Z"
+  },
+  {
+    "_id": "695cea194ebdae5c01decd03",
+    "projectId": "695ce9536a3f0bcc98c1c791",
+    "__v": 0,
+    "createdAt": "2026-01-06T10:55:21.391Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 1,
+    "totalIncome": 100500000,
+    "updatedAt": "2026-01-06T10:58:01.051Z"
+  },
+  {
+    "_id": "695ceab94ebdae5c01decd83",
+    "projectId": "695cea1a6a3f0bcc98c1ccc6",
+    "__v": 0,
+    "createdAt": "2026-01-06T10:58:01.236Z",
+    "lastCalculatedAt": "2026-01-06T10:57:53.462Z",
+    "taxPercentage": 7,
+    "totalIncome": 540000000,
+    "updatedAt": "2026-01-06T10:58:01.236Z"
+  }
+]
