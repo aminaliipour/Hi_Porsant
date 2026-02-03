@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
 
 // MongoDB Local Connection String
-const MONGODB_URI = "mongodb+srv://aminaliipour:7Fe12121@cluster0.ypjkwmj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const MONGODB_URI = "mongodb://root:pNjqJR1oro7I6aU6YjtXlSPg@denali.liara.cloud:31986/my-app?authSource=admin";
 
 if (!MONGODB_URI) {
   throw new Error("لطفاً متغیر محیطی MONGODB_URI را تنظیم کنید");
