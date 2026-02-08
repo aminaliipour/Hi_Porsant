@@ -30,6 +30,8 @@ interface EmployeeSalary {
   isPorsanti?: boolean
   salary1?: number
   salary2?: number
+  salary1Base?: number
+  insuranceDeduction?: boolean
   uniqueKey?: string
 }
 
@@ -181,6 +183,8 @@ export default function ReportTab() {
             isPorsanti: memberSalary?.isPorsanti || false,
             salary1: memberSalary?.salary1 || 0,
             salary2: memberSalary?.salary2 || 0,
+            salary1Base: memberSalary?.salary1Base || 133911989, // مبلغ حقوق پایه هر شخص
+            insuranceDeduction: memberSalary?.insuranceDeduction ?? true, // وضعیت کسر بیمه
             uniqueKey: `${member._id}-${index}`
           }
         })
@@ -200,15 +204,15 @@ export default function ReportTab() {
   }, 0);
   const totalBaseSalary = filteredEmployeeSalaries.reduce((sum: number, s: any) => {
     if (s.isPorsanti) {
-      const FIXED_SALARY_BASE = 133911989;
-      return sum + FIXED_SALARY_BASE;
+      const salary1Base = s.salary1Base || 133911989;
+      return sum + salary1Base;
     }
     return sum + (s.baseSalary || 0);
   }, 0);
   const totalEmployeeInsurance = filteredEmployeeSalaries.reduce((sum: number, s: any) => {
     if (s.isPorsanti) {
-      const FIXED_SALARY_BASE = 133911989;
-      return sum + Math.round(FIXED_SALARY_BASE * 0.07);
+      const salary1Base = s.salary1Base || 133911989;
+      return sum + Math.round(salary1Base * 0.07);
     }
     return sum + calculateEmployeeInsurance(s.baseSalary || 0);
   }, 0);
@@ -340,9 +344,9 @@ export default function ReportTab() {
                   if (salary.isPorsanti) {
                     const salary1 = salary.salary1 || 0;
                     const salary2 = salary.salary2 || 0;
-                    const FIXED_SALARY_BASE = 133911989;
-                    const salary1Insurance = Math.round(FIXED_SALARY_BASE * 0.07);
-                    const officeSalary1Insurance = Math.round(FIXED_SALARY_BASE * 0.23);
+                    const salary1Base = salary.salary1Base || 133911989;
+                    const salary1Insurance = Math.round(salary1Base * 0.07);
+                    const officeSalary1Insurance = Math.round(salary1Base * 0.23);
                     const totalSalary1Insurance = salary1Insurance + officeSalary1Insurance;
                     
                     // محاسبه پورسانت نهایی برای پورسانتی (حقوق دوم + اضافات - کسورات)
@@ -357,7 +361,7 @@ export default function ReportTab() {
                         <TableCell>
                           <div className="text-sm">
                             <div className="font-medium">حقوق اول: {salary1.toLocaleString()} ریال</div>
-                            <div className="text-xs text-gray-500 mt-1">({FIXED_SALARY_BASE.toLocaleString()} - 7%)</div>
+                            <div className="text-xs text-gray-500 mt-1">({salary1Base.toLocaleString()} - 7%)</div>
                           </div>
                         </TableCell>
                         <TableCell className="font-semibold text-green-600">
@@ -414,8 +418,8 @@ export default function ReportTab() {
                     <TableCell>
                       {employeeSalaries.reduce((sum, s) => {
                         if (s.isPorsanti) {
-                          const FIXED_SALARY_BASE = 133911989;
-                          return sum + FIXED_SALARY_BASE;
+                          const salary1Base = s.salary1Base || 133911989;
+                          return sum + salary1Base;
                         }
                         return sum + (s.baseSalary || 0);
                       }, 0).toLocaleString()} ریال
@@ -454,8 +458,8 @@ export default function ReportTab() {
                     <TableCell>
                       {employeeSalaries.reduce((sum, s) => {
                         if (s.isPorsanti) {
-                          const FIXED_SALARY_BASE = 133911989;
-                          return sum + Math.round(FIXED_SALARY_BASE * 0.07);
+                          const salary1Base = s.salary1Base || 133911989;
+                          return sum + Math.round(salary1Base * 0.07);
                         }
                         return sum + calculateEmployeeInsurance(s.baseSalary || 0);
                       }, 0).toLocaleString()} ریال
@@ -463,8 +467,8 @@ export default function ReportTab() {
                     <TableCell>
                       {employeeSalaries.reduce((sum, s) => {
                         if (s.isPorsanti) {
-                          const FIXED_SALARY_BASE = 133911989;
-                          return sum + Math.round(FIXED_SALARY_BASE * 0.23);
+                          const salary1Base = s.salary1Base || 133911989;
+                          return sum + Math.round(salary1Base * 0.23);
                         }
                         return sum + calculateOfficeInsurance(s.baseSalary || 0);
                       }, 0).toLocaleString()} ریال
@@ -472,8 +476,8 @@ export default function ReportTab() {
                     <TableCell className="font-semibold">
                       {employeeSalaries.reduce((sum, s) => {
                         if (s.isPorsanti) {
-                          const FIXED_SALARY_BASE = 133911989;
-                          return sum + Math.round(FIXED_SALARY_BASE * 0.30);
+                          const salary1Base = s.salary1Base || 133911989;
+                          return sum + Math.round(salary1Base * 0.30);
                         }
                         return sum + calculateTotalInsurance(s.baseSalary || 0);
                       }, 0).toLocaleString()} ریال

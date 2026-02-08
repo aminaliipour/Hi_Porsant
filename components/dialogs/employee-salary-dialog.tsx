@@ -53,6 +53,7 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
     isPorsanti: false, // حالت پورسانتی
     salary1: 0, // حقوق اول
     salary2: 0, // حقوق دوم
+    salary1Base: 133911989, // مبلغ حقوق پایه - هر شخص مبلغ خودش را دارد
   })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -126,6 +127,12 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
           salary2Value = calculated.salary2
         }
         
+        // بارگذاری مبلغ حقوق پایه و وضعیت کسر بیمه از دیتابیس
+        const loadedSalary1Base = latestSalary.salary1Base || 133911989
+        const loadedInsuranceDeduction = latestSalary.insuranceDeduction ?? true
+        setBaseSalaryAmount(loadedSalary1Base)
+        setInsuranceDeduction(loadedInsuranceDeduction)
+        
         setSalary({
           baseSalary: latestSalary.baseSalary || 0,
           additions: Array.isArray(latestSalary.additions) ? latestSalary.additions : [],
@@ -135,6 +142,7 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
           isPorsanti: latestSalary.isPorsanti || false,
           salary1: salary1Value,
           salary2: salary2Value,
+          salary1Base: loadedSalary1Base, // بارگذاری مبلغ حقوق پایه
         })
       } else {
         setSalary({
@@ -146,6 +154,7 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
           isPorsanti: false,
           salary1: 0,
           salary2: 0,
+          salary1Base: 133911989, // مقدار پیش‌فرض
         })
       }
     } catch (error) {
@@ -193,6 +202,7 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
           const { salary1, salary2 } = calculatePorsantiSalaries(totalIncome)
           newSalary.salary1 = salary1
           newSalary.salary2 = salary2
+          newSalary.salary1Base = baseSalaryAmount // ذخیره مقدار فعلی
         } else {
           // اگر غیرفعال شد، صفر کن
           newSalary.salary1 = 0
@@ -280,6 +290,8 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
           isPorsanti: salary.isPorsanti, // حالت پورسانتی
           salary1: salary.salary1, // حقوق اول
           salary2: salary.salary2, // حقوق دوم
+          salary1Base: salary.salary1Base, // مبلغ حقوق پایه - هر شخص مبلغ خودش
+          insuranceDeduction: insuranceDeduction, // وضعیت کسر بیمه
           archiveId,
         }),
       })
@@ -371,7 +383,8 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
                             ...prev,
                             isPorsanti: true,
                             salary1,
-                            salary2
+                            salary2,
+                            salary1Base: baseSalaryAmount, // ذخیره مقدار فعلی
                           }))
                         } else {
                           setSalary(prev => ({
@@ -400,7 +413,8 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
                           setSalary(prev => ({
                             ...prev,
                             salary1,
-                            salary2
+                            salary2,
+                            salary1Base: numValue, // ذخیره در state برای ارسال به دیتابیس
                           }))
                         }}
                         placeholder="مبلغ حقوق پایه"
@@ -427,7 +441,8 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
                           setSalary(prev => ({
                             ...prev,
                             salary1,
-                            salary2
+                            salary2,
+                            salary1Base: baseSalaryAmount, // حفظ مقدار فعلی
                           }))
                         }}
                       />
@@ -465,11 +480,11 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
 
                       <div className="p-4 border rounded-lg bg-yellow-50">
                         <label className="font-medium text-lg block mb-2">حقوق دوم</label>
-                        {getTotalCommission() < salary.salary1Base ? (
+                        {getTotalCommission() < baseSalaryAmount ? (
                           <div className="text-center py-2 text-orange-600">
                             <p className="font-medium">مجموع درآمد کمتر از حقوق پایه است</p>
                             <p className="text-sm mt-1">
-                              کمبود: {new Intl.NumberFormat('fa-IR').format(salary.salary1Base - getTotalCommission())} ریال
+                              کمبود: {new Intl.NumberFormat('fa-IR').format(baseSalaryAmount - getTotalCommission())} ریال
                             </p>
                           </div>
                         ) : (

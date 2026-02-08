@@ -75,6 +75,8 @@ export async function POST(request: Request) {
       isPorsanti: body.isPorsanti || false, // حالت پورسانتی
       salary1: body.salary1 || 0, // حقوق اول
       salary2: body.salary2 || 0, // حقوق دوم
+      salary1Base: body.salary1Base || 133911989, // مبلغ حقوق پایه - هر شخص مبلغ خودش
+      insuranceDeduction: body.insuranceDeduction ?? true, // وضعیت کسر بیمه
       date: body.date || new Date().toISOString().split("T")[0],
       ...(findArchiveId && { archiveId: findArchiveId }),
     }

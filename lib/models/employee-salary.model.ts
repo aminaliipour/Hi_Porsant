@@ -10,6 +10,8 @@ export interface IEmployeeSalary extends Document {
   isPorsanti?: boolean // حالت پورسانتی
   salary1?: number // حقوق اول (133911989 منهای 7%)
   salary2?: number // حقوق دوم (مابه‌التفاوت درآمد)
+  salary1Base?: number // مبلغ حقوق پایه برای محاسبه پورسانتی (هر شخص مبلغ خودش را دارد)
+  insuranceDeduction?: boolean // کسر بیمه 7% - true یعنی کسر میشود
   date: string
   archiveId?: mongoose.Types.ObjectId // اضافه شد
   createdAt: Date
@@ -39,6 +41,8 @@ const EmployeeSalarySchema: Schema = new Schema(
     isPorsanti: { type: Boolean, default: false }, // حالت پورسانتی
     salary1: { type: Number, default: 0 }, // حقوق اول
     salary2: { type: Number, default: 0 }, // حقوق دوم
+    salary1Base: { type: Number, default: 133911989 }, // مبلغ حقوق پایه برای محاسبه پورسانتی
+    insuranceDeduction: { type: Boolean, default: true }, // کسر بیمه
     date: { type: String, required: true },
     archiveId: { type: Schema.Types.ObjectId, ref: "Archive" }, // اضافه شد
   },
