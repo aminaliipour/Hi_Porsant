@@ -54,6 +54,7 @@
     "mongoose": "latest",
     "next": "^14.2.28",
     "next-themes": "latest",
+    "pg": "^8.13.1",
     "react": "^18.2.0",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18.2.0",

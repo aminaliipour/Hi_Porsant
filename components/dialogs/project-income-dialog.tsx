@@ -288,7 +288,8 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
               // اگر حالت متغیر است، مقدار خام را بازسازی کن
               // در حالت ثابت، مقدار ذخیره شده همان مقدار خام است (برای بخش‌ها) یا مقدار نهایی (برای آیتم‌ها)
               if (isVariableMode && sectionName && latestPercentages[sectionName as keyof typeof latestPercentages]) {
-                const systemPercentage = latestPercentages[sectionName as keyof typeof latestPercentages] || 0
+                // استفاده از getProjectPercentage برای درصد صحیح (سیستم مخصوص یا اصلی)
+                const systemPercentage = getProjectPercentage(sectionName)
                 // بازسازی مقدار خام: finalValue = rawValue * (1 - systemPercentage/100)
                 // پس rawValue = finalValue / (1 - systemPercentage/100)
                 const rawValue = systemPercentage > 0 

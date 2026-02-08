@@ -42,6 +42,8 @@ interface EmployeeSalaryDialogProps {
 
 export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeSalaryDialogProps) {
   const [assignments, setAssignments] = useState<UserAssignment[]>([])
+  const [baseSalaryAmount, setBaseSalaryAmount] = useState(133911989) // مقدار قابل تغییر حقوق پایه
+  const [insuranceDeduction, setInsuranceDeduction] = useState(true) // کسر بیمه به صورت پیش‌فرض فعال
   const [salary, setSalary] = useState({
     baseSalary: 0,
     additions: [] as Array<{title: string, amount: number}>, // تفصیلی شد
@@ -158,16 +160,14 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
     }
   }
 
-  const FIXED_SALARY_BASE = 133911989 // مقدار ثابت حقوق پایه
-
   const calculatePorsantiSalaries = (totalIncome: number) => {
-    const salary1Base = FIXED_SALARY_BASE
-    const salary1Insurance = Math.round(salary1Base * 0.07)
+    const salary1Base = baseSalaryAmount
+    const salary1Insurance = !insuranceDeduction ? Math.round(salary1Base * 0.07) : 0
     const salary1 = salary1Base - salary1Insurance
     
     let salary2 = 0
-    if (totalIncome > salary1) {
-      salary2 = totalIncome - salary1
+    if (totalIncome > salary1Base) {
+      salary2 = totalIncome - salary1Base
     }
     
     return { salary1, salary2, salary1Base }
@@ -385,6 +385,55 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
                     />
                   </div>
 
+                  {/* فیلد ورودی حقوق پایه - فقط در حالت پورسانتی */}
+                  {salary.isPorsanti && (
+                    <div className="space-y-2 p-4 border rounded-lg bg-purple-50">
+                      <label className="font-medium">مبلغ حقوق پایه:</label>
+                      <NumberInput
+                        value={baseSalaryAmount.toString()}
+                        onChange={(value) => {
+                          const numValue = parseInt(value) || 0
+                          setBaseSalaryAmount(numValue)
+                          // محاسبه مجدد حقوق اول و دوم
+                          const totalIncome = getTotalCommission()
+                          const { salary1, salary2 } = calculatePorsantiSalaries(totalIncome)
+                          setSalary(prev => ({
+                            ...prev,
+                            salary1,
+                            salary2
+                          }))
+                        }}
+                        placeholder="مبلغ حقوق پایه"
+                      />
+                    </div>
+                  )}
+
+                  {/* سوئیچ کسر بیمه - فقط در حالت پورسانتی */}
+                  {salary.isPorsanti && (
+                    <div className="flex items-center justify-between p-4 border rounded-lg bg-orange-50">
+                      <div>
+                        <label className="font-medium text-lg">کسر بیمه (7%)</label>
+                        <p className="text-sm text-gray-600">
+                          کسر 7% بیمه از حقوق پایه
+                        </p>
+                      </div>
+                      <Switch
+                        checked={insuranceDeduction}
+                        onCheckedChange={(checked) => {
+                          setInsuranceDeduction(checked)
+                          // محاسبه مجدد حقوق اول و دوم
+                          const totalIncome = getTotalCommission()
+                          const { salary1, salary2 } = calculatePorsantiSalaries(totalIncome)
+                          setSalary(prev => ({
+                            ...prev,
+                            salary1,
+                            salary2
+                          }))
+                        }}
+                      />
+                    </div>
+                  )}
+
                   {salary.isPorsanti ? (
                     // نمایش حقوق اول و دوم برای حالت پورسانتی
                     <div className="space-y-4">
@@ -394,15 +443,17 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
                           <div className="flex justify-between">
                             <span className="text-sm">مبلغ پایه:</span>
                             <span className="font-medium">
-                              {new Intl.NumberFormat('fa-IR').format(FIXED_SALARY_BASE)} ریال
+                              {new Intl.NumberFormat('fa-IR').format(baseSalaryAmount)} ریال
                             </span>
                           </div>
-                          <div className="flex justify-between text-red-600">
-                            <span className="text-sm">کسر بیمه (7%):</span>
-                            <span className="font-medium">
-                              {new Intl.NumberFormat('fa-IR').format(Math.round(FIXED_SALARY_BASE * 0.07))} ریال
-                            </span>
-                          </div>
+                          {insuranceDeduction && (
+                            <div className="flex justify-between text-red-600">
+                              <span className="text-sm">کسر بیمه (7%):</span>
+                              <span className="font-medium">
+                                {new Intl.NumberFormat('fa-IR').format(Math.round(baseSalaryAmount * 0.07))} ریال
+                              </span>
+                            </div>
+                          )}
                           <div className="flex justify-between pt-2 border-t border-green-300">
                             <span className="font-bold">حقوق اول خالص:</span>
                             <span className="font-bold text-green-700">
@@ -414,11 +465,11 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
 
                       <div className="p-4 border rounded-lg bg-yellow-50">
                         <label className="font-medium text-lg block mb-2">حقوق دوم</label>
-                        {getTotalCommission() < salary.salary1 ? (
+                        {getTotalCommission() < salary.salary1Base ? (
                           <div className="text-center py-2 text-orange-600">
-                            <p className="font-medium">مجموع درآمد کمتر از حقوق اول خالص است</p>
+                            <p className="font-medium">مجموع درآمد کمتر از حقوق پایه است</p>
                             <p className="text-sm mt-1">
-                              کمبود: {new Intl.NumberFormat('fa-IR').format(salary.salary1 - getTotalCommission())} ریال
+                              کمبود: {new Intl.NumberFormat('fa-IR').format(salary.salary1Base - getTotalCommission())} ریال
                             </p>
                           </div>
                         ) : (
@@ -430,9 +481,9 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
                               </span>
                             </div>
                             <div className="flex justify-between">
-                              <span className="text-sm">منهای حقوق اول خالص:</span>
+                              <span className="text-sm">منهای حقوق پایه:</span>
                               <span className="font-medium">
-                                {new Intl.NumberFormat('fa-IR').format(salary.salary1)} ریال
+                                {new Intl.NumberFormat('fa-IR').format(baseSalaryAmount)} ریال
                               </span>
                             </div>
                             <div className="flex justify-between pt-2 border-t border-yellow-300">
