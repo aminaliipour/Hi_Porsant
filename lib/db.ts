@@ -1,9 +1,7 @@
 import mongoose from "mongoose"
 
-// MongoDB Local Connection String
-// const MONGODB_URI = "mongodb+srv://aminaliipour:7Fe12121@cluster0.ypjkwmj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-const MONGODB_URI = "mongodb://root:pNjqJR1oro7I6aU6YjtXlSPg@denali.liara.cloud:31986/my-app?authSource=admin";
-// const MONGODB_URI = "mongodb://localhost:27017/salam";
+// const MONGODB_URI = "mongodb://root:pNjqJR1oro7I6aU6YjtXlSPg@denali.liara.cloud:31986/my-app?authSource=admin";
+const MONGODB_URI = "mongodb://localhost:27017/salam";
 
 if (!MONGODB_URI) {
   throw new Error("لطفاً متغیر محیطی MONGODB_URI را تنظیم کنید");
@@ -14,6 +12,14 @@ if (!MONGODB_URI) {
  * in development. This prevents connections growing exponentially
  * during API Route usage.
  */
+
+declare global {
+  var mongoose: {
+    conn: typeof import("mongoose") | null;
+    promise: Promise<typeof import("mongoose")> | null;
+  };
+}
+
 let cached = global.mongoose
 
 if (!cached) {
@@ -40,17 +46,3 @@ async function dbConnect() {
 }
 
 export default dbConnect
-
-// Extend the NodeJS.Global interface to include mongoose
-declare global {
-  namespace NodeJS {
-    interface Global {
-      mongoose: {
-        conn: typeof mongoose | null;
-        promise: Promise<typeof mongoose> | null;
-      };
-    }
-  }
-}
-
-export {}; // Ensure this file is treated as a module
