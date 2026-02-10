@@ -12,6 +12,7 @@ import { MoreVertical, Trash, Edit, ClipboardList, Plus } from "lucide-react"
 import { TeamMemberDetailsDialog } from "@/components/dialogs/team-member-details-dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 interface TeamMember {
   _id: string
@@ -23,6 +24,7 @@ interface TeamMember {
   email?: string
   education?: string
   address?: string
+  cardNumber?: string
 }
 
 interface Assignment {
@@ -50,6 +52,7 @@ export default function TeamTab() {
     email: "",
     education: "",
     address: "",
+    cardNumber: "",
   })
   const { toast } = useToast()
 
@@ -195,6 +198,7 @@ export default function TeamTab() {
         email: "",
         education: "",
         address: "",
+        cardNumber: "",
       })
 
       setIsAddDialogOpen(false)
@@ -287,6 +291,12 @@ export default function TeamTab() {
                       <span className="text-sm text-gray-500 dark:text-gray-400">شماره تماس:</span>
                       <span className="text-sm text-gray-700 dark:text-gray-300">{member.phoneNumber}</span>
                     </div>
+                    {member.cardNumber && (
+                      <div className="flex justify-between">
+                        <span className="text-sm text-gray-500 dark:text-gray-400">شماره کارت:</span>
+                        <span className="text-sm text-gray-700 dark:text-gray-300 font-mono">{member.cardNumber}</span>
+                      </div>
+                    )}
                     <Button
                       variant="outline"
                       className="w-full mt-2 border-yellow-200 text-yellow-700 hover:bg-yellow-50 dark:border-yellow-900/30 dark:text-yellow-400 dark:hover:bg-yellow-900/20 btn-hover"
@@ -369,6 +379,18 @@ export default function TeamTab() {
             </div>
 
             <div className="space-y-2 md:col-span-2">
+              <Label htmlFor="cardNumber">شماره کارت</Label>
+              <Input 
+                id="cardNumber" 
+                name="cardNumber" 
+                value={newMember.cardNumber} 
+                onChange={handleInputChange}
+                placeholder="****-****-****-****"
+                maxLength={19}
+              />
+            </div>
+
+            <div className="space-y-2 md:col-span-2">
               <Label htmlFor="address">آدرس</Label>
               <Input id="address" name="address" value={newMember.address} onChange={handleInputChange} />
             </div>
@@ -386,7 +408,7 @@ export default function TeamTab() {
       {/* دیالوگ نمایش وظایف */}
       {selectedMember && (
         <Dialog open={isAssignmentsDialogOpen} onOpenChange={setIsAssignmentsDialogOpen}>
-          <DialogContent className="max-w-3xl">
+          <DialogContent className="max-w-3xl max-h-[90vh]">
             <DialogHeader>
               <DialogTitle>وظایف اختصاص داده شده به {selectedMember.fullName}</DialogTitle>
             </DialogHeader>
@@ -396,34 +418,36 @@ export default function TeamTab() {
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
               </div>
             ) : assignments.length > 0 ? (
-              <div className="space-y-4">
-                {assignments.map((assignment, index) => (
-                  <Card key={index}>
-                    <CardContent className="p-4">
-                      <div className="space-y-2">
-                        <div className="flex justify-between">
-                          <span className="font-medium">پروژه:</span>
-                          <span>{assignment.projectName}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="font-medium">بخش:</span>
-                          <span>{assignment.sectionName}</span>
-                        </div>
-                        {assignment.itemName && (
+              <ScrollArea className="max-h-[calc(90vh-12rem)] pr-4">
+                <div className="space-y-4">
+                  {assignments.map((assignment, index) => (
+                    <Card key={index}>
+                      <CardContent className="p-4">
+                        <div className="space-y-2">
                           <div className="flex justify-between">
-                            <span className="font-medium">آیتم:</span>
-                            <span>{assignment.itemName}</span>
+                            <span className="font-medium">پروژه:</span>
+                            <span>{assignment.projectName}</span>
                           </div>
-                        )}
-                        <div className="flex justify-between">
-                          <span className="font-medium">فیلد:</span>
-                          <span>{assignment.fieldName}</span>
+                          <div className="flex justify-between">
+                            <span className="font-medium">بخش:</span>
+                            <span>{assignment.sectionName}</span>
+                          </div>
+                          {assignment.itemName && (
+                            <div className="flex justify-between">
+                              <span className="font-medium">آیتم:</span>
+                              <span>{assignment.itemName}</span>
+                            </div>
+                          )}
+                          <div className="flex justify-between">
+                            <span className="font-medium">فیلد:</span>
+                            <span>{assignment.fieldName}</span>
+                          </div>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </ScrollArea>
             ) : (
               <div className="text-center py-8">
                 <p className="text-gray-500">هیچ وظیفه‌ای به این عضو اختصاص داده نشده است.</p>

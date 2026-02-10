@@ -3,6 +3,7 @@ import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
 import type { Metadata } from "next"
+import { morabbaFont } from "@/lib/fonts"
 
 export const metadata: Metadata = {
   title: "HiPorsant - سیستم مدیریت پروژه",
@@ -20,8 +21,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="fa" dir="rtl">
-      <body className="min-h-screen bg-background font-[Morabba] antialiased">
+    <html lang="fa" dir="rtl" className={morabbaFont.variable}>
+      <body className={`min-h-screen bg-background antialiased ${morabbaFont.className}`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           {children}
           <Toaster />

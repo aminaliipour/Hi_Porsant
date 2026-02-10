@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Input } from "@/components/ui/input"
 import { formatNumber } from "@/lib/utils"
 
@@ -29,17 +29,29 @@ export function NumberInput({
   name,
 }: NumberInputProps) {
   const [displayValue, setDisplayValue] = useState("")
+  const [isFocused, setIsFocused] = useState(false)
+  const isUpdatingFromProp = useRef(false)
 
-  // تنظیم مقدار اولیه و بروزرسانی با تغییر value
+  // تنظیم مقدار اولیه و بروزرسانی با تغییر value از بیرون
   useEffect(() => {
-    if (value !== undefined && value !== null && value !== "") {
-      setDisplayValue(formatNumber(value))
-    } else {
-      setDisplayValue("")
+    // فقط اگر input focus نداشته باشد، مقدار را از prop به‌روز کن
+    if (!isFocused) {
+      if (value !== undefined && value !== null && value !== "") {
+        isUpdatingFromProp.current = true
+        setDisplayValue(formatNumber(value))
+      } else {
+        setDisplayValue("")
+      }
     }
-  }, [value])
+  }, [value, isFocused])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // اگر در حال به‌روزرسانی از prop هستیم، از handleChange جلوگیری کن
+    if (isUpdatingFromProp.current) {
+      isUpdatingFromProp.current = false
+      return
+    }
+
     const input = e.target.value
     
     // حذف همه کاراکترهای غیر عددی به جز نقطه و منفی
@@ -66,12 +78,27 @@ export function NumberInput({
     }
   }
 
+  const handleFocus = () => {
+    setIsFocused(true)
+  }
+
+  const handleBlur = () => {
+    setIsFocused(false)
+    // فرمت نهایی هنگام از دست دادن focus
+    if (displayValue && displayValue !== "-") {
+      const formatted = formatNumber(displayValue)
+      setDisplayValue(formatted)
+    }
+  }
+
   return (
     <Input
       type="text"
       inputMode="numeric"
       value={displayValue}
       onChange={handleChange}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
       className={className}
       placeholder={placeholder}
       disabled={disabled}

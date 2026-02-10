@@ -45,6 +45,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
         email: body.email,
         education: body.education,
         address: body.address,
+        cardNumber: body.cardNumber,
       },
       { new: true },
     )

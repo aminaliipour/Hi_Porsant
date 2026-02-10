@@ -22,6 +22,7 @@ interface TeamMember {
   email?: string
   education?: string
   address?: string
+  cardNumber?: string
 }
 
 interface Assignment {
@@ -50,13 +51,20 @@ export function TeamMemberDetailsDialog({ member, open, onOpenChange }: TeamMemb
     email: "",
     education: "",
     address: "",
+    cardNumber: "",
   })
   const [isEditing, setIsEditing] = useState(false)
   const { toast } = useToast()
 
   useEffect(() => {
     if (open && member) {
-      setMemberData(member)
+      setMemberData({
+        ...member,
+        email: member.email || "",
+        education: member.education || "",
+        address: member.address || "",
+        cardNumber: member.cardNumber || "",
+      })
       fetchAssignments()
     }
   }, [open, member]) // Removing setMemberData and fetchAssignments from dependencies
@@ -230,7 +238,7 @@ export function TeamMemberDetailsDialog({ member, open, onOpenChange }: TeamMemb
                           id="email"
                           name="email"
                           type="email"
-                          value={memberData.email}
+                          value={memberData.email || ""}
                           onChange={handleInputChange}
                           className="h-9"
                         />
@@ -242,9 +250,22 @@ export function TeamMemberDetailsDialog({ member, open, onOpenChange }: TeamMemb
                       <Input
                         id="education"
                         name="education"
-                        value={memberData.education}
+                        value={memberData.education || ""}
                         onChange={handleInputChange}
                         className="h-9"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="cardNumber" className="text-sm">شماره کارت</Label>
+                      <Input
+                        id="cardNumber"
+                        name="cardNumber"
+                        value={memberData.cardNumber || ""}
+                        onChange={handleInputChange}
+                        className="h-9"
+                        placeholder="****-****-****-****"
+                        maxLength={19}
                       />
                     </div>
 
@@ -253,7 +274,7 @@ export function TeamMemberDetailsDialog({ member, open, onOpenChange }: TeamMemb
                       <Input
                         id="address"
                         name="address"
-                        value={memberData.address}
+                        value={memberData.address || ""}
                         onChange={handleInputChange}
                         className="h-9"
                       />
@@ -291,6 +312,12 @@ export function TeamMemberDetailsDialog({ member, open, onOpenChange }: TeamMemb
                       <div className="flex justify-between items-center py-1 border-b">
                         <span className="text-muted-foreground">تحصیلات:</span>
                         <span>{memberData.education}</span>
+                      </div>
+                    )}
+                    {memberData.cardNumber && (
+                      <div className="flex justify-between items-center py-1 border-b">
+                        <span className="text-muted-foreground">شماره کارت:</span>
+                        <span className="font-mono">{memberData.cardNumber}</span>
                       </div>
                     )}
                     {memberData.address && (

@@ -36,6 +36,7 @@ export async function POST(request: Request) {
       email: body.email,
       education: body.education,
       address: body.address,
+      cardNumber: body.cardNumber,
     })
 
     await member.save()

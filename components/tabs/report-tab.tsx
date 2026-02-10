@@ -323,7 +323,7 @@ export default function ReportTab() {
                   <TableHead className="text-right">حقوق پایه</TableHead>
                   <TableHead className="text-right">حقوق پایه نهایی</TableHead>
                   <TableHead className="text-right">پورسانت</TableHead>
-                  <TableHead className="text-right">پورسانت نهایی</TableHead>
+                  <TableHead className="text-right">حقوق دوم</TableHead>
                   <TableHead className="text-right">حق بیمه (7%)</TableHead>
                   <TableHead className="text-right">حق بیمه دفتر (23%)</TableHead>
                   <TableHead className="text-right">حق بیمه کل</TableHead>
@@ -349,8 +349,8 @@ export default function ReportTab() {
                     const officeSalary1Insurance = Math.round(salary1Base * 0.23);
                     const totalSalary1Insurance = salary1Insurance + officeSalary1Insurance;
                     
-                    // محاسبه پورسانت نهایی برای پورسانتی (حقوق دوم + اضافات - کسورات)
-                    const finalCommission = salary2 + totalAdditions - totalDeductions;
+                    // محاسبه حقوق دوم (پورسانت نهایی) برای پورسانتی (حقوق دوم + اضافات - کسورات)
+                    const finalSalary2 = salary2 + totalAdditions - totalDeductions;
 
                     return (
                       <TableRow key={salary.uniqueKey || `${salary.employeeId}-${index}`} className="bg-blue-50 dark:bg-blue-900/20">
@@ -369,7 +369,7 @@ export default function ReportTab() {
                         </TableCell>
                         <TableCell>
                           <div className="text-sm">
-                            <div>حقوق دوم: {salary2.toLocaleString()} ریال</div>
+                            <div>مجموع پورسانت: {commission.toLocaleString()} ریال</div>
                             {commission < salary1 && (
                               <div className="text-xs text-orange-500 mt-1">
                                 کمبود: {(salary1 - commission).toLocaleString()}
@@ -378,7 +378,7 @@ export default function ReportTab() {
                           </div>
                         </TableCell>
                         <TableCell className="font-semibold text-blue-600">
-                          {finalCommission.toLocaleString()} ریال
+                          {finalSalary2.toLocaleString()} ریال
                         </TableCell>
                         <TableCell>{salary1Insurance.toLocaleString()} ریال</TableCell>
                         <TableCell>{officeSalary1Insurance.toLocaleString()} ریال</TableCell>
@@ -436,9 +436,6 @@ export default function ReportTab() {
                     </TableCell>
                     <TableCell>
                       {employeeSalaries.reduce((sum, s) => {
-                        if (s.isPorsanti) {
-                          return sum + (s.salary2 || 0);
-                        }
                         return sum + (s.commission || 0);
                       }, 0).toLocaleString()} ریال
                     </TableCell>

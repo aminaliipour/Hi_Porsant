@@ -20,7 +20,7 @@ const config = {
     },
     extend: {
       fontFamily: {
-        sans: ["var(--font-vazirmatn)"],
+        sans: ["var(--font-morabba)", "Vazirmatn", "Tahoma", "Arial", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",

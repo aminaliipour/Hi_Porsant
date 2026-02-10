@@ -66,6 +66,24 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
     }
   }, [open, employee?._id])
 
+  // محاسبه خودکار حقوق اول و دوم هنگام تغییر مبلغ پایه یا وضعیت بیمه
+  useEffect(() => {
+    if (salary.isPorsanti && assignments.length > 0) {
+      const totalIncome = getTotalCommission()
+      const calculated = calculatePorsantiSalaries(totalIncome)
+      
+      // فقط اگر مقادیر تغییر کرده باشند، state را آپدیت کن
+      if (calculated.salary1 !== salary.salary1 || calculated.salary2 !== salary.salary2) {
+        setSalary(prev => ({
+          ...prev,
+          salary1: calculated.salary1,
+          salary2: calculated.salary2,
+          salary1Base: baseSalaryAmount,
+        }))
+      }
+    }
+  }, [baseSalaryAmount, insuranceDeduction])
+
   const fetchData = async () => {
     try {
       setLoading(true)
@@ -171,7 +189,7 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
 
   const calculatePorsantiSalaries = (totalIncome: number) => {
     const salary1Base = baseSalaryAmount
-    const salary1Insurance = !insuranceDeduction ? Math.round(salary1Base * 0.07) : 0
+    const salary1Insurance = insuranceDeduction ? Math.round(salary1Base * 0.07) : 0
     const salary1 = salary1Base - salary1Insurance
     
     let salary2 = 0
