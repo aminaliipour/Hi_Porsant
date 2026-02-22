@@ -9,7 +9,6 @@ interface MobileBottomNavProps {
 
 const tabs: { value: string; label: string; icon: any }[] = [
   { value: "projects", label: "پروژه", icon: Home },
-  { value: "team", label: "تیم", icon: Users2 },
   { value: "commission", label: "پورسانت", icon: Percent },
   { value: "system", label: "سیستم", icon: Settings2 },
   { value: "salary", label: "حقوق", icon: Wallet },
@@ -20,7 +19,7 @@ const tabs: { value: string; label: string; icon: any }[] = [
 export function MobileBottomNav({ activeTab, setActiveTab }: MobileBottomNavProps) {
   return (
     <nav className="md:hidden fixed bottom-0 inset-x-0 z-50 bg-background/95 backdrop-blur border-t shadow-lg">
-      <div className="grid grid-cols-7 *:flex *:items-center *:justify-center">
+      <div className="grid grid-cols-6 *:flex *:items-center *:justify-center">
         {tabs.map(t => {
           const Icon = t.icon
           const active = activeTab === t.value

@@ -1,4 +1,7 @@
 import mongoose, { Schema, type Document } from "mongoose"
+import "./User"
+import "./project.model"
+import "./archive.model"
 
 export interface IProjectSection extends Document {
   projectId: mongoose.Types.ObjectId
@@ -14,7 +17,7 @@ const ProjectSectionSchema: Schema = new Schema(
   {
     projectId: { type: Schema.Types.ObjectId, ref: "Project", required: true },
     sectionName: { type: String, required: true },
-    assignedMemberId: { type: Schema.Types.ObjectId, ref: "TeamMember" },
+    assignedMemberId: { type: Schema.Types.ObjectId, ref: "User" },
     assignedMembers: { type: Map, of: Schema.Types.ObjectId, default: {} },
     isActive: { type: Boolean, default: true }, // اضافه کردن فیلد فعال بودن بخش
     archiveId: { type: Schema.Types.ObjectId, ref: "Archive" }, // اضافه شد

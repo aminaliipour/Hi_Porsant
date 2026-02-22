@@ -1,8 +1,21 @@
 import { NextResponse } from "next/server"
 import dbConnect from "@/lib/db"
 import { TeamMember } from "@/lib/models"
+import User from "@/lib/models/User"
 import fs from "fs"
 import path from "path"
+
+interface TempFile {
+  nationalCode: string
+  fileName: string
+  pdfData: string
+  employeeName: string
+  uploadTime: Date
+}
+
+declare global {
+  var tempFiles: TempFile[] | undefined
+}
 
 export async function POST(request: Request) {
   console.log('Upload payslip API called')
@@ -36,8 +49,10 @@ export async function POST(request: Request) {
 
     // اتصال به دیتابیس برای دریافت کد ملی
     await dbConnect()
-    const employee = await TeamMember.findById(employeeId)
-    
+    const userEmployee = await User.findById(employeeId)
+    const teamEmployee = userEmployee ? null : await TeamMember.findById(employeeId)
+    const employee = userEmployee || teamEmployee
+
     if (!employee) {
       return NextResponse.json(
         { error: "کارمند یافت نشد" },
@@ -122,23 +137,18 @@ export async function POST(request: Request) {
       } else {
         // اجرا در محیط development - استفاده از temp storage
         console.log('Running in development - Using temp storage')
-        
-        const tempResponse = await fetch(`${request.headers.get('origin') || 'http://localhost:3000'}/api/download-payslips`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            nationalCode: employee.nationalCode,
-            fileName: fileName,
-            pdfData: pdfData,
-            employeeName: employee.fullName
-          })
-        })
 
-        if (!tempResponse.ok) {
-          throw new Error(`Temp storage failed: ${tempResponse.status}`)
+        if (!global.tempFiles) {
+          global.tempFiles = []
         }
+
+        global.tempFiles.push({
+          nationalCode: employee.nationalCode,
+          fileName: fileName,
+          pdfData: pdfData,
+          employeeName: employee.fullName || employee.name || "",
+          uploadTime: new Date()
+        })
 
         return NextResponse.json({
           success: true,

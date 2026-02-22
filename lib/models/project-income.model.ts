@@ -1,4 +1,6 @@
 import mongoose, { Schema, type Document } from "mongoose"
+import "./project.model"
+import "./archive.model"
 
 export interface IProjectIncome extends Document {
   projectId: mongoose.Types.ObjectId

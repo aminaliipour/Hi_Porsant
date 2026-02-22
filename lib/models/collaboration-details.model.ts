@@ -1,4 +1,6 @@
 import mongoose, { Schema, type Document } from "mongoose"
+import "./User"
+import "./project-section.model"
 
 export interface ICollaborationDetails extends Document {
   sectionId: mongoose.Types.ObjectId
@@ -15,7 +17,7 @@ const CollaborationDetailsSchema: Schema = new Schema(
     sectionId: { type: Schema.Types.ObjectId, ref: "ProjectSection", required: true },
     itemName: { type: String, required: true },
     details: { type: Map, of: new Schema({ value: Schema.Types.Mixed, isActive: { type: Boolean, default: true } }), default: {} },
-    assignedMemberId: { type: Schema.Types.ObjectId, ref: "TeamMember" },
+    assignedMemberId: { type: Schema.Types.ObjectId, ref: "User" },
     assignedMembers: { type: Map, of: Schema.Types.ObjectId, default: {} },
   },
   { timestamps: true },

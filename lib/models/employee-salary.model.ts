@@ -1,10 +1,12 @@
 import mongoose, { Schema, type Document } from "mongoose"
+import "./User"
+import "./archive.model"
 
 export interface IEmployeeSalary extends Document {
   employeeId: mongoose.Types.ObjectId
   baseSalary: number
-  additions: Array<{title: string, amount: number}>
-  deductions: Array<{title: string, amount: number}>
+  additions: Array<{ title: string, amount: number }>
+  deductions: Array<{ title: string, amount: number }>
   taxDeduction?: number // کسر 7% مالیات اضافه شد
   description?: string // فیلد توضیحات اضافه شد
   isPorsanti?: boolean // حالت پورسانتی
@@ -20,21 +22,21 @@ export interface IEmployeeSalary extends Document {
 
 const EmployeeSalarySchema: Schema = new Schema(
   {
-    employeeId: { type: Schema.Types.ObjectId, ref: "TeamMember", required: true },
+    employeeId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     baseSalary: { type: Number, default: 0 },
-    additions: { 
-      type: [{ 
+    additions: {
+      type: [{
         title: { type: String, required: true },
         amount: { type: Number, required: true }
-      }], 
-      default: [] 
+      }],
+      default: []
     },
-    deductions: { 
-      type: [{ 
+    deductions: {
+      type: [{
         title: { type: String, required: true },
         amount: { type: Number, required: true }
-      }], 
-      default: [] 
+      }],
+      default: []
     },
     taxDeduction: { type: Number, default: 0 }, // کسر 7% مالیات اضافه شد
     description: { type: String, default: "" }, // فیلد توضیحات - حذف required: false
@@ -46,7 +48,7 @@ const EmployeeSalarySchema: Schema = new Schema(
     date: { type: String, required: true },
     archiveId: { type: Schema.Types.ObjectId, ref: "Archive" }, // اضافه شد
   },
-  { 
+  {
     timestamps: true,
     strict: false // اجازه فیلدهای اضافی
   },

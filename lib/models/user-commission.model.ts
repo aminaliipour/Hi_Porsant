@@ -1,4 +1,7 @@
 import mongoose, { Schema, type Document } from "mongoose"
+import "./User"
+import "./project.model"
+import "./archive.model"
 
 export interface IUserCommission extends Document {
   userId: mongoose.Types.ObjectId
@@ -18,7 +21,7 @@ export interface IUserCommission extends Document {
 
 const UserCommissionSchema: Schema = new Schema(
   {
-    userId: { type: Schema.Types.ObjectId, ref: "TeamMember", required: true },
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     projectId: { type: Schema.Types.ObjectId, ref: "Project", required: true },
     sectionName: { type: String, required: true },
     itemName: { type: String },

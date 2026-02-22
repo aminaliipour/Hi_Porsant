@@ -285,7 +285,7 @@ export function Header({ activeTab, setActiveTab, onLogout }: HeaderProps) {
               </Button>
             </>
           )}
-          
+
           {user ? (
             <>
               <div className="hidden md:flex items-center gap-2 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full">
@@ -331,7 +331,7 @@ export function Header({ activeTab, setActiveTab, onLogout }: HeaderProps) {
           </Button>
         </div>
       </div>
-      
+
       {/* Archive Selection Dialog */}
       <Dialog open={showArchiveSelect} onOpenChange={setShowArchiveSelect}>
         <DialogContent className="max-w-[90vw] md:max-w-md max-h-[90vh] flex flex-col p-0 overflow-hidden">
@@ -352,7 +352,7 @@ export function Header({ activeTab, setActiveTab, onLogout }: HeaderProps) {
               >
                 <span>🚫 بدون آرشیو (خروج از آرشیو)</span>
               </div>
-              
+
               {/* لیست آرشیوها */}
               {archives.length === 0 && (
                 <div className="p-8 text-center text-gray-400">
@@ -364,11 +364,10 @@ export function Header({ activeTab, setActiveTab, onLogout }: HeaderProps) {
                 {archives.map((archive) => (
                   <div
                     key={archive._id}
-                    className={`flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-yellow-50 dark:hover:bg-yellow-900/20 border rounded-lg transition-colors ${
-                      activeArchive && activeArchive._id === archive._id 
-                        ? "bg-yellow-100 dark:bg-yellow-800/40 border-yellow-500 shadow-sm" 
-                        : "border-gray-200 dark:border-gray-700"
-                    }`}
+                    className={`flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-yellow-50 dark:hover:bg-yellow-900/20 border rounded-lg transition-colors ${activeArchive && activeArchive._id === archive._id
+                      ? "bg-yellow-100 dark:bg-yellow-800/40 border-yellow-500 shadow-sm"
+                      : "border-gray-200 dark:border-gray-700"
+                      }`}
                   >
                     <div
                       className="flex-1 flex items-center gap-3 cursor-pointer"
@@ -392,27 +391,27 @@ export function Header({ activeTab, setActiveTab, onLogout }: HeaderProps) {
                       </div>
                     </div>
                     <div className="flex items-center gap-1">
-                      <Button 
-                        size="sm" 
-                        variant="ghost" 
+                      <Button
+                        size="sm"
+                        variant="ghost"
                         onClick={(e) => {
                           e.stopPropagation()
                           handleEditArchive(archive)
                           setShowArchiveSelect(false)
-                        }} 
+                        }}
                         title="ویرایش"
                         className="h-8 w-8 p-0 hover:bg-blue-100 dark:hover:bg-blue-900/30"
                       >
                         <Edit2 className="w-3 h-3 text-blue-600 dark:text-blue-400" />
                       </Button>
-                      <Button 
-                        size="sm" 
-                        variant="ghost" 
+                      <Button
+                        size="sm"
+                        variant="ghost"
                         onClick={(e) => {
                           e.stopPropagation()
                           handleDeleteArchive(archive._id)
                           setShowArchiveSelect(false)
-                        }} 
+                        }}
                         title="حذف"
                         className="h-8 w-8 p-0 hover:bg-red-100 dark:hover:bg-red-900/30"
                       >
@@ -425,8 +424,8 @@ export function Header({ activeTab, setActiveTab, onLogout }: HeaderProps) {
             </div>
           </ScrollArea>
           <DialogFooter className="p-4 pt-3 border-t border-gray-200 dark:border-gray-700 flex-shrink-0">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={() => setShowArchiveSelect(false)}
               className="text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100"
             >

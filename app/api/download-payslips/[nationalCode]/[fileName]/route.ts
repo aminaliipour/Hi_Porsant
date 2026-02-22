@@ -24,14 +24,18 @@ if (!global.tempFiles) {
 
 export async function GET(
   request: Request,
-  { params }: { params: { nationalCode: string; fileName: string } }
+  { params }: { params: Promise<{ nationalCode: string; fileName: string }> }
 ) {
   try {
-    const { nationalCode, fileName } = params
+    const { nationalCode, fileName } = await params
+    let decodedFileName = fileName
+    try {
+      decodedFileName = decodeURIComponent(fileName)
+    } catch {}
     const tempFiles = global.tempFiles || []
     
     const targetFile = tempFiles.find(
-      (f: TempFile) => f.nationalCode === nationalCode && f.fileName === fileName
+      (f: TempFile) => f.nationalCode === nationalCode && f.fileName === decodedFileName
     )
     
     if (!targetFile) {
@@ -44,10 +48,13 @@ export async function GET(
     // تبدیل base64 به binary
     const pdfBuffer = Buffer.from(targetFile.pdfData.split(',')[1], 'base64')
     
+    const asciiFileName = decodedFileName.replace(/[^\x20-\x7E]/g, "_")
+    const encodedFileName = encodeURIComponent(decodedFileName)
+
     return new NextResponse(pdfBuffer, {
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename="${fileName}"`,
+        'Content-Disposition': `attachment; filename="${asciiFileName}"; filename*=UTF-8''${encodedFileName}`,
         'Content-Length': pdfBuffer.length.toString(),
       },
     })

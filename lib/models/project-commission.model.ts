@@ -1,4 +1,5 @@
 import mongoose, { Schema, type Document } from "mongoose"
+import "./project.model"
 
 export interface IProjectCommission extends Document {
   projectId: mongoose.Types.ObjectId
