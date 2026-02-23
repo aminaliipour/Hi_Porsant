@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import dbConnect from "@/lib/db"
 import { TeamMember } from "@/lib/models/team-member.model"
 import User from "@/lib/models/User"
+import Session from "@/lib/models/Session"
 import { ProjectSection } from "@/lib/models/project-section.model"
 import { DesignDetails } from "@/lib/models/design-details.model"
 import { ContractingDetails } from "@/lib/models/contracting-details.model"
@@ -13,8 +14,30 @@ import { EmployeeSalary } from "@/lib/models/employee-salary.model"
 import { UserCommission } from "@/lib/models/user-commission.model"
 import mongoose from "mongoose"
 
+async function getUser(req: NextRequest) {
+    const token = req.cookies.get("auth_token")?.value
+    if (!token) return null
+    await dbConnect()
+    const session = await Session.findOne({ token }).populate("userId")
+    return session?.userId
+}
+
+// Support both GET and POST for migration
+export async function POST(req: NextRequest) {
+    return await runMigration(req)
+}
+
 export async function GET(req: NextRequest) {
+    return await runMigration(req)
+}
+
+async function runMigration(req: NextRequest) {
     try {
+        const user = await getUser(req)
+        if (!user || user.role !== "admin") {
+            return NextResponse.json({ message: "Forbidden - Admin access required" }, { status: 403 })
+        }
+
         await dbConnect()
 
         const teamMembers = await TeamMember.find({})

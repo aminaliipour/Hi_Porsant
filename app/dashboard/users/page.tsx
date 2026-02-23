@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { UserPlus, Trash2, Edit, Shield, User as UserIcon, Upload, Search } from "lucide-react"
+import { UserPlus, Trash2, Edit, Shield, User as UserIcon, Upload, Search, RefreshCw } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/components/ui/use-toast"
@@ -24,6 +24,7 @@ export default function UsersPage() {
 
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [editingUser, setEditingUser] = useState<any>(null)
+    const [migrating, setMigrating] = useState(false)
     const [formData, setFormData] = useState<any>({
         name: "",
         nationalCode: "",
@@ -148,6 +149,38 @@ export default function UsersPage() {
         if (res.ok) fetchUsers()
     }
 
+    const handleMigration = async () => {
+        if (!confirm("این عملیات تمام اعضای تیم قدیمی را به کاربران جدید منتقل می‌کند و ارجاعات پروژه‌ها را به‌روزرسانی می‌کند. ادامه می‌دهید؟")) return
+        
+        setMigrating(true)
+        try {
+            const res = await fetch("/api/migrate-team", { method: "POST" })
+            const result = await res.json()
+            
+            if (res.ok) {
+                toast({
+                    title: "موفق",
+                    description: `${result.results.usersCreated} کاربر جدید ایجاد شد و ${result.results.usersUpdated} کاربر به‌روزرسانی شد`,
+                })
+                fetchUsers()
+            } else {
+                toast({
+                    title: "خطا",
+                    description: result.message || "خطا در انجام همگام‌سازی",
+                    variant: "destructive",
+                })
+            }
+        } catch (error) {
+            toast({
+                title: "خطا",
+                description: "خطا در ارسال درخواست",
+                variant: "destructive",
+            })
+        } finally {
+            setMigrating(false)
+        }
+    }
+
     const handleInlineEdit = async (userId: string, field: string, value: string) => {
         setSavingUserId(userId)
         const formData = new FormData()
@@ -204,10 +237,21 @@ export default function UsersPage() {
                     <p className="text-gray-500">مشاهده، ایجاد و مدیریت اعضای تیم و کاربران سیستم</p>
                 </div>
 
-                <Button onClick={openCreateDialog} className="gap-2 bg-yellow-500 hover:bg-yellow-600 text-black">
-                    <UserPlus className="w-4 h-4" />
-                    افزودن کاربر جدید
-                </Button>
+                <div className="flex gap-2">
+                    <Button 
+                        onClick={handleMigration} 
+                        disabled={migrating}
+                        variant="outline"
+                        className="gap-2"
+                    >
+                        <RefreshCw className={`w-4 h-4 ${migrating ? 'animate-spin' : ''}`} />
+                        {migrating ? "در حال همگام‌سازی..." : "همگام‌سازی اعضای تیم"}
+                    </Button>
+                    <Button onClick={openCreateDialog} className="gap-2 bg-yellow-500 hover:bg-yellow-600 text-black">
+                        <UserPlus className="w-4 h-4" />
+                        افزودن کاربر جدید
+                    </Button>
+                </div>
             </div>
 
             <div className="flex items-center gap-2 max-w-md bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-lg px-3 py-2">
