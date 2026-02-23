@@ -1,14 +1,28 @@
 import { NextResponse } from "next/server"
 import dbConnect from "@/lib/db"
-import { TeamMember } from "@/lib/models"
+import User from "@/lib/models/User"
 
 export async function GET(request: Request, { params }: { params: { id: string } }) {
   try {
     await dbConnect()
-    const member = await TeamMember.findById(params.id)
+    const user = await User.findById(params.id)
 
-    if (!member) {
+    if (!user) {
       return NextResponse.json({ error: "عضو تیم یافت نشد" }, { status: 404 })
+    }
+
+    // Map User to TeamMember format for consistent API response
+    const member = {
+      _id: user._id,
+      fullName: user.name,
+      position: user.jobTitle || "تعیین نشده",
+      fatherName: user.fatherName || "",
+      nationalCode: user.nationalCode,
+      phoneNumber: user.phoneNumber || "",
+      email: user.email || "",
+      education: user.education || "",
+      address: user.address || "",
+      cardNumber: user.cardNumber || "",
     }
 
     return NextResponse.json(member)
@@ -24,21 +38,22 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 
     // بررسی تکراری نبودن کد ملی در صورت تغییر
     if (body.nationalCode) {
-      const existingMember = await TeamMember.findOne({
+      const existingUser = await User.findOne({
         nationalCode: body.nationalCode,
         _id: { $ne: params.id },
       })
 
-      if (existingMember) {
+      if (existingUser) {
         return NextResponse.json({ error: "کد ملی قبلاً در سیستم ثبت شده است" }, { status: 400 })
       }
     }
 
-    const member = await TeamMember.findByIdAndUpdate(
+    // Update User collection with TeamMember data mapped to User fields
+    const updatedUser = await User.findByIdAndUpdate(
       params.id,
       {
-        fullName: body.fullName,
-        position: body.position,
+        name: body.fullName,
+        jobTitle: body.position,
         fatherName: body.fatherName,
         nationalCode: body.nationalCode,
         phoneNumber: body.phoneNumber,
@@ -50,8 +65,22 @@ export async function PUT(request: Request, { params }: { params: { id: string }
       { new: true },
     )
 
-    if (!member) {
+    if (!updatedUser) {
       return NextResponse.json({ error: "عضو تیم یافت نشد" }, { status: 404 })
+    }
+
+    // Return in TeamMember format for frontend compatibility
+    const member = {
+      _id: updatedUser._id,
+      fullName: updatedUser.name,
+      position: updatedUser.jobTitle || "تعیین نشده",
+      fatherName: updatedUser.fatherName || "",
+      nationalCode: updatedUser.nationalCode,
+      phoneNumber: updatedUser.phoneNumber || "",
+      email: updatedUser.email || "",
+      education: updatedUser.education || "",
+      address: updatedUser.address || "",
+      cardNumber: updatedUser.cardNumber || "",
     }
 
     return NextResponse.json(member)
@@ -63,9 +92,9 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
   try {
     await dbConnect()
-    const member = await TeamMember.findByIdAndDelete(params.id)
+    const user = await User.findByIdAndDelete(params.id)
 
-    if (!member) {
+    if (!user) {
       return NextResponse.json({ error: "عضو تیم یافت نشد" }, { status: 404 })
     }
 
