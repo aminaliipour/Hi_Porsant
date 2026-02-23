@@ -12,6 +12,48 @@ async function getUser(req: NextRequest) {
     return session?.userId
 }
 
+
+export async function POST(req: NextRequest) {
+    try {
+        const user = await getUser(req)
+        if (!user) return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+
+        const body = await req.json()
+        const { receiverId, content, type, fileUrl } = body
+
+        if (!receiverId) {
+            return NextResponse.json({ message: "receiverId is required" }, { status: 400 })
+        }
+
+        if (!content && type === "text") {
+            return NextResponse.json({ message: "Content is required" }, { status: 400 })
+        }
+
+        const targetUser = await User.findById(receiverId)
+        if (!targetUser) {
+            return NextResponse.json({ message: "User not found" }, { status: 404 })
+        }
+
+        const newMessage = await DirectMessage.create({
+            sender: user._id,
+            receiver: receiverId,
+            content: content || "File",
+            type: type || "text",
+            fileUrl
+        })
+
+        const populatedMessage = await newMessage.populate([
+            { path: "sender", select: "name avatar" },
+            { path: "receiver", select: "name avatar" }
+        ])
+
+        return NextResponse.json(populatedMessage, { status: 201 })
+    } catch (error) {
+        console.error("DirectMessage POST Error:", error)
+        return NextResponse.json({ message: "Server Error", error: String(error) }, { status: 500 })
+    }
+}
+
 export async function GET(req: NextRequest) {
     try {
         const user = await getUser(req)
@@ -52,47 +94,6 @@ export async function GET(req: NextRequest) {
         return NextResponse.json(messages)
     } catch (error) {
         console.error("DirectMessage GET Error:", error)
-        return NextResponse.json({ message: "Server Error", error: String(error) }, { status: 500 })
-    }
-}
-
-export async function POST(req: NextRequest) {
-    try {
-        const user = await getUser(req)
-        if (!user) return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
-
-        const body = await req.json()
-        const { receiverId, content, type, fileUrl } = body
-
-        if (!receiverId) {
-            return NextResponse.json({ message: "receiverId is required" }, { status: 400 })
-        }
-
-        if (!content && type === "text") {
-            return NextResponse.json({ message: "Content is required" }, { status: 400 })
-        }
-
-        const targetUser = await User.findById(receiverId)
-        if (!targetUser) {
-            return NextResponse.json({ message: "User not found" }, { status: 404 })
-        }
-
-        const newMessage = await DirectMessage.create({
-            sender: user._id,
-            receiver: receiverId,
-            content: content || "File",
-            type: type || "text",
-            fileUrl
-        })
-
-        const populatedMessage = await newMessage.populate([
-            { path: "sender", select: "name avatar" },
-            { path: "receiver", select: "name avatar" }
-        ])
-
-        return NextResponse.json(populatedMessage, { status: 201 })
-    } catch (error) {
-        console.error("DirectMessage POST Error:", error)
         return NextResponse.json({ message: "Server Error", error: String(error) }, { status: 500 })
     }
 }

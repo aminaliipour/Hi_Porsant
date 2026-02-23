@@ -1,12 +1,52 @@
 import { NextResponse } from "next/server"
 import dbConnect from "@/lib/db"
 import User from "@/lib/models/User"
+import { TeamMember } from "@/lib/models/team-member.model"
+
+async function ensureUsersFromLegacyTeamMembers() {
+  const legacyMembers = await TeamMember.find({})
+  if (legacyMembers.length === 0) return
+
+  for (const member of legacyMembers) {
+    const existingUser = await User.findOne({ nationalCode: member.nationalCode })
+    if (!existingUser) {
+      await User.create({
+        name: member.fullName,
+        jobTitle: member.position,
+        fatherName: member.fatherName || "",
+        nationalCode: member.nationalCode,
+        phoneNumber: member.phoneNumber,
+        email: member.email || "",
+        education: member.education || "",
+        address: member.address || "",
+        cardNumber: member.cardNumber || "",
+        role: "user",
+      })
+      continue
+    }
+
+    let updated = false
+    if (!existingUser.jobTitle && member.position) { existingUser.jobTitle = member.position; updated = true }
+    if (!existingUser.fatherName && member.fatherName) { existingUser.fatherName = member.fatherName; updated = true }
+    if (!existingUser.phoneNumber && member.phoneNumber) { existingUser.phoneNumber = member.phoneNumber; updated = true }
+    if (!existingUser.email && member.email) { existingUser.email = member.email; updated = true }
+    if (!existingUser.education && member.education) { existingUser.education = member.education; updated = true }
+    if (!existingUser.address && member.address) { existingUser.address = member.address; updated = true }
+    if (!existingUser.cardNumber && member.cardNumber) { existingUser.cardNumber = member.cardNumber; updated = true }
+
+    if (updated) {
+      await existingUser.save()
+    }
+  }
+}
 
 export async function GET(request: Request) {
   try {
     await dbConnect()
     const { searchParams } = new URL(request.url)
     const archiveId = searchParams.get("archiveId")
+
+    await ensureUsersFromLegacyTeamMembers()
 
     // Fetch all users, or filter by role/jobTitle if needed. 
     // For now, returning all users as potential team members.
