@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { Suspense, useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog"
@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Megaphone, Plus, Calendar, Edit, Trash2 } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 
-export default function AnnouncementsPage() {
+function AnnouncementsContent() {
     const [announcements, setAnnouncements] = useState<any[]>([])
     const [users, setUsers] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
@@ -396,5 +396,13 @@ export default function AnnouncementsPage() {
                 </Dialog>
             )}
         </div>
+    )
+}
+
+export default function AnnouncementsPage() {
+    return (
+        <Suspense fallback={<div className="p-8 flex justify-center"><div className="animate-spin h-8 w-8 border-4 border-yellow-500 rounded-full border-t-transparent"></div></div>}>
+            <AnnouncementsContent />
+        </Suspense>
     )
 }

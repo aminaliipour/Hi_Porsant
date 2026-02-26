@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { ModeToggle } from "@/components/mode-toggle"
-import { Bell, Search, Menu, LogOut, User as UserIcon, Building2 } from "lucide-react"
+import { Bell, Search, Menu, LogOut, User as UserIcon, Building2, CreditCard } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import {
@@ -16,24 +16,18 @@ import {
 import { DashboardSidebar } from "@/components/dashboard/sidebar"
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import { useUser } from "@/contexts/UserContext"
 
 export function DashboardHeader() {
-    const [user, setUser] = useState<any>(null)
+    const { user } = useUser()
     const [notifications, setNotifications] = useState<any[]>([])
     const [unreadCount, setUnreadCount] = useState(0)
     const [notificationOpen, setNotificationOpen] = useState(false)
 
     useEffect(() => {
-        fetch("/api/auth/me")
-            .then(res => res.json())
-            .then(data => {
-                if (data.user) setUser(data.user)
-            })
-            .catch(err => console.error(err))
-
         // Fetch notifications
         fetchNotifications()
-        const interval = setInterval(fetchNotifications, 5000)
+        const interval = setInterval(fetchNotifications, 15000) // Changed from 5000 to 15000 for better performance
         return () => clearInterval(interval)
     }, [])
 
@@ -117,7 +111,6 @@ export function DashboardHeader() {
                                 </div>
                                 <div className="flex flex-col px-4 gap-2">
                                     <Link href="/dashboard"><Button variant="ghost" className="w-full justify-start">داشبورد</Button></Link>
-                                    <Link href="/dashboard/porsant"><Button variant="ghost" className="w-full justify-start">پورسانت</Button></Link>
                                     <Link href="/dashboard/chat"><Button variant="ghost" className="w-full justify-start">گفتگو</Button></Link>
                                     <Link href="/dashboard/tasks"><Button variant="ghost" className="w-full justify-start">وظایف</Button></Link>
                                     <Link href="/dashboard/payslips"><Button variant="ghost" className="w-full justify-start">فیش حقوقی</Button></Link>
@@ -130,7 +123,16 @@ export function DashboardHeader() {
             </div>
 
             {/* Center: Branding & Search Bar */}
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl hidden md:flex flex-row items-center justify-center gap-6">
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl hidden md:flex flex-row items-center justify-center gap-3">
+                {/* Porsant Button - Admin Only */}
+                {(user?.role === "admin" || user?.role === "مدیر") && (
+                    <Link href="/porsant">
+                        <Button className="bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 text-black shadow-lg hover:shadow-xl transition-all whitespace-nowrap">
+                            <CreditCard className="w-4 h-4 ml-2" />
+                            پورسانت
+                        </Button>
+                    </Link>
+                )}
                 {/* Search */}
                 <div className="relative w-full max-w-md">
                     <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />

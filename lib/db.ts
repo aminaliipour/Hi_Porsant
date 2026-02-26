@@ -34,41 +34,47 @@ async function dbConnect() {
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
+      maxPoolSize: 10, // Connection pool size for better performance
+      minPoolSize: 2,
+      socketTimeoutMS: 45000,
+      serverSelectionTimeoutMS: 5000,
     }
 
     cached.promise = mongoose.connect(MONGODB_URI, opts).then(async (mongoose) => {
       console.log("MongoDB محلی با موفقیت متصل شد!");
       
-      // Import all models to ensure they are registered
-      await import("@/lib/models/User")
-      await import("@/lib/models/Session")
-      await import("@/lib/models/Task")
-      await import("@/lib/models/Announcement")
-      await import("@/lib/models/Notification")
-      await import("@/lib/models/Message")
-      await import("@/lib/models/ChatGroup")
-      await import("@/lib/models/ChatGroupTask")
-      await import("@/lib/models/GroupMessage")
-      await import("@/lib/models/DirectMessage")
-      await import("@/lib/models/archive.model")
-      await import("@/lib/models/project.model")
-      await import("@/lib/models/project-section.model")
-      await import("@/lib/models/project-income.model")
-      await import("@/lib/models/project-tax.model")
-      await import("@/lib/models/project-commission.model")
-      await import("@/lib/models/user-commission.model")
-      await import("@/lib/models/employee-salary.model")
-      await import("@/lib/models/team-member.model")
-      await import("@/lib/models/section-weights.model")
-      await import("@/lib/models/system-percentages.model")
-      await import("@/lib/models/system-expenses.model")
-      await import("@/lib/models/guest-referral.model")
-      await import("@/lib/models/purchase-details.model")
-      await import("@/lib/models/sale-details.model")
-      await import("@/lib/models/design-details.model")
-      await import("@/lib/models/contracting-details.model")
-      await import("@/lib/models/consultation-details.model")
-      await import("@/lib/models/collaboration-details.model")
+      // Import all models in parallel for better performance
+      await Promise.all([
+        import("@/lib/models/User"),
+        import("@/lib/models/Session"),
+        import("@/lib/models/Task"),
+        import("@/lib/models/Announcement"),
+        import("@/lib/models/Notification"),
+        import("@/lib/models/Message"),
+        import("@/lib/models/ChatGroup"),
+        import("@/lib/models/ChatGroupTask"),
+        import("@/lib/models/GroupMessage"),
+        import("@/lib/models/DirectMessage"),
+        import("@/lib/models/archive.model"),
+        import("@/lib/models/project.model"),
+        import("@/lib/models/project-section.model"),
+        import("@/lib/models/project-income.model"),
+        import("@/lib/models/project-tax.model"),
+        import("@/lib/models/project-commission.model"),
+        import("@/lib/models/user-commission.model"),
+        import("@/lib/models/employee-salary.model"),
+        import("@/lib/models/team-member.model"),
+        import("@/lib/models/section-weights.model"),
+        import("@/lib/models/system-percentages.model"),
+        import("@/lib/models/system-expenses.model"),
+        import("@/lib/models/guest-referral.model"),
+        import("@/lib/models/purchase-details.model"),
+        import("@/lib/models/sale-details.model"),
+        import("@/lib/models/design-details.model"),
+        import("@/lib/models/contracting-details.model"),
+        import("@/lib/models/consultation-details.model"),
+        import("@/lib/models/collaboration-details.model"),
+      ])
       
       return mongoose;
     })

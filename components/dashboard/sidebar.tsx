@@ -19,6 +19,7 @@ import {
     User
 } from "lucide-react"
 import { useState, useEffect } from "react"
+import { useUser } from "@/contexts/UserContext"
 
 const sidebarItems = [
     {
@@ -47,12 +48,6 @@ const sidebarItems = [
         icon: Mail,
     },
     {
-        title: "پورسانت",
-        href: "/dashboard/porsant",
-        icon: CreditCard,
-        adminOnly: true,
-    },
-    {
         title: "اطلاعیه‌ها",
         href: "/dashboard/announcements",
         icon: Megaphone,
@@ -72,32 +67,25 @@ const sidebarItems = [
 
 export function DashboardSidebar() {
     const pathname = usePathname()
-    const [user, setUser] = useState<any>(null)
+    const { user } = useUser()
     const [unreadCount, setUnreadCount] = useState(0)
     const [pendingRequestsCount, setPendingRequestsCount] = useState(0)
 
     useEffect(() => {
-        // console.log("Fetching user for sidebar...");
-        fetch("/api/auth/me")
-            .then(res => res.json())
-            .then(data => {
-                // console.log("Sidebar user fetched:", data.user);
-                setUser(data.user || null)
-            })
-            .catch(err => console.error(err))
-    }, [])
-
-    useEffect(() => {
         const fetchUnreadCount = async () => {
-            const res = await fetch("/api/messages/total-unread")
-            if (res.ok) {
-                const data = await res.json()
-                setUnreadCount(data.unreadMessagesCount)
+            try {
+                const res = await fetch("/api/messages/total-unread")
+                if (res.ok) {
+                    const data = await res.json()
+                    setUnreadCount(data.unreadMessagesCount)
+                }
+            } catch (err) {
+                console.error("Error fetching unread count:", err)
             }
         }
 
         fetchUnreadCount()
-        const interval = setInterval(fetchUnreadCount, 2000)
+        const interval = setInterval(fetchUnreadCount, 10000) // Changed from 2000 to 10000 for better performance
         return () => clearInterval(interval)
     }, [])
 
