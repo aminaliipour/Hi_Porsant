@@ -1,6 +1,4 @@
 import mongoose, { Schema, type Document } from "mongoose"
-import "./User"
-import "./project-section.model"
 
 export interface IDesignDetails extends Document {
   sectionId: mongoose.Types.ObjectId
@@ -14,7 +12,7 @@ export interface IDesignDetails extends Document {
 
 const DetailsItemSchema = new Schema({
   isActive: { type: Boolean, default: true },
-  assignedMemberId: { type: Schema.Types.ObjectId, ref: "User", default: null }
+  assignedMemberId: { type: Schema.Types.ObjectId, ref: "TeamMember", default: null }
 })
 
 const DesignDetailsSchema: Schema = new Schema(

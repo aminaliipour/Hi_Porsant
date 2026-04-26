@@ -161,6 +161,36 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
     return weight
   }
 
+  // محاسبه درصد توزیع شده فیلدها به طوری که جمع درصدهای فیلدهای فعال در یک آیتم/بخش برابر 100 شود
+  const getDistributedFieldPercent = (sectionName: string, itemName: string | undefined, fieldName: string) => {
+    // استخراج فیلدهای فعال برای همین آیتم/بخش
+    const fields = getFieldsForSection(sectionName)
+    const activeFields = fields.filter(f => isFieldActive(sectionName, itemName, f))
+
+    // اگر هیچ فیلدی فعال نیست، برگردان مقدار اصلی یا 0
+    if (activeFields.length === 0) {
+      const w = getFieldWeight(sectionName, fieldName)
+      return w // fallback
+    }
+
+    // جمع وزن‌های اصلی فیلدهای فعال
+    let sumActive = 0
+    const orig: Record<string, number> = {}
+    for (const f of activeFields) {
+      const w = getFieldWeight(sectionName, f)
+      orig[f] = w
+      sumActive += w
+    }
+
+    if (sumActive === 0) {
+      // اگر همه وزن‌ها صفر هستند، تقسیم مساوی کن
+      return 100 / activeFields.length
+    }
+
+    const target = (orig[fieldName] || 0) / sumActive * 100
+    return target
+  }
+
   // تابع کمکی برای بررسی اینکه آیا فیلد فعال است
   const isFieldActive = (sectionName: string, itemName: string | undefined, field: string) => {
     if (itemName) {
@@ -1322,7 +1352,7 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
                                             <div>
                                               <div>مقدار: {formatNumber(finalValue)} ریال</div>
                                               <div className="text-green-600 font-medium">
-                                                درصد پورسانت ({getFieldWeight(section.sectionName, field)}%): {formatNumber(Math.round(finalValue * getFieldWeight(section.sectionName, field) / 100))} ریال
+                                                درصد پورسانت ({getDistributedFieldPercent(section.sectionName, item.itemName, field).toFixed(1)}%): {formatNumber(Math.round(finalValue * getDistributedFieldPercent(section.sectionName, item.itemName, field) / 100))} ریال
                                               </div>
                                             </div>
                                           )
@@ -1442,7 +1472,7 @@ export function ProjectIncomeDialog({ project, open, onOpenChange, onSave }: Pro
                                       <div>
                                         <div>مقدار: {formatNumber(finalValue)} ریال</div>
                                         <div className="text-green-600 font-medium">
-                                          درصد پورسانت ({getFieldWeight(section.sectionName, field)}%): {formatNumber(Math.round(finalValue * getFieldWeight(section.sectionName, field) / 100))} ریال
+                                          درصد پورسانت ({getDistributedFieldPercent(section.sectionName, undefined, field).toFixed(1)}%): {formatNumber(Math.round(finalValue * getDistributedFieldPercent(section.sectionName, undefined, field) / 100))} ریال
                                         </div>
                                       </div>
                                     )

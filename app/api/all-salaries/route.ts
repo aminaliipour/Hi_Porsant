@@ -14,12 +14,25 @@ export async function GET(request: Request) {
     let query: any = {}
     if (archiveId) query.archiveId = new mongoose.Types.ObjectId(archiveId)
 
-    const salaries = await EmployeeSalary.find(query)
+    let salaries = await EmployeeSalary.find(query)
       .sort({ date: -1 })
       .exec()
 
     // جداگانه اطلاعات اعضای تیم را دریافت می‌کنیم
-    const teamMembers = await TeamMember.find({}).exec()
+    // برای آرشیو: اعضای تخصصی + shared members (بدون archiveId)
+    let teamMembersQuery: any = {}
+    if (archiveId) {
+      teamMembersQuery = {
+        $or: [
+          { archiveId: archiveId },
+          { archiveId: { $exists: false } }
+        ]
+      }
+    } else {
+      teamMembersQuery = { archiveId: { $exists: false } }
+    }
+    
+    const teamMembers = await TeamMember.find(teamMembersQuery).exec()
     
     // ترکیب اطلاعات
     const salariesWithNames = salaries.map(salary => {

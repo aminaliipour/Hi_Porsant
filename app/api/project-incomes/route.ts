@@ -13,7 +13,19 @@ export async function GET(request: Request) {
     if (archiveId) query.archiveId = archiveId
     if (projectId) query.projectId = projectId
 
-    const incomes = await ProjectIncome.find(query).lean()
+    let incomes;
+    if (archiveId) {
+      incomes = await ProjectIncome.find()
+        .populate({
+          path: 'projectId',
+          match: { archiveId: archiveId },
+          select: 'archiveId'
+        })
+        .lean()
+        .then(results => results.filter(income => income.projectId)) // فیلتر کردن مواردی که projectId پیدا شده
+    } else {
+      incomes = await ProjectIncome.find(query).lean()
+    }
 
     // تبدیل details از Map به Object
     const transformedIncomes = incomes.map(income => {

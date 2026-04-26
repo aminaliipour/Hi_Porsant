@@ -121,6 +121,15 @@ export function TeamMemberDetailsDialog({ member, open, onOpenChange }: TeamMemb
         return
       }
 
+      // دریافت archiveId فعال از localStorage
+      let archiveId = ""
+      if (typeof window !== "undefined") {
+        const stored = localStorage.getItem("activeArchive")
+        if (stored) {
+          try { archiveId = JSON.parse(stored)._id } catch {}
+        }
+      }
+
       const url = memberData._id ? `/api/team-members/${memberData._id}` : "/api/team-members"
       const method = memberData._id ? "PUT" : "POST"
 
@@ -129,7 +138,7 @@ export function TeamMemberDetailsDialog({ member, open, onOpenChange }: TeamMemb
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(memberData),
+        body: JSON.stringify({ ...memberData, archiveId }),
       })
 
       if (!response.ok) {

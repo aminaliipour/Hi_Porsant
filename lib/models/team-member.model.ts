@@ -10,6 +10,7 @@ export interface ITeamMember extends Document {
   education?: string
   address?: string
   cardNumber?: string
+  archiveId?: string
   createdAt: Date
   updatedAt: Date
 }
@@ -25,6 +26,7 @@ const TeamMemberSchema: Schema = new Schema(
     education: { type: String },
     address: { type: String },
     cardNumber: { type: String },
+    archiveId: { type: String },
   },
   { timestamps: true },
 )

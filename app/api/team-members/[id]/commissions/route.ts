@@ -13,14 +13,12 @@ import {
   SectionWeights
 } from "@/lib/models"
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id: memberId } = await params
     const { searchParams } = new URL(request.url)
     const cursor = searchParams.get('cursor')
     const limit = 10 // Number of projects to process per request
-
-    await dbConnect()
-    const memberId = params.id
 
     // دریافت اطلاعات وزن‌های بخش‌ها
     const weights = await SectionWeights.find().lean()

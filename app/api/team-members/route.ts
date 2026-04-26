@@ -1,74 +1,29 @@
 import { NextResponse } from "next/server"
 import dbConnect from "@/lib/db"
-import User from "@/lib/models/User"
-import { TeamMember } from "@/lib/models/team-member.model"
-
-async function ensureUsersFromLegacyTeamMembers() {
-  const legacyMembers = await TeamMember.find({})
-  if (legacyMembers.length === 0) return
-
-  for (const member of legacyMembers) {
-    const existingUser = await User.findOne({ nationalCode: member.nationalCode })
-    if (!existingUser) {
-      await User.create({
-        name: member.fullName,
-        jobTitle: member.position,
-        fatherName: member.fatherName || "",
-        nationalCode: member.nationalCode,
-        phoneNumber: member.phoneNumber,
-        email: member.email || "",
-        education: member.education || "",
-        address: member.address || "",
-        cardNumber: member.cardNumber || "",
-        role: "user",
-      })
-      continue
-    }
-
-    let updated = false
-    if (!existingUser.jobTitle && member.position) { existingUser.jobTitle = member.position; updated = true }
-    if (!existingUser.fatherName && member.fatherName) { existingUser.fatherName = member.fatherName; updated = true }
-    if (!existingUser.phoneNumber && member.phoneNumber) { existingUser.phoneNumber = member.phoneNumber; updated = true }
-    if (!existingUser.email && member.email) { existingUser.email = member.email; updated = true }
-    if (!existingUser.education && member.education) { existingUser.education = member.education; updated = true }
-    if (!existingUser.address && member.address) { existingUser.address = member.address; updated = true }
-    if (!existingUser.cardNumber && member.cardNumber) { existingUser.cardNumber = member.cardNumber; updated = true }
-
-    if (updated) {
-      await existingUser.save()
-    }
-  }
-}
+import { TeamMember } from "@/lib/models"
 
 export async function GET(request: Request) {
   try {
     await dbConnect()
     const { searchParams } = new URL(request.url)
     const archiveId = searchParams.get("archiveId")
-
-    await ensureUsersFromLegacyTeamMembers()
-
-    // Fetch all users, or filter by role/jobTitle if needed. 
-    // For now, returning all users as potential team members.
-    // We map User fields to the expected TeamMember format for frontend compatibility.
-    const users = await User.find({}).sort({ createdAt: -1 })
-
-    const members = users.map(user => ({
-      _id: user._id,
-      fullName: user.name,
-      position: user.jobTitle || "تعیین نشده",
-      fatherName: user.fatherName || "",
-      nationalCode: user.nationalCode,
-      phoneNumber: user.phoneNumber || "",
-      email: user.email || "",
-      education: user.education || "",
-      address: user.address || "",
-      cardNumber: user.cardNumber || "",
-    }))
-
+    
+    let members
+    if (archiveId) {
+      // دریافت اعضای تخصصی برای آرشیو + shared members (بدون archiveId)
+      members = await TeamMember.find({
+        $or: [
+          { archiveId: archiveId },
+          { archiveId: { $exists: false } }
+        ]
+      }).sort({ createdAt: -1 })
+    } else {
+      // اگر archiveId نداشتیم، تمام shared members را دریافت کن
+      members = await TeamMember.find({ archiveId: { $exists: false } }).sort({ createdAt: -1 })
+    }
+    
     return NextResponse.json(members)
   } catch (error) {
-    console.error("Error fetching team members:", error)
     return NextResponse.json({ error: "خطا در دریافت اعضای تیم" }, { status: 500 })
   }
 }
@@ -78,51 +33,31 @@ export async function POST(request: Request) {
     const body = await request.json()
     await dbConnect()
 
-    // Validate required fields
-    if (!body.fullName || !body.nationalCode || !body.position || !body.phoneNumber) {
-      return NextResponse.json({ error: "فیلدهای ضروری را تکمیل کنید" }, { status: 400 })
+    // بررسی تکراری نبودن کد ملی (فقط برای همین آرشیو)
+    const existingMember = await TeamMember.findOne({ 
+      nationalCode: body.nationalCode,
+      archiveId: body.archiveId
+    })
+    if (existingMember) {
+      return NextResponse.json({ error: "کد ملی قبلاً در این آرشیو ثبت شده است" }, { status: 400 })
     }
 
-    // Check if national code already exists
-    const existingUser = await User.findOne({ nationalCode: body.nationalCode })
-    if (existingUser) {
-      return NextResponse.json({ error: "کد ملی قبلاً در سیستم ثبت شده است" }, { status: 400 })
-    }
-
-    // Create new user with TeamMember data mapped to User fields
-    const newUser = await User.create({
-      name: body.fullName,
-      jobTitle: body.position,
-      fatherName: body.fatherName || "",
+    const member = new TeamMember({
+      fullName: body.fullName,
+      position: body.position,
+      fatherName: body.fatherName,
       nationalCode: body.nationalCode,
       phoneNumber: body.phoneNumber,
-      email: body.email || "",
-      education: body.education || "",
-      address: body.address || "",
-      cardNumber: body.cardNumber || "",
-      role: "user",
+      email: body.email,
+      education: body.education,
+      address: body.address,
+      cardNumber: body.cardNumber,
+      archiveId: body.archiveId,
     })
 
-    // Return in TeamMember format for frontend compatibility
-    const member = {
-      _id: newUser._id,
-      fullName: newUser.name,
-      position: newUser.jobTitle || "تعیین نشده",
-      fatherName: newUser.fatherName || "",
-      nationalCode: newUser.nationalCode,
-      phoneNumber: newUser.phoneNumber || "",
-      email: newUser.email || "",
-      education: newUser.education || "",
-      address: newUser.address || "",
-      cardNumber: newUser.cardNumber || "",
-    }
-
+    await member.save()
     return NextResponse.json(member, { status: 201 })
-  } catch (error: any) {
-    console.error("Error creating team member:", error)
-    if (error.code === 11000) {
-      return NextResponse.json({ error: "کد ملی قبلاً در سیستم ثبت شده است" }, { status: 400 })
-    }
+  } catch (error) {
     return NextResponse.json({ error: "خطا در ایجاد عضو تیم" }, { status: 500 })
   }
 }

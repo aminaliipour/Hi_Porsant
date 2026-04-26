@@ -4,11 +4,12 @@ import { Project, ProjectSection, ProjectIncome, PurchaseDetails, CollaborationD
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await dbConnect()
-    const memberId = params.id
+    const paramsResolved = await params
+    const memberId = paramsResolved.id
 
     const { searchParams } = new URL(request.url)
     const archiveId = searchParams.get("archiveId")
@@ -43,16 +44,55 @@ export async function GET(
     }
 
     // ایجاد نقشه‌های سریع برای جستجو
-    const projectsMap = new Map(projects.map(p => [p._id.toString(), p]))
-    const sectionsMap = new Map(sections.map(s => [s._id.toString(), s]))
-    const incomesMap = new Map(incomes.map(i => [i.projectId.toString(), i]))
+    const projectsMap = new Map(projects.map((p: any) => [p._id.toString(), p]))
+    const sectionsMap = new Map(sections.map((s: any) => [s._id.toString(), s]))
+    const incomesMap = new Map(incomes.map((i: any) => [i.projectId.toString(), i]))
     const weightsMap = new Map()
     
     // گروه‌بندی weights برای دسترسی سریع
-    weights.forEach(w => {
+    weights.forEach((w: any) => {
       const key = `${w.sectionName}_${w.fieldName}`
       weightsMap.set(key, w.weight)
     })
+
+    // محاسبه درصد سیستم تعادل توزیع شده برای هر پروژه
+    const distributedSystemPercents = new Map()
+    for (const project of projects) {
+      const projectSections = sections.filter((s: any) => s.projectId.toString() === (project as any)._id.toString())
+      const activeSections = projectSections.filter((s: any) => s.isActive !== false)
+      const inactiveSections = projectSections.filter((s: any) => s.isActive === false)
+      
+      const distributedPercent: Record<string, number> = {}
+      
+      // جمع درصد بخش‌های غیرفعال
+      let inactivePercentSum = 0
+      for (const section of inactiveSections) {
+        const percent = (project as any).useCustomTaadol && (project as any).customTaadolPercentages 
+          ? (project as any).customTaadolPercentages[section.sectionName] || 0
+          : systemPercent[section.sectionName as keyof typeof systemPercent] || 0
+        inactivePercentSum += percent
+      }
+      
+      // توزیع بین بخش‌های فعال
+      if (activeSections.length > 0 && inactivePercentSum > 0) {
+        const percentPerActiveSection = inactivePercentSum / activeSections.length
+        for (const section of activeSections) {
+          const originalPercent = (project as any).useCustomTaadol && (project as any).customTaadolPercentages 
+            ? (project as any).customTaadolPercentages[section.sectionName] || 0
+            : systemPercent[section.sectionName as keyof typeof systemPercent] || 0
+          distributedPercent[section.sectionName] = originalPercent + percentPerActiveSection
+        }
+      } else {
+        // اگر هیچ بخش فعالی نیست یا درصد غیرفعالی نیست، درصد اصلی را نگه دار
+        for (const section of activeSections) {
+          distributedPercent[section.sectionName] = (project as any).useCustomTaadol && (project as any).customTaadolPercentages 
+            ? (project as any).customTaadolPercentages[section.sectionName] || 0
+            : systemPercent[section.sectionName as keyof typeof systemPercent] || 0
+        }
+      }
+      
+      distributedSystemPercents.set((project as any)._id.toString(), distributedPercent)
+    }
 
     // تابع کمکی برای گرفتن وزن فیلد (مخصوص پروژه یا عمومی)
     const getWeightForProject = (project: any, sectionName: string, fieldName: string) => {
@@ -70,17 +110,20 @@ export async function GET(
       return weightsMap.get(key) || 0
     }
 
-    const commissions = []
+    const commissions: any[] = []
 
     console.time('Processing Details')
 
-    // تابع کمکی برای دریافت درصد سیستم تعادل (مخصوص یا اصلی)
+    // تابع کمکی برای دریافت درصد سیستم تعادل توزیع شده
     const getSystemPercentForProject = (project: any, sectionName: string) => {
-      // اگر پروژه از سیستم تعادل مخصوص استفاده می‌کند
+      const distributed = distributedSystemPercents.get(project._id.toString())
+      if (distributed) {
+        return distributed[sectionName] || 0
+      }
+      // fallback به درصد اصلی
       if (project.useCustomTaadol && project.customTaadolPercentages) {
         return project.customTaadolPercentages[sectionName] || 0
       }
-      // در غیر این صورت از سیستم تعادل اصلی استفاده کن
       return systemPercent[sectionName as keyof typeof systemPercent] || 0
     }
 
@@ -92,7 +135,7 @@ export async function GET(
     ]
 
     // تابع کمکی برای پردازش commission
-    const processCommission = (project, section, income, name, itemName, field, weightValue, systemPercentValue, value) => {
+    const processCommission = (project: any, section: any, income: any, name: any, itemName: any, field: any, weightValue: any, systemPercentValue: any, value: any) => {
       if (value > 0 && weightValue > 0) {
         // مقدار دریافتی از project-income قبلاً پردازش شده است
         // (درصد سیستم کسر شده و مقدار نهایی محاسبه شده)
@@ -114,6 +157,65 @@ export async function GET(
     }
 
     // بهینه‌سازی محاسبه وزن‌ها
+    const getSectionFields = (sectionName: string) => {
+      const sectionFields: Record<string, string[]> = {
+        خرید: [
+          "متراژ",
+          "استعلام قیمت",
+          "هماهنگی با نصاب",
+          "بودجه",
+          "سفارش",
+          "تحویل باربری",
+          "گرفتن فاکتور نهایی",
+        ],
+        همکاری: [
+          "بازدید",
+          "ابعاد و اندازه",
+          "براورد مالی",
+          "برآورد زمانی",
+          "قرارداد",
+          "گرفتن بودجه",
+          "تهیه جنس",
+          "نظارت بر اجرای درست",
+          "گرفتن فاکتور نهایی",
+          "تحویل نهایی پروژه",
+        ],
+        فروش: [
+          "متراژ",
+          "۳ سطح پیشنهاد",
+          "هماهنگی زمان و اندازه با نصاب",
+          "گرفتن موجودی",
+          "بودجه",
+          "سفارش",
+          "تحویل بار",
+        ],
+        طراحی: [
+          "برداشت میدانی",
+          "ترسیم وضع موجود",
+          "طراحی اولیه",
+          "نقشه نهایی 2d",
+          "نقشه آماده 3d(نما-مقطع-پلان-روف-محوطه)",
+          "3D Modeling",
+          "3D Rendering & Animation",
+          "نقشه اجرایی فاز ۱",
+          "نقشه اجرایی فاز ۲",
+          "آلبوم عکس و نقشه",
+        ],
+        پیمانکاری: [
+          "فاصله زمانی",
+          "سختی کار",
+          "تحویل نهایی کار و آلبوم",
+          "ارجاع توسط",
+        ],
+        مشاوره: [
+          "بازدید",
+          "پر کردن چک لیست",
+          "مشاوره",
+        ],
+      }
+      return sectionFields[sectionName] || []
+    }
+
     const calculateDistributedWeights = (project: any, sectionName: string, allFields: string[], activeFields: string[]) => {
       const redistributedWeights = new Map()
       
@@ -177,7 +279,10 @@ export async function GET(
         }
 
         // تعیین همه فیلدها و فیلدهای فعال
-        const allFields = Object.keys(detailsObj)
+        const allFields = Array.from(new Set([
+          ...getSectionFields(name),
+          ...Object.keys(detailsObj),
+        ]))
         const activeFields = allFields.filter(field => 
           !(detailsObj as any)[field] || (detailsObj as any)[field].isActive !== false
         )
@@ -185,6 +290,9 @@ export async function GET(
         // پیدا کردن پروژه مربوط به این detail برای استفاده از وزن‌های صحیح
         const section = sectionsMap.get(detail.sectionId?.toString())
         const project = section ? projectsMap.get(section.projectId.toString()) : null
+
+        // اگر بخش غیرفعال باشد، رد کن
+        if (!section || section.isActive === false) continue
 
         // محاسبه وزن‌های بازتوزیع شده
         const redistributedWeights = project ? 
@@ -273,7 +381,10 @@ export async function GET(
         }
 
         // تعیین همه فیلدها و فیلدهای فعال
-        const allFields = Object.keys(detailsObj)
+        const allFields = Array.from(new Set([
+          ...getSectionFields(name),
+          ...Object.keys(detailsObj),
+        ]))
         const activeFields = allFields.filter(field => {
           const fieldDetails = (detailsObj as any)[field]
           return typeof fieldDetails === 'object' && (fieldDetails as any)?.isActive !== false
@@ -282,6 +393,9 @@ export async function GET(
         // پیدا کردن پروژه مربوط به این detail
         const section = sectionsMap.get(detail.sectionId?.toString())
         const project = section ? projectsMap.get(section.projectId.toString()) : null
+
+        // اگر بخش غیرفعال باشد، رد کن
+        if (!section || section.isActive === false) continue
 
         // محاسبه وزن‌های بازتوزیع شده
         const redistributedWeights = project ?

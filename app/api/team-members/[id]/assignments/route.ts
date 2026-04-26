@@ -12,20 +12,23 @@ import {
 } from "@/lib/models"
 import mongoose from "mongoose"
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     await dbConnect()
-    const memberId = params.id
+    const { id: memberId } = await params
     const assignments = []
 
     const { searchParams } = new URL(request.url)
     const archiveId = searchParams.get("archiveId")
-    // دریافت فقط بخش‌های مربوط به آرشیو فعال
+    
+    // دریافت بخش‌های مربوط به آرشیو فعال
     let sectionFilter: any = {}
     if (archiveId) sectionFilter.archiveId = archiveId
     const sections = await ProjectSection.find(sectionFilter)
     const sectionIds = sections.map(s => s._id.toString())
-    const sectionProjectIds = sections.map(s => s.projectId.toString())
+    
+    console.log(`[Assignments] memberId=${memberId}, archiveId=${archiveId}, sectionCount=${sections.length}`)
+    
     // جستجوی بخش‌های دارای آیتم
     const withItemsCollections = [
       { model: PurchaseDetails, name: "خرید" },
@@ -34,12 +37,24 @@ export async function GET(request: Request, { params }: { params: { id: string }
     ]
 
     for (const { model, name } of withItemsCollections) {
-      // دیتیل‌ها را بدون فیلتر archiveId بخوان
+      // دیتیل‌ها را دریافت کن (بدون محدودیت archiveId اما بعداً فیلتر می‌کنیم)
       const details = await model.find()
+      
       for (const detail of details) {
         if (!detail.assignedMembers) continue
         // فقط دیتیل‌هایی که sectionId آن‌ها در بخش‌های همین آرشیو است
-        if (!detail.sectionId || !sectionIds.includes(detail.sectionId.toString())) continue
+        if (!detail.sectionId || !sectionIds.includes(detail.sectionId.toString())) {
+          // اگر archiveId وجود دارد، بررسی کن آیا این detail برای آرشیوهای قدیمی است
+          // در اینصورت، بخش قدیمی را جستجو کن
+          if (archiveId && detail.sectionId) {
+            const section = await ProjectSection.findById(detail.sectionId)
+            if (!section || section.archiveId?.toString() !== archiveId) {
+              continue
+            }
+          } else {
+            continue
+          }
+        }
         
         // تبدیل Map به Object برای راحتی کار
         let assignedMembers = {}
@@ -53,7 +68,8 @@ export async function GET(request: Request, { params }: { params: { id: string }
         
         for (const [field, assignedId] of Object.entries(assignedMembers)) {
           if (assignedId?.toString() === memberId) {
-            const section = sections.find(s => s._id.toString() === detail.sectionId?.toString())
+            const section = sections.find(s => s._id.toString() === detail.sectionId?.toString()) ||
+                           await ProjectSection.findById(detail.sectionId)
             if (section) {
               const project = await Project.findById(section.projectId)
               if (project) {
@@ -80,7 +96,19 @@ export async function GET(request: Request, { params }: { params: { id: string }
     for (const { model, name } of withoutItemsCollections) {
       const details = await model.find()
       for (const detail of details) {
-        if (!detail.sectionId || !sectionIds.includes(detail.sectionId.toString())) continue
+        if (!detail.sectionId) continue
+        
+        // بررسی آیا sectionId در sections آرشیو فعال است
+        let validSection = sections.find(s => s._id.toString() === detail.sectionId?.toString())
+        if (!validSection && archiveId) {
+          // اگر در sections فعال نیست، بررسی کن آیا در آرشیو قدیم است
+          const section = await ProjectSection.findById(detail.sectionId)
+          if (section && section.archiveId?.toString() === archiveId) {
+            validSection = section
+          }
+        }
+        
+        if (!validSection) continue
         if (!detail.details) continue
         
         // تبدیل Map به Object برای راحتی کار
@@ -95,16 +123,13 @@ export async function GET(request: Request, { params }: { params: { id: string }
         
         for (const [field, fieldDetails] of Object.entries(detailsObj)) {
           if (fieldDetails?.assignedMemberId?.toString() === memberId) {
-            const section = sections.find(s => s._id.toString() === detail.sectionId?.toString())
-            if (section) {
-              const project = await Project.findById(section.projectId)
-              if (project) {
-                assignments.push({
-                  projectName: project.name,
-                  sectionName: name,
-                  fieldName: field
-                })
-              }
+            const project = await Project.findById(validSection.projectId)
+            if (project) {
+              assignments.push({
+                projectName: project.name,
+                sectionName: name,
+                fieldName: field
+              })
             }
           }
         }

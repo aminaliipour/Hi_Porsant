@@ -98,43 +98,23 @@ export default function SystemTab() {
       setProjects(projectsData)
 
       // دریافت درآمدهای پروژه‌ها
-      let incomesData: ProjectIncome[] = []
       let incomesUrl = "/api/project-incomes"
       if (archiveId) incomesUrl += `?archiveId=${archiveId}`
       const incomesResponse = await fetch(incomesUrl)
-      
-      if (!incomesResponse.ok) {
-        console.error("Failed to fetch project incomes:", incomesResponse.status)
-        toast({
-          title: "خطا",
-          description: "خطا در دریافت اطلاعات درآمد پروژه‌ها",
-          variant: "destructive",
-        })
-        setProjectIncomes([])
-      } else {
-        const responseData = await incomesResponse.json()
-        if (!Array.isArray(responseData)) {
-          console.error("Project incomes response is not an array:", responseData)
-          toast({
-            title: "خطا",
-            description: "دریافت اطلاعات درآمد پروژه‌ها با خطا مواجه شد",
-            variant: "destructive",
-          })
-          setProjectIncomes([])
-        } else {
-          incomesData = responseData
-          setProjectIncomes(incomesData)
-          
-          // لاگ برای دیباگ
-          console.log("Project incomes received:", incomesData.map(income => ({
-            id: income._id,
-            totalIncome: income.totalIncome,
-            totalRawIncome: income.totalRawIncome,
-            totalSystemShare: income.totalSystemShare,
-            details: income.details?._rawTotals ? "Has rawTotals" : "No rawTotals"
-          })))
-        }
+      const incomesData = await incomesResponse.json()
+      if (!Array.isArray(incomesData)) {
+        throw new Error("دریافت اطلاعات درآمد پروژه‌ها با خطا مواجه شد")
       }
+      setProjectIncomes(incomesData)
+      
+      // لاگ برای دیباگ
+      console.log("Project incomes received:", incomesData.map(income => ({
+        id: income._id,
+        totalIncome: income.totalIncome,
+        totalRawIncome: income.totalRawIncome,
+        totalSystemShare: income.totalSystemShare,
+        details: income.details?._rawTotals ? "Has rawTotals" : "No rawTotals"
+      })))
 
       // دریافت درصدهای سیستم
       const percentagesResponse = await fetch("/api/system-percentages")
@@ -142,7 +122,7 @@ export default function SystemTab() {
       
       // محاسبه سهم سیستم برای هر درآمد
       const shares: Record<string, number> = {}
-      if (!latestPercentages.error && incomesData.length > 0) {
+      if (!latestPercentages.error) {
         incomesData.forEach((income: ProjectIncome) => {
           const project = projectsData.find((p: Project) => p._id === income.projectId)
           // محاسبه سهم سیستم از کل درآمد پروژه
@@ -171,7 +151,7 @@ export default function SystemTab() {
           shares[income._id] = Math.round(totalSystemShare)
         })
         setSystemShares(shares)
-      } else if (latestPercentages.error) {
+      } else {
         toast({
           title: "هشدار",
           description: "درصدهای سیستم تنظیم نشده‌اند",

@@ -1,5 +1,4 @@
 import mongoose, { Schema, type Document } from "mongoose"
-import "./archive.model"
 
 export interface IProject extends Document {
   name: string

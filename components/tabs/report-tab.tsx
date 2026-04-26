@@ -79,7 +79,10 @@ export default function ReportTab() {
       
       // دریافت تمام اعضای تیم
       console.log("Fetching team members...")
-      const teamResponse = await fetch('/api/team-members')
+      const teamUrl = currentArchiveId 
+        ? `/api/team-members?archiveId=${currentArchiveId}`
+        : '/api/team-members'
+      const teamResponse = await fetch(teamUrl)
       const teamData = await teamResponse.json()
       console.log("Team data received:", teamData)
       setTeamMembers(teamData)

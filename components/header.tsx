@@ -147,24 +147,72 @@ export function Header({ activeTab, setActiveTab, onLogout }: HeaderProps) {
 
   // انتقال پروژه‌ها و اعضای تیم فعلی به آرشیو انتخابی
   const copyCurrentDataToArchive = async (archive: any) => {
-    // انتقال پروژه‌ها بدون تکرار
-    const projectsRes = await fetch("/api/projects")
-    const projects = await projectsRes.json()
-    // دریافت پروژه‌های آرشیو مقصد
-    const destRes = await fetch(`/api/projects?archiveId=${archive._id}`)
-    const destProjects = await destRes.json()
-    for (const p of projects) {
-      const exists = destProjects.find((dp: any) => dp.name === p.name)
-      if (!exists) {
-        await fetch("/api/projects", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name: p.name, archiveId: archive._id }),
-        })
+    try {
+      // انتقال پروژه‌ها بدون تکرار
+      const projectsRes = await fetch("/api/projects")
+      const projects = await projectsRes.json()
+      // دریافت پروژه‌های آرشیو مقصد
+      const destRes = await fetch(`/api/projects?archiveId=${archive._id}`)
+      const destProjects = await destRes.json()
+      for (const p of projects) {
+        const exists = destProjects.find((dp: any) => dp.name === p.name)
+        if (!exists) {
+          await fetch("/api/projects", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name: p.name, archiveId: archive._id }),
+          })
+        }
       }
+
+      // انتقال حقوق‌های کارکنان
+      const salariesRes = await fetch("/api/all-salaries")
+      const salaries = await salariesRes.json()
+      for (const salary of salaries) {
+        // بررسی اینکه آیا این حقوق قبلاً در آرشیو وجود دارد یا نه
+        const existingSalaryRes = await fetch(`/api/employee-salaries?employeeId=${salary.employeeId}&archiveId=${archive._id}`)
+        const existingSalaries = await existingSalaryRes.json()
+        if (existingSalaries.length === 0) {
+          await fetch("/api/employee-salaries", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ ...salary, archiveId: archive._id }),
+          })
+        }
+      }
+
+      // انتقال پورسانت‌های کاربران
+      const teamMembersRes = await fetch("/api/team-members")
+      const teamMembers = await teamMembersRes.json()
+      for (const member of teamMembers) {
+        const commissionsRes = await fetch(`/api/user-commissions/${member._id}`)
+        const commissions = await commissionsRes.json()
+        if (commissions.length > 0) {
+          // ارسال وضعیت پورسانت‌ها برای آرشیو جدید
+          await fetch("/api/user-commissions/update-status", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              employeeId: member._id,
+              archiveId: archive._id,
+              commissionStates: commissions.map((c: any) => ({
+                projectName: c.projectName,
+                sectionName: c.sectionName,
+                itemName: c.itemName,
+                fieldName: c.fieldName,
+                isActive: c.isActive
+              }))
+            }),
+          })
+        }
+      }
+
+      toast({ title: "انتقال انجام شد!", description: "داده‌ها به آرشیو انتخابی منتقل شدند." })
+      window.location.reload()
+    } catch (error) {
+      console.error("Error copying data to archive:", error)
+      toast({ title: "خطا", description: "خطا در انتقال داده‌ها", variant: "destructive" })
     }
-    toast({ title: "انتقال انجام شد!", description: "پروژه‌های غیرتکراری به آرشیو انتخابی منتقل شدند." })
-    window.location.reload()
   }
 
   useEffect(() => {
@@ -285,7 +333,7 @@ export function Header({ activeTab, setActiveTab, onLogout }: HeaderProps) {
               </Button>
             </>
           )}
-
+          
           {user ? (
             <>
               <div className="hidden md:flex items-center gap-2 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full">
@@ -331,7 +379,7 @@ export function Header({ activeTab, setActiveTab, onLogout }: HeaderProps) {
           </Button>
         </div>
       </div>
-
+      
       {/* Archive Selection Dialog */}
       <Dialog open={showArchiveSelect} onOpenChange={setShowArchiveSelect}>
         <DialogContent className="max-w-[90vw] md:max-w-md max-h-[90vh] flex flex-col p-0 overflow-hidden">
@@ -352,7 +400,7 @@ export function Header({ activeTab, setActiveTab, onLogout }: HeaderProps) {
               >
                 <span>🚫 بدون آرشیو (خروج از آرشیو)</span>
               </div>
-
+              
               {/* لیست آرشیوها */}
               {archives.length === 0 && (
                 <div className="p-8 text-center text-gray-400">
@@ -364,10 +412,11 @@ export function Header({ activeTab, setActiveTab, onLogout }: HeaderProps) {
                 {archives.map((archive) => (
                   <div
                     key={archive._id}
-                    className={`flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-yellow-50 dark:hover:bg-yellow-900/20 border rounded-lg transition-colors ${activeArchive && activeArchive._id === archive._id
-                      ? "bg-yellow-100 dark:bg-yellow-800/40 border-yellow-500 shadow-sm"
-                      : "border-gray-200 dark:border-gray-700"
-                      }`}
+                    className={`flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-yellow-50 dark:hover:bg-yellow-900/20 border rounded-lg transition-colors ${
+                      activeArchive && activeArchive._id === archive._id 
+                        ? "bg-yellow-100 dark:bg-yellow-800/40 border-yellow-500 shadow-sm" 
+                        : "border-gray-200 dark:border-gray-700"
+                    }`}
                   >
                     <div
                       className="flex-1 flex items-center gap-3 cursor-pointer"
@@ -391,27 +440,27 @@ export function Header({ activeTab, setActiveTab, onLogout }: HeaderProps) {
                       </div>
                     </div>
                     <div className="flex items-center gap-1">
-                      <Button
-                        size="sm"
-                        variant="ghost"
+                      <Button 
+                        size="sm" 
+                        variant="ghost" 
                         onClick={(e) => {
                           e.stopPropagation()
                           handleEditArchive(archive)
                           setShowArchiveSelect(false)
-                        }}
+                        }} 
                         title="ویرایش"
                         className="h-8 w-8 p-0 hover:bg-blue-100 dark:hover:bg-blue-900/30"
                       >
                         <Edit2 className="w-3 h-3 text-blue-600 dark:text-blue-400" />
                       </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
+                      <Button 
+                        size="sm" 
+                        variant="ghost" 
                         onClick={(e) => {
                           e.stopPropagation()
                           handleDeleteArchive(archive._id)
                           setShowArchiveSelect(false)
-                        }}
+                        }} 
                         title="حذف"
                         className="h-8 w-8 p-0 hover:bg-red-100 dark:hover:bg-red-900/30"
                       >
@@ -424,8 +473,8 @@ export function Header({ activeTab, setActiveTab, onLogout }: HeaderProps) {
             </div>
           </ScrollArea>
           <DialogFooter className="p-4 pt-3 border-t border-gray-200 dark:border-gray-700 flex-shrink-0">
-            <Button
-              variant="outline"
+            <Button 
+              variant="outline" 
               onClick={() => setShowArchiveSelect(false)}
               className="text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100"
             >

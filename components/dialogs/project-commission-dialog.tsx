@@ -40,6 +40,7 @@ export function ProjectCommissionDialog({ project, open, onOpenChange }: Project
   const [sections, setSections] = useState<ProjectSection[]>([])
   const [income, setIncome] = useState<Record<string, any>>({})
   const [weights, setWeights] = useState<SectionWeight[]>([])
+  const [systemPercents, setSystemPercents] = useState<Record<string, number>>({})
   const [loading, setLoading] = useState(true)
   const [sectionDetails, setSectionDetails] = useState<Record<string, any>>({})
   const [totalAmount, setTotalAmount] = useState(0)
@@ -82,6 +83,39 @@ export function ProjectCommissionDialog({ project, open, onOpenChange }: Project
           description: "وزن‌های بخش‌ها تنظیم نشده‌اند",
           variant: "default",
         })
+      }
+
+      // دریافت درصدهای سیستم تعادل
+      const systemPercentsResponse = await fetch(`/api/system-percentages`)
+      const systemPercentsData = await systemPercentsResponse.json()
+      if (systemPercentsData && !Array.isArray(systemPercentsData)) {
+        // اگر جواب چند بخش غیرفعال دارد، درصدهای باقی را بین بخش‌های فعال تقسیم کنیم
+        const activeSections = sectionsData.filter((s: any) => s.isActive !== false)
+        const inactiveSections = sectionsData.filter((s: any) => s.isActive === false)
+        
+        const distributedPercents: Record<string, number> = {}
+        let inactiveSum = 0
+        
+        // جمع درصد بخش‌های غیرفعال
+        for (const section of inactiveSections) {
+          const percent = systemPercentsData[section.sectionName] || 0
+          inactiveSum += percent
+        }
+        
+        // توزیع بین بخش‌های فعال
+        if (activeSections.length > 0 && inactiveSum > 0) {
+          const percentPerActiveSection = inactiveSum / activeSections.length
+          for (const section of activeSections) {
+            const originalPercent = systemPercentsData[section.sectionName] || 0
+            distributedPercents[section.sectionName] = originalPercent + percentPerActiveSection
+          }
+        } else {
+          for (const section of sectionsData) {
+            distributedPercents[section.sectionName] = systemPercentsData[section.sectionName] || 0
+          }
+        }
+        
+        setSystemPercents(distributedPercents)
       }
 
       // دریافت جزئیات هر بخش

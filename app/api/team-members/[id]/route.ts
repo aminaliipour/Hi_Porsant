@@ -1,28 +1,15 @@
 import { NextResponse } from "next/server"
 import dbConnect from "@/lib/db"
-import User from "@/lib/models/User"
+import { TeamMember } from "@/lib/models"
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params
     await dbConnect()
-    const user = await User.findById(params.id)
+    const member = await TeamMember.findById(id)
 
-    if (!user) {
+    if (!member) {
       return NextResponse.json({ error: "عضو تیم یافت نشد" }, { status: 404 })
-    }
-
-    // Map User to TeamMember format for consistent API response
-    const member = {
-      _id: user._id,
-      fullName: user.name,
-      position: user.jobTitle || "تعیین نشده",
-      fatherName: user.fatherName || "",
-      nationalCode: user.nationalCode,
-      phoneNumber: user.phoneNumber || "",
-      email: user.email || "",
-      education: user.education || "",
-      address: user.address || "",
-      cardNumber: user.cardNumber || "",
     }
 
     return NextResponse.json(member)
@@ -31,29 +18,30 @@ export async function GET(request: Request, { params }: { params: { id: string }
   }
 }
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params
     const body = await request.json()
     await dbConnect()
 
-    // بررسی تکراری نبودن کد ملی در صورت تغییر
+    // بررسی تکراری نبودن کد ملی در صورت تغییر (فقط برای همین آرشیو)
     if (body.nationalCode) {
-      const existingUser = await User.findOne({
+      const existingMember = await TeamMember.findOne({
         nationalCode: body.nationalCode,
-        _id: { $ne: params.id },
+        archiveId: body.archiveId,
+        _id: { $ne: id },
       })
 
-      if (existingUser) {
-        return NextResponse.json({ error: "کد ملی قبلاً در سیستم ثبت شده است" }, { status: 400 })
+      if (existingMember) {
+        return NextResponse.json({ error: "کد ملی قبلاً در این آرشیو ثبت شده است" }, { status: 400 })
       }
     }
 
-    // Update User collection with TeamMember data mapped to User fields
-    const updatedUser = await User.findByIdAndUpdate(
-      params.id,
+    const member = await TeamMember.findByIdAndUpdate(
+      id,
       {
-        name: body.fullName,
-        jobTitle: body.position,
+        fullName: body.fullName,
+        position: body.position,
         fatherName: body.fatherName,
         nationalCode: body.nationalCode,
         phoneNumber: body.phoneNumber,
@@ -61,26 +49,13 @@ export async function PUT(request: Request, { params }: { params: { id: string }
         education: body.education,
         address: body.address,
         cardNumber: body.cardNumber,
+        archiveId: body.archiveId,
       },
       { new: true },
     )
 
-    if (!updatedUser) {
+    if (!member) {
       return NextResponse.json({ error: "عضو تیم یافت نشد" }, { status: 404 })
-    }
-
-    // Return in TeamMember format for frontend compatibility
-    const member = {
-      _id: updatedUser._id,
-      fullName: updatedUser.name,
-      position: updatedUser.jobTitle || "تعیین نشده",
-      fatherName: updatedUser.fatherName || "",
-      nationalCode: updatedUser.nationalCode,
-      phoneNumber: updatedUser.phoneNumber || "",
-      email: updatedUser.email || "",
-      education: updatedUser.education || "",
-      address: updatedUser.address || "",
-      cardNumber: updatedUser.cardNumber || "",
     }
 
     return NextResponse.json(member)
@@ -89,12 +64,13 @@ export async function PUT(request: Request, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params
     await dbConnect()
-    const user = await User.findByIdAndDelete(params.id)
+    const member = await TeamMember.findByIdAndDelete(id)
 
-    if (!user) {
+    if (!member) {
       return NextResponse.json({ error: "عضو تیم یافت نشد" }, { status: 404 })
     }
 

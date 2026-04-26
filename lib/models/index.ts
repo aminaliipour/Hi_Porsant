@@ -1,21 +1,4 @@
 // این فایل برای export کردن همه مدل‌ها از یک نقطه است
-
-// Import all models to ensure they are registered with Mongoose
-import User from "./User"
-import Session from "./Session"
-import Task from "./Task"
-import Announcement from "./Announcement"
-import Notification from "./Notification"
-import Message from "./Message"
-import ChatGroup from "./ChatGroup"
-import ChatGroupTask from "./ChatGroupTask"
-import GroupMessage from "./GroupMessage"
-import DirectMessage from "./DirectMessage"
-
-// Export models
-export { User, Session, Task, Announcement, Notification, Message, ChatGroup, ChatGroupTask, GroupMessage, DirectMessage }
-
-// Export other models
 export * from "./project.model"
 export * from "./team-member.model"
 export * from "./project-section.model"

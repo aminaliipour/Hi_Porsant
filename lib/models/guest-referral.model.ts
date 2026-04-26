@@ -1,5 +1,4 @@
 import mongoose, { Schema, type Document } from "mongoose"
-import "./archive.model"
 
 export interface IGuestReferral extends Document {
   fullName: string
