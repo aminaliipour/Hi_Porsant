@@ -213,6 +213,7 @@ export default function ReportTab() {
     return sum + (s.baseSalary || 0);
   }, 0);
   const totalEmployeeInsurance = filteredEmployeeSalaries.reduce((sum: number, s: any) => {
+    if (!s.insuranceDeduction) return sum;
     if (s.isPorsanti) {
       const salary1Base = s.salary1Base || 133911989;
       return sum + Math.round(salary1Base * 0.07);
@@ -325,6 +326,8 @@ export default function ReportTab() {
                   <TableHead className="text-right">نام کارمند</TableHead>
                   <TableHead className="text-right">حقوق پایه</TableHead>
                   <TableHead className="text-right">حقوق پایه نهایی</TableHead>
+                      <TableHead className="text-right">مجموع اضافات</TableHead>
+                      <TableHead className="text-right">کسورات نهایی</TableHead>
                   <TableHead className="text-right">پورسانت</TableHead>
                   <TableHead className="text-right">حقوق دوم</TableHead>
                   <TableHead className="text-right">حق بیمه (7%)</TableHead>
@@ -348,8 +351,8 @@ export default function ReportTab() {
                     const salary1 = salary.salary1 || 0;
                     const salary2 = salary.salary2 || 0;
                     const salary1Base = salary.salary1Base || 133911989;
-                    const salary1Insurance = Math.round(salary1Base * 0.07);
-                    const officeSalary1Insurance = Math.round(salary1Base * 0.23);
+                    const salary1Insurance = salary.insuranceDeduction ? Math.round(salary1Base * 0.07) : 0;
+                    const officeSalary1Insurance = salary.insuranceDeduction ? Math.round(salary1Base * 0.23) : 0;
                     const totalSalary1Insurance = salary1Insurance + officeSalary1Insurance;
                     
                     // محاسبه حقوق دوم (پورسانت نهایی) برای پورسانتی (حقوق دوم + اضافات - کسورات)
@@ -361,15 +364,21 @@ export default function ReportTab() {
                           {salary.employeeName || "نامشخص"}
                           <span className="text-xs text-blue-600 mr-2">(پورسانتی)</span>
                         </TableCell>
-                        <TableCell>
-                          <div className="text-sm">
-                            <div className="font-medium">حقوق اول: {salary1.toLocaleString()} ریال</div>
-                            <div className="text-xs text-gray-500 mt-1">({salary1Base.toLocaleString()} - 7%)</div>
-                          </div>
-                        </TableCell>
-                        <TableCell className="font-semibold text-green-600">
-                          {salary1.toLocaleString()} ریال
-                        </TableCell>
+                            <TableCell>
+                              <div className="text-sm">
+                                <div className="font-medium">حقوق اول: {salary1Base.toLocaleString()} ریال</div>
+                                <div className="text-xs text-gray-500 mt-1">(پس از کسر 7%: {salary1.toLocaleString()} ریال)</div>
+                              </div>
+                            </TableCell>
+                            <TableCell className="font-semibold text-green-600">
+                              {salary1.toLocaleString()} ریال
+                            </TableCell>
+                            <TableCell>
+                              {totalAdditions.toLocaleString()} ریال
+                            </TableCell>
+                            <TableCell>
+                              {totalDeductions.toLocaleString()} ریال
+                            </TableCell>
                         <TableCell>
                           <div className="text-sm">
                             <div>مجموع پورسانت: {commission.toLocaleString()} ریال</div>
@@ -391,12 +400,12 @@ export default function ReportTab() {
                   }
 
                   // حالت عادی (غیر پورسانتی)
-                  const employeeInsurance = calculateEmployeeInsurance(baseSalary);
-                  const officeInsurance = calculateOfficeInsurance(baseSalary);
-                  const totalInsurance = calculateTotalInsurance(baseSalary);
+                  const employeeInsurance = salary.insuranceDeduction ? calculateEmployeeInsurance(baseSalary) : 0;
+                  const officeInsurance = salary.insuranceDeduction ? calculateOfficeInsurance(baseSalary) : 0;
+                  const totalInsurance = salary.insuranceDeduction ? calculateTotalInsurance(baseSalary) : 0;
 
-                  // محاسبه حقوق پایه نهایی (حقوق پایه منهای 7% حق بیمه)
-                  const finalBaseSalary = baseSalary - employeeInsurance;
+                  // محاسبه حقوق پایه نهایی (حقوق پایه منهای 7% حق بیمه اگر فعال باشد)
+                  const finalBaseSalary = baseSalary - (salary.insuranceDeduction ? employeeInsurance : 0);
 
                   // محاسبه پورسانت نهایی (پورسانت + اضافات - کسورات)
                   const finalCommission = commission + totalAdditions - totalDeductions;
@@ -406,6 +415,8 @@ export default function ReportTab() {
                       <TableCell className="font-medium">{salary.employeeName || "نامشخص"}</TableCell>
                       <TableCell>{baseSalary.toLocaleString()} ریال</TableCell>
                       <TableCell className="font-semibold text-green-600">{finalBaseSalary.toLocaleString()} ریال</TableCell>
+                      <TableCell>{totalAdditions.toLocaleString()} ریال</TableCell>
+                      <TableCell>{totalDeductions.toLocaleString()} ریال</TableCell>
                       <TableCell>{commission.toLocaleString()} ریال</TableCell>
                       <TableCell className="font-semibold text-blue-600">{finalCommission.toLocaleString()} ریال</TableCell>
                       <TableCell>{employeeInsurance.toLocaleString()} ریال</TableCell>
@@ -457,6 +468,19 @@ export default function ReportTab() {
                     </TableCell>
                     <TableCell>
                       {employeeSalaries.reduce((sum, s) => {
+                        const totalAdditions = s.additions?.reduce((addSum, addition) => addSum + (addition.amount || 0), 0) || 0;
+                        return sum + totalAdditions;
+                      }, 0).toLocaleString()} ریال
+                    </TableCell>
+                    <TableCell>
+                      {employeeSalaries.reduce((sum, s) => {
+                        const totalDeductions = s.deductions?.reduce((dedSum, deduction) => dedSum + (deduction.amount || 0), 0) || 0;
+                        return sum + totalDeductions;
+                      }, 0).toLocaleString()} ریال
+                    </TableCell>
+                    <TableCell>
+                      {employeeSalaries.reduce((sum, s) => {
+                        if (!s.insuranceDeduction) return sum;
                         if (s.isPorsanti) {
                           const salary1Base = s.salary1Base || 133911989;
                           return sum + Math.round(salary1Base * 0.07);
@@ -466,6 +490,7 @@ export default function ReportTab() {
                     </TableCell>
                     <TableCell>
                       {employeeSalaries.reduce((sum, s) => {
+                        if (!s.insuranceDeduction) return sum;
                         if (s.isPorsanti) {
                           const salary1Base = s.salary1Base || 133911989;
                           return sum + Math.round(salary1Base * 0.23);
@@ -475,6 +500,7 @@ export default function ReportTab() {
                     </TableCell>
                     <TableCell className="font-semibold">
                       {employeeSalaries.reduce((sum, s) => {
+                        if (!s.insuranceDeduction) return sum;
                         if (s.isPorsanti) {
                           const salary1Base = s.salary1Base || 133911989;
                           return sum + Math.round(salary1Base * 0.30);

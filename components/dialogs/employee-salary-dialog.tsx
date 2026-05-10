@@ -698,10 +698,10 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
             position={employee.position}
             assignments={assignments.filter(assignment => assignment.isActive !== false)} // فقط پورسانت‌های فعال
             totalCommission={getTotalCommission()}
-            baseSalary={salary.baseSalary}
+            baseSalary={salary.isPorsanti ? salary.salary1Base : salary.baseSalary}
             additions={salary.additions}
             deductions={salary.deductions}
-            taxDeduction={salary.taxDeduction} // کسر 7% اضافه شد
+            taxDeduction={salary.isPorsanti ? (insuranceDeduction ? Math.round((salary.salary1Base || 0) * 0.07) : 0) : salary.taxDeduction} // در حالت پورسانتی از salary1Base استفاده کن
             description={salary.description} // فیلد توضیحات اضافه شد
             employeeId={employee._id} // اضافه شد برای آپلود
             onComplete={() => {
