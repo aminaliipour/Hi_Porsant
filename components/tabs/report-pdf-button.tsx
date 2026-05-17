@@ -2,6 +2,79 @@ import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 import { Button } from "@/components/ui/button";
 
+  // ساخت و دانلود فایل اکسل (در صورت موجود بودن xlsx) یا CSV به‌عنوان fallback
+  async function handleDownloadExcel() {
+    const reportElement = document.getElementById("report-main-container");
+    if (!reportElement) return;
+
+    // جمع‌آوری داده‌ها از جداول داخل گزارش
+    const tables = Array.from(reportElement.querySelectorAll('table')) as HTMLTableElement[];
+    const sheets: Array<{ name: string, data: any[][] }> = [];
+
+    if (tables.length === 0) {
+      // اگر جدولی نیست، خروجی متن ساده از محتوای کارت‌ها بساز
+      const text = reportElement.innerText || '';
+      const csv = '\uFEFF' + text.split('\n').map(r => '"' + r.replace(/"/g, '""') + '"').join('\r\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'report.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+      return;
+    }
+
+    tables.forEach((table, idx) => {
+      const rows = Array.from(table.querySelectorAll('tr'));
+      const data: any[][] = rows.map(row => {
+        const cells = Array.from(row.querySelectorAll('th, td'));
+        return cells.map(cell => (cell.textContent || '').trim());
+      });
+      sheets.push({ name: `Sheet${idx + 1}`, data });
+    });
+
+    // تلاش برای استفاده از کتابخانه xlsx در صورت نصب بودن
+    try {
+      // dynamic import - اگر xlsx نصب نباشد خطا می‌افتد و به fallback می‌رویم
+      // @ts-ignore
+      const XLSX = (await import('xlsx')).default || (await import('xlsx'));
+      const wb = XLSX.utils.book_new();
+      sheets.forEach(s => {
+        const ws = XLSX.utils.aoa_to_sheet(s.data);
+        XLSX.utils.book_append_sheet(wb, ws, s.name);
+      });
+      const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+      const blob = new Blob([wbout], { type: 'application/octet-stream' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'report.xlsx';
+      a.click();
+      URL.revokeObjectURL(url);
+      return;
+    } catch (e) {
+      // fallback to CSV (with BOM for Excel UTF-8)
+      const csvParts: string[] = [];
+      sheets.forEach((s, idx) => {
+        if (idx > 0) csvParts.push('\r\n');
+        s.data.forEach(row => {
+          const line = row.map(cell => '"' + (cell || '').replace(/"/g, '""') + '"').join(',');
+          csvParts.push(line);
+        });
+      });
+      const csv = '\uFEFF' + csvParts.join('\r\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'report.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+      return;
+    }
+  }
+
 export default function ReportPdfButton() {
   const handleDownloadPdf = async () => {
   // فقط بخش اصلی گزارش را برای PDF بگیر (بدون دکمه‌ها)
@@ -84,13 +157,63 @@ export default function ReportPdfButton() {
       (el as HTMLElement).style.display = 'none';
     });
 
-    // capture at device pixel ratio so on-screen size is preserved
-    const scale = (window.devicePixelRatio && window.devicePixelRatio > 1) ? window.devicePixelRatio : 1;
+    // constrain report to A4 landscape width to avoid horizontal overflow during capture
+    const prevWidth = (reportElement as HTMLElement).style.width || '';
+    const prevFontSize = (reportElement as HTMLElement).style.fontSize || '';
+    const prevLineHeight = (reportElement as HTMLElement).style.lineHeight || '';
+    const prevTransform = (reportElement as HTMLElement).style.transform || '';
+    const prevTransformOrigin = (reportElement as HTMLElement).style.transformOrigin || '';
+
+    // target A4 landscape width in px
+    const targetWidth = 1123;
+    // scale down so table contents become much smaller and fit better
+    // lowered from 0.72 to 0.65 to shrink remaining large cells
+    const scaleFactor = 0.65;
+
+    // set element width larger so after scaling it matches targetWidth
+    (reportElement as HTMLElement).style.width = `${Math.round(targetWidth / scaleFactor)}px`;
+    (reportElement as HTMLElement).style.boxSizing = 'border-box';
+    // reduce base font size and line-height
+    (reportElement as HTMLElement).style.fontSize = '8px';
+    (reportElement as HTMLElement).style.lineHeight = '1';
+    // apply CSS transform scale to shrink content visually
+    (reportElement as HTMLElement).style.transformOrigin = 'top left';
+    (reportElement as HTMLElement).style.transform = `scale(${scaleFactor})`;
+
+    // inject temporary style to reduce paddings in tables and tighten spacing
+    const tempStyle = document.createElement('style');
+    tempStyle.id = 'report-pdf-temp-style';
+    tempStyle.innerHTML = `
+      /* Force uniform small font and tighter spacing for PDF export */
+      #report-main-container, #report-main-container * { font-size: 7px !important; font-family: IRANSansWeb, Tahoma, Arial, sans-serif !important; line-height: 1 !important; }
+      #report-main-container table td, #report-main-container table th { padding: 12px !important; }
+      #report-main-container table th { font-size: 7px !important; }
+      #report-main-container .report-card, #report-main-container .card { padding: 4px !important; }
+      #report-main-container .report-title img { max-height: 40px !important; }
+      #report-main-container .font-bold, #report-main-container strong { font-size: 7px !important; }
+    `;
+    document.head.appendChild(tempStyle);
+    // capture at higher resolution for better PDF quality
+    const dpr = (window.devicePixelRatio && window.devicePixelRatio > 1) ? window.devicePixelRatio : 1;
+    const qualityFactor = 2 // increase for higher quality (2x DPR)
+    const captureScale = dpr * qualityFactor
     const canvas = await html2canvas(reportElement as HTMLElement, {
-      scale,
+      scale: captureScale,
       useCORS: true,
-      backgroundColor: "#fff"
+      backgroundColor: "#fff",
+      // improve timeout for images
+      imageTimeout: 0,
+      logging: false
     });
+    // restore original width and text styles
+    (reportElement as HTMLElement).style.width = prevWidth;
+    (reportElement as HTMLElement).style.fontSize = prevFontSize;
+    (reportElement as HTMLElement).style.lineHeight = prevLineHeight;
+    (reportElement as HTMLElement).style.transform = prevTransform;
+    (reportElement as HTMLElement).style.transformOrigin = prevTransformOrigin;
+    // remove temporary style
+    const existingTemp = document.getElementById('report-pdf-temp-style');
+    if (existingTemp && existingTemp.parentNode) existingTemp.parentNode.removeChild(existingTemp);
 
     // restore hidden elements and styles before PDF creation
     hiddenEls.forEach(({ el, prev }) => {
@@ -104,8 +227,8 @@ export default function ReportPdfButton() {
       titleEl.innerHTML = titleBackup.html;
     }
 
-    // create multi-page PDF preserving on-screen scale
-    const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+    // create multi-page PDF preserving on-screen scale (landscape)
+    const pdf = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
 
@@ -130,9 +253,9 @@ export default function ReportPdfButton() {
         ctx.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
         ctx.drawImage(canvas, 0, yOffset, canvasWidth, sliceHeight, 0, 0, canvasWidth, sliceHeight);
       }
-      const imgData = pageCanvas.toDataURL('image/jpeg', 1);
+      const imgData = pageCanvas.toDataURL('image/png');
       // add page image scaled to pageWidth x pageHeight (maintain aspect)
-      pdf.addImage(imgData, 'JPEG', 0, 0, pageWidth, (sliceHeight / pxPerMm));
+      pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, (sliceHeight / pxPerMm));
       yOffset += sliceHeight;
       if (yOffset < canvasHeight) pdf.addPage();
     }
@@ -141,8 +264,13 @@ export default function ReportPdfButton() {
   };
 
   return (
-    <Button onClick={handleDownloadPdf} variant="secondary">
-      دانلود PDF گزارش
-    </Button>
+    <div className="flex gap-2">
+      <Button onClick={handleDownloadPdf} variant="secondary">
+        دانلود PDF گزارش
+      </Button>
+      <Button onClick={handleDownloadExcel} variant="outline">
+        دانلود Excel گزارش
+      </Button>
+    </div>
   );
 }

@@ -27,6 +27,9 @@ interface CommissionInvoicePdfProps {
   description?: string // فیلد توضیحات اضافه شد
   employeeId?: string // اضافه شد برای آپلود
   onComplete?: () => void
+  isPorsanti?: boolean
+  salary1?: number
+  salary2?: number
 }
 
 export const CommissionInvoicePdf: React.FC<CommissionInvoicePdfProps> = ({
@@ -41,6 +44,9 @@ export const CommissionInvoicePdf: React.FC<CommissionInvoicePdfProps> = ({
   description = "", // فیلد توضیحات اضافه شد
   employeeId, // اضافه شد
   onComplete,
+  isPorsanti = false,
+  salary1 = 0,
+  salary2 = 0,
 }) => {
   const [isClient, setIsClient] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -216,10 +222,12 @@ export const CommissionInvoicePdf: React.FC<CommissionInvoicePdfProps> = ({
       tempDiv.style.position = 'absolute'
       tempDiv.style.left = '-9999px'
       tempDiv.style.top = '0'
-      tempDiv.style.width = '750px'
+      tempDiv.style.width = '794px'
       tempDiv.style.backgroundColor = 'white'
       tempDiv.style.fontFamily = 'Morabba, Arial, sans-serif'
       tempDiv.style.direction = 'rtl'
+      tempDiv.style.boxSizing = 'border-box'
+      tempDiv.style.padding = '12px'
       tempDiv.style.textRendering = 'optimizeLegibility' // بهبود رندر متن
       ;(tempDiv.style as any).webkitFontSmoothing = 'antialiased' // نرم‌تر کردن فونت
       document.body.appendChild(tempDiv)
@@ -337,6 +345,12 @@ export const CommissionInvoicePdf: React.FC<CommissionInvoicePdfProps> = ({
     const totalAdditions = additions.reduce((sum, item) => sum + item.amount, 0)
     const totalDeductions = deductions.reduce((sum, item) => sum + item.amount, 0)
     const totalPayment = baseSalary + totalAdditions + totalCommission - totalDeductions - taxDeduction
+    // برای حالت پورسانتی، مجموع پورسانت در فیش باید برابر جمع کل دریافتی باشد
+    const displayedCommission = isPorsanti
+      ? (salary1 || 0) + (salary2 || 0) + totalAdditions - totalDeductions
+      : totalCommission
+    // جمع نهایی که در بخش "جمع کل دریافتی" نمایش داده می‌شود
+    const finalTotalPayment = isPorsanti ? displayedCommission : totalPayment
 
     return `
       <style>
@@ -360,8 +374,13 @@ export const CommissionInvoicePdf: React.FC<CommissionInvoicePdfProps> = ({
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
         }
+        /* قوانین جدید برای جلوگیری از خروج محتوا از صفحه در PDF */
+        img { max-width: 100%; height: auto; }
+        table { table-layout: fixed; width: 100%; word-break: break-word; border-collapse: collapse; }
+        td, th { word-break: break-word; white-space: normal; overflow-wrap: anywhere; max-width: 100%; }
+        .pdf-container { box-sizing: border-box; max-width: 100%; }
       </style>
-      <div style="width: 750px; min-height: 800px; background: white; font-family: 'Morabba', 'Tahoma', 'Arial', sans-serif; font-size: 12px; direction: rtl; padding: 12px; box-sizing: border-box;">
+      <div style="width: 794px; min-height: 800px; background: white; font-family: 'Morabba', 'Tahoma', 'Arial', sans-serif; font-size: 12px; direction: rtl; padding: 12px; box-sizing: border-box;" class="pdf-container">
         
         <!-- هدر -->
         <div style="background: linear-gradient(135deg, #FBCC0A, #FDD835); padding: 15px; border-radius: 6px; margin-bottom: 15px; position: relative;">
@@ -410,7 +429,7 @@ export const CommissionInvoicePdf: React.FC<CommissionInvoicePdfProps> = ({
             `).join('') : ''}
             <tr style="background: #FBCC0A;">
               <td style="padding: 8px; border: 1px solid #58595B; font-weight: bold; text-align: center; vertical-align: middle; color: #58595B; font-family: 'Morabba', Arial, sans-serif;">🎯 مجموع پورسانت (سهم از پروژه‌ها)</td>
-              <td style="padding: 8px; border: 1px solid #58595B; text-align: center; vertical-align: middle; color: #58595B; font-weight: bold; font-family: 'Morabba', Arial, sans-serif;">${totalCommission.toLocaleString('fa-IR')} ریال</td>
+              <td style="padding: 8px; border: 1px solid #58595B; text-align: center; vertical-align: middle; color: #58595B; font-weight: bold; font-family: 'Morabba', Arial, sans-serif;">${displayedCommission.toLocaleString('fa-IR')} ریال</td>
             </tr>
             <tr style="background: white;">
               <td style="padding: 8px; border: 1px solid #58595B; font-weight: bold; text-align: center; vertical-align: middle; color: #58595B; font-family: 'Morabba', Arial, sans-serif;">➖ کسورات (بیمه، مالیات و سایر)</td>
@@ -441,7 +460,7 @@ export const CommissionInvoicePdf: React.FC<CommissionInvoicePdfProps> = ({
           ` : ''}
           
           <div style="background: white; color: #58595B; padding: 10px; border-radius: 5px; text-align: center; border: 2px solid #FBCC0A;">
-            <span style="font-size: 15px; font-weight: bold; font-family: 'Morabba', Arial, sans-serif;">💵 جمع کل دریافتی: ${totalPayment.toLocaleString('fa-IR')} ریال</span>
+            <span style="font-size: 15px; font-weight: bold; font-family: 'Morabba', Arial, sans-serif;">💵 جمع کل دریافتی: ${finalTotalPayment.toLocaleString('fa-IR')} ریال</span>
           </div>
         </div>
 

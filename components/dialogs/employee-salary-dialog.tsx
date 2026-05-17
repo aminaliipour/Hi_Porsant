@@ -423,7 +423,7 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
                       <NumberInput
                         value={baseSalaryAmount.toString()}
                         onChange={(value) => {
-                          const numValue = parseInt(value) || 0
+                          const numValue = typeof value === 'string' ? parseInt(value) || 0 : Number(value) || 0
                           setBaseSalaryAmount(numValue)
                           // محاسبه مجدد حقوق اول و دوم
                           const totalIncome = getTotalCommission()
@@ -702,6 +702,9 @@ export function EmployeeSalaryDialog({ employee, open, onOpenChange }: EmployeeS
             additions={salary.additions}
             deductions={salary.deductions}
             taxDeduction={salary.isPorsanti ? (insuranceDeduction ? Math.round((salary.salary1Base || 0) * 0.07) : 0) : salary.taxDeduction} // در حالت پورسانتی از salary1Base استفاده کن
+            isPorsanti={salary.isPorsanti}
+            salary1={salary.salary1}
+            salary2={salary.salary2}
             description={salary.description} // فیلد توضیحات اضافه شد
             employeeId={employee._id} // اضافه شد برای آپلود
             onComplete={() => {

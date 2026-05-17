@@ -444,26 +444,8 @@ export default function ReportTab() {
                           return sum + (s.salary1 || 0);
                         }
                         const baseSalary = s.baseSalary || 0;
-                        const employeeInsurance = calculateEmployeeInsurance(baseSalary);
+                        const employeeInsurance = s.insuranceDeduction ? calculateEmployeeInsurance(baseSalary) : 0;
                         return sum + (baseSalary - employeeInsurance);
-                      }, 0).toLocaleString()} ریال
-                    </TableCell>
-                    <TableCell>
-                      {employeeSalaries.reduce((sum, s) => {
-                        return sum + (s.commission || 0);
-                      }, 0).toLocaleString()} ریال
-                    </TableCell>
-                    <TableCell className="font-semibold text-blue-600">
-                      {employeeSalaries.reduce((sum, s) => {
-                        const totalAdditions = s.additions?.reduce((addSum, addition) => addSum + (addition.amount || 0), 0) || 0;
-                        const totalDeductions = s.deductions?.reduce((dedSum, deduction) => dedSum + (deduction.amount || 0), 0) || 0;
-                        
-                        if (s.isPorsanti) {
-                          const salary2 = s.salary2 || 0;
-                          return sum + (salary2 + totalAdditions - totalDeductions);
-                        }
-                        const commission = s.commission || 0;
-                        return sum + (commission + totalAdditions - totalDeductions);
                       }, 0).toLocaleString()} ریال
                     </TableCell>
                     <TableCell>
@@ -476,6 +458,23 @@ export default function ReportTab() {
                       {employeeSalaries.reduce((sum, s) => {
                         const totalDeductions = s.deductions?.reduce((dedSum, deduction) => dedSum + (deduction.amount || 0), 0) || 0;
                         return sum + totalDeductions;
+                      }, 0).toLocaleString()} ریال
+                    </TableCell>
+                    <TableCell>
+                      {employeeSalaries.reduce((sum, s) => {
+                        return sum + (s.commission || 0);
+                      }, 0).toLocaleString()} ریال
+                    </TableCell>
+                    <TableCell className="font-semibold text-blue-600">
+                      {employeeSalaries.reduce((sum, s) => {
+                        const totalAdditions = s.additions?.reduce((addSum, addition) => addSum + (addition.amount || 0), 0) || 0;
+                        const totalDeductions = s.deductions?.reduce((dedSum, deduction) => dedSum + (deduction.amount || 0), 0) || 0;
+                        if (s.isPorsanti) {
+                          const salary2 = s.salary2 || 0;
+                          return sum + (salary2 + totalAdditions - totalDeductions);
+                        }
+                        const commission = s.commission || 0;
+                        return sum + (commission + totalAdditions - totalDeductions);
                       }, 0).toLocaleString()} ریال
                     </TableCell>
                     <TableCell>
